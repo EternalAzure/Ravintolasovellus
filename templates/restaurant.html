@@ -1,0 +1,18 @@
+{{ name }}
+<hr>
+<form action="/answer" method="POST">
+{% for review in reviews %}
+<p>{{ review.review }} <br>
+<input type="radio" name="{{ review.id }}" value="1">
+<input type="radio" name="{{ review.id }}" value="2">
+<input type="radio" name="{{ review.id }}" value="3">
+<input type="radio" name="{{ review.id }}" value="4">
+<input type="radio" name="{{ review.id }}" value="5">
+</p>
+{% endfor %}
+<p>
+<input type="submit" value="Lähetä">
+<input type="hidden" name="id" value="{{ id }}">
+</form>
+<hr>
+<a href="/">Takaisin</a>

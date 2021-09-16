@@ -1,0 +1,9 @@
+{{ name }}
+<hr>
+<ul>
+{% for review in reviews %}
+<li> {{ review.review }}: {{ review.grade }} tähteä
+{% endfor %}
+</ul>
+<hr>
+<a href="/">Takaisin</a>
