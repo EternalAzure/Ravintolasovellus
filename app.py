@@ -1,56 +1,48 @@
 from flask import Flask
 from flask import redirect, render_template, request
 from flask_sqlalchemy import SQLAlchemy
-from os import getenv, name
+from os import getenv
+import sys
+import db
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_DATABASE_URI"] = getenv("DATABASE_URL")
-db = SQLAlchemy(app)
+connection = SQLAlchemy(app)
+
 
 @app.route("/")
 def index():
-    sql = "SELECT id, name, created_at FROM restaurants ORDER BY id DESC"
-    result = db.session.execute(sql)
-    restaurants = result.fetchall()
+    restaurants = db.restaurants(connection)
+    restaurants.sort(key=sortByGrade)
     return render_template("index.html", restaurants=restaurants)
 
 @app.route("/create", methods=["POST"])
 def create():
     name = request.form["name"]
     address = request.form["address"]
-    sql = "INSERT INTO restaurants (name, address, created_at) VALUES (:name, :address, NOW()) RETURNING id"
-    result = db.session.execute(sql, {"name":name, "address":address})
-    restaurants_id = result.fetchone()[0]
-    reviews = request.form.getlist("review")
-    for review in reviews:
-        if review != "":
-            sql = "INSERT INTO reviews (restaurants_id, review) VALUES (:restaurants_id, :review)"
-            db.session.execute(sql, {"restaurants_id":restaurants_id, "review":review})
-    db.session.commit()
+    db.insertRestaurant(connection, name, address)
     return redirect("/")
 
-@app.route("/restaurant/<int:id>")
-def restaurant(id):
-    sql = "SELECT name FROM restaurants WHERE id=:id"
-    result = db.session.execute(sql, {"id":id})
-    name = result.fetchone()[0]
-    sql = "SELECT id, review FROM reviews WHERE restaurants_id=:id"
-    result = db.session.execute(sql, {"id":id})
-    reviews = result.fetchall()
-    return render_template("restaurant.html", id=id, name=name, reviews=reviews)
+@app.route("/review/<int:id>")
+def review(id):
+    name = db.restaurant(connection, id)
+    categories = db.categories(connection)
+    return render_template("review.html", id=id, name=name, categories=categories)
 
 @app.route("/result/<int:id>")
 def result(id):
-    sql = "SELECT name FROM restaurants WHERE id=:id"
-    result = db.session.execute(sql, {"id":id})
-    name = result.fetchone()[0]
-
-    sql = "SELECT r.review, a.grade FROM reviews r LEFT JOIN answers a " \
-          "ON r.id=a.reviews_id WHERE r.restaurants_id=:restaurants_id"
-    result = db.session.execute(sql, {"restaurants_id":id})
-    reviews = result.fetchall()
-    return render_template("result.html", name=name, reviews=reviews)
+    name = db.restaurant(connection, id)
+    textReviews = db.reviews(connection, id)
+    #calculates one average grade for all categories
+    generalGrade = db.reviewTogether(connection, id)
+    categories = db.categories(connection)
+    gradesByCategory = []
+    for c in categories:
+        #calculates average grade by review category
+        average = db.reviewSeparate(connection, id, c[0])
+        gradesByCategory.append(average)
+    return render_template("result.html", name=name, generalGrade=generalGrade, gradesByCategory=gradesByCategory, reviews=textReviews)
 
 @app.route("/new")
 def new():
@@ -58,18 +50,24 @@ def new():
 
 @app.route("/answer", methods=["POST"])
 def answer():
-    restaurants_id = request.form["id"]
-    query = "SELECT id FROM reviews WHERE restaurants_id=:id"
-    result = db.session.execute(query, {"id":restaurants_id})
-    reviews = result.fetchall()
+    restaurant = request.form["id"]
+    review =request.form["review"]
+    db.insertReview(connection, review, restaurant)
+    categories = db.categories(connection)
 
-    for review in reviews:
-        grade = request.form[str(review.id)]
-        sql = "INSERT INTO answers (reviews_id, grade, sent_at) VALUES (:reviews_id, :grade, NOW())"
-        db.session.execute(sql, {"reviews_id":review.id, "grade":grade})
-        db.session.commit()
-        
-    return redirect("/result/" + str(restaurants_id))
+    for c in categories:
+        grade = request.form[str(c.id)]
+        db.insertGrade(connection, grade, restaurant, c.id)
+
+    return redirect("/result/" + str(restaurant))
 
 
+def sortByGrade(e):
+    #Descending
+    try:
+        return 0 - db.reviewTogether(connection, e.id)
+    except:
+        return 0
 
+def log(output):
+    print("log:"+ str(output), file=sys.stdout)

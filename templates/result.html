@@ -1,9 +1,18 @@
-{{ name }}
+<h4>{{ name }}</h4>
 <hr>
 <ul>
-{% for review in reviews %}
-<li> {{ review.review }}: {{ review.grade }} tähteä
-{% endfor %}
+    {% for g in gradesByCategory %}
+    <li> {{ g[0]}}: {{ g[1] }} tähteä</li>
+    {% endfor %}
+    <li>yleisarvosana: {{ generalGrade }}</li>
 </ul>
 <hr>
 <a href="/">Takaisin</a>
+<div>
+    <h4>Arvostelut:</h4>
+    {% for r in reviews %}
+    <hr>
+    {{ r.content }}
+    {% endfor %}
+</div>
+

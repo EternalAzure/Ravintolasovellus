@@ -3,7 +3,7 @@
 {% for restaurant in restaurants %}
 Nimi: {{ restaurant.name }} <br>
 Lisätty: {{ restaurant.created_at.strftime("%Y-%m-%d %H:%M:%S") }} <br>
-<a href="/restaurant/{{ restaurant.id }}">Katso ravintola</a> |
+<a href="/review/{{ restaurant.id }}">Arvostele ravintola</a> |
 <a href="/result/{{ restaurant.id }}">Näytä arvostelut</a> <br>
 <hr>
 {% endfor %}
