@@ -1,8 +1,8 @@
 from app import app
 from flask import render_template, request, redirect
-import db
-import mainpage
-import utils
+import src.db as db
+import src.mainpage as mainpage
+import src.utils as utils
 
 @app.route("/")
 def index():
@@ -40,3 +40,7 @@ def answer():
     db.insert_review(review, restaurant)
     utils.insert_grades(restaurant)
     return redirect("/result/" + str(restaurant))
+
+@app.route("/map", method=["GET"])
+def map():
+    return render_template("map.html")

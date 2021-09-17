@@ -6,7 +6,6 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_DATABASE_URI"] = getenv("DATABASE_URL")
 db = SQLAlchemy(app)
 
-import sys
 
 def restaurants():
     sql = "SELECT id, name, created_at FROM restaurants"
