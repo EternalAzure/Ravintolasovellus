@@ -1,9 +1,10 @@
 <a href="/new">Lisää ravintola</a>
 <hr>
-{% for restaurant in restaurants %}
-Nimi: {{ restaurant.name }} <br>
-Lisätty: {{ restaurant.created_at.strftime("%Y-%m-%d %H:%M:%S") }} <br>
-<a href="/review/{{ restaurant.id }}">Arvostele ravintola</a> |
-<a href="/result/{{ restaurant.id }}">Näytä arvostelut</a> <br>
-<hr>
+{% for d in dictionaries %}
+    Nimi: {{ d.name }} <br>
+    Rating: {{d.rating}} <br>
+    Lisätty: {{ d.created_at.strftime("%Y-%m-%d %H:%M:%S") }} <br>
+    <a href="/review/{{ d.id }}">Arvostele ravintola</a> |
+    <a href="/result/{{ d.id }}">Näytä arvostelut</a> <br>
+    <hr>
 {% endfor %}
