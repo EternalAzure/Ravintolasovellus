@@ -1,8 +1,11 @@
 from app import app
 from flask import render_template, request, redirect
-import src.db as db
-import src.mainpage as mainpage
-import src.utils as utils
+import db
+import mainpage
+import utils
+import map as m
+import mainpage
+import sys
 
 @app.route("/")
 def index():
@@ -15,8 +18,12 @@ def new():
 @app.route("/create", methods=["POST"])
 def create():
     name = request.form["name"]
-    address = request.form["address"]
-    db.insert_restaurant(name, address)
+    street = request.form["street"]
+    city = request.form["city"]
+    #Validate address
+    m.location(city, street)
+
+    #db.insert_restaurant(name, street, city)
     return redirect("/")
 
 @app.route("/review/<int:id>")
@@ -41,6 +48,7 @@ def answer():
     utils.insert_grades(restaurant)
     return redirect("/result/" + str(restaurant))
 
-@app.route("/map", method=["GET"])
-def map():
-    return render_template("map.html")
+@app.route("/map/<city>/<street>", methods=["GET"])
+def map(city, street):
+    return m.show(city, street)
+

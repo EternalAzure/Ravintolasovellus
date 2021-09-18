@@ -1,12 +1,13 @@
 <form action="/create" method="POST">
     <p>Ravintolan nimi:<br>
-    <input type="text" name="name"></p>
-    <p>osoite: </br>
-    <input type="text" name="address"></p>
-
-    <input type="hidden" name="review" value="viihtyisyys">
-    <input type="hidden" name="review" value="hinta-laatu">
-    <input type="hidden" name="review" value="maukkaus">
+        <input type="text" name="name">
+    </p>
+    <p>
+        <b>osoite:</b> </br>
+        <input type="text" placeholder="Kanavaranta 7" name="street">
+        <input type="text" placeholder="Helsinki" name="city">
+    </p>
     <input type="submit" value="Lisää ravintola">
+    <a href="/" >Takaisin</a>
     </form>
     
