@@ -1,3 +1,23 @@
+CREATE TABLE streets (
+    id SERIAL PRIMARY KEY,
+    street TEXT UNIQUE
+);
+
+CREATE TABLE cities (
+    id SERIAL PRIMARY KEY,
+    city TEXT UNIQUE
+);
+
+CREATE TABLE addresses (
+    id SERIAL PRIMARY KEY,
+    street_id INTEGER 
+    REFERENCES streets
+    ON DELETE CASCADE,
+    city_id INTEGER 
+    REFERENCES cities
+    ON DELETE CASCADE
+);
+
 CREATE TABLE restaurants (
     id SERIAL PRIMARY KEY, 
     name TEXT, 
@@ -24,25 +44,5 @@ CREATE TABLE reviews (
     content TEXT,
     sent_at TIMESTAMP,
     restaurant_id INTEGER REFERENCES restaurants
-    ON DELETE CASCADE
-);
-
-CREATE TABLE streets (
-    id SERIAL PRIMARY KEY,
-    street TEXT UNIQUE
-);
-
-CREATE TABLE cities (
-    id SERIAL PRIMARY KEY,
-    city TEXT UNIQUE
-);
-
-CREATE TABLE addresses (
-    id SERIAL PRIMARY KEY,
-    street_id INTEGER 
-    REFERENCES streets
-    ON DELETE CASCADE,
-    city_id INTEGER 
-    REFERENCES cities
     ON DELETE CASCADE
 );
