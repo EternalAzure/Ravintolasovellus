@@ -115,6 +115,10 @@ def insert_grade(grade, restaurant, category):
     db.session.execute(sql, {"grade":grade, "r_id":restaurant, "c_id":category})
     db.session.commit()
 
-
+def delete(id):
+    sql = "DELETE FROM restaurants WHERE id=:id"
+    db.session.execute(sql, {"id": id})
+    db.session.commit()
+    
 def log(m):
     print("LOG: " + str(m), file=sys.stdout)

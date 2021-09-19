@@ -24,7 +24,9 @@
           <h3>{{ r.name }}</h3>
            <h4>{{r.rating}}</h4>
           <a href="/review/{{ r.id }}">Arvostele ravintola</a> |
-          <a href="/result/{{ r.id }}">Näytä arvostelut</a>
+          <a href="/result/{{ r.id }}">Näytä arvostelut</a> <br>
+          <a href="/restaurant/{{ r.id }}">Katso tiedot</a> |
+          <a href="/delete/{{ r.id }}">Poista</a> <br>
           <hr>
           {% endfor %}
         </div>

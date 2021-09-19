@@ -46,6 +46,15 @@ def answer():
     utils.insert_grades(restaurant)
     return redirect("/result/" + str(restaurant))
 
+@app.route("/restaurant/<int:id>", methods=["GET"])
+def restaurant(id):
+    return    
+
+@app.route("/delete/<int:id>")
+def delete(id):
+    db.delete(id)
+    return redirect("/")
+
 @app.route("/api/restaurants", methods=["GET"])
 def restaurants():
     return utils.json_restaurants()

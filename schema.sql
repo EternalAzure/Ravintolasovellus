@@ -46,3 +46,20 @@ CREATE TABLE reviews (
     restaurant_id INTEGER REFERENCES restaurants
     ON DELETE CASCADE
 );
+
+CREATE TABLE info (
+    id SERIAL PRIMARY KEY,
+    description TEXT,
+    opening TIME,
+    closing TIME,
+    tags TEXT[],
+    restaurant_id INTEGER REFERENCES restaurants
+    ON DELETE CASCADE
+);
+
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username TEXT UNIQUE,
+    pwhash TEXT,
+    role TEXT
+);
