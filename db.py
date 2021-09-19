@@ -9,7 +9,6 @@ db = SQLAlchemy(app)
 
 
 def restaurants():
-    #city and street are not in addresses but only id references
     sql = "SELECT restaurants.id, name, created_at, city, street FROM addresses, restaurants, streets, cities " \
           "WHERE restaurants.address_id=addresses.id AND addresses.city_id=cities.id AND addresses.street_id=streets.id"
     result = db.session.execute(sql)
@@ -60,18 +59,11 @@ def rating(id):
     except:
         return "None"
 
-def get_grades(restaurant, c):
-    sql = "SELECT r.category, 1.0*SUM(grade)/NULLIF(COUNT(grade), 0) AS average FROM review_categories r LEFT JOIN grades " \
-          "ON r.id=grades.category_id WHERE grades.restaurant_id=:restaurant AND r.id=:category GROUP BY r.category"
-    result = db.session.execute(sql, {"restaurant":restaurant, "category":c})
-
-    name = category(c)
-    try:
-        values = result.fetchall()[0]
-        rounded = [values[0], round(values[1], 1)]
-        return rounded
-    except:
-        return (name, None)
+def get_grades(restaurant):
+    sql = "SELECT r.category, ROUND(1.0*SUM(grade)/NULLIF(COUNT(grade), 0), 1) AS average FROM review_categories r LEFT JOIN grades " \
+          "ON r.id=grades.category_id WHERE grades.restaurant_id=:restaurant GROUP BY r.category"
+    result = db.session.execute(sql, {"restaurant": restaurant})
+    return result 
 
 def insert_restaurant(name, street, city):
     street_id = insert_street(street)

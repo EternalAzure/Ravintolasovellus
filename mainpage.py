@@ -1,8 +1,10 @@
-from flask import render_template, request, redirect
-import db
+from flask import render_template
+from os import getenv
 from math import inf
 import sys
 import map
+import db
+import json
 
 def render():
     N = 60.1699
@@ -10,7 +12,8 @@ def render():
     description = "Ravintola"
     #{"N": 60.1699, "E": 24.9384}
     restaurants = prepare()
-    return render_template("index.html", description=description, N=(N), E=E, restaurants=restaurants)
+    url = getenv("MAP")
+    return render_template("googlemap.html.j2", url=url, N=(N), E=E, restaurants=restaurants)
 
 
 def prepare():

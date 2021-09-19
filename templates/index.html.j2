@@ -14,11 +14,12 @@
       padding: 20px;
       }
     </style>
+
     <script type="text/javascript">
       window.onload = function() {
         L.mapquest.key = 'lYrP4vF3Uk5zgTiGGuEzQGwGIVDGuy24';
   
-        var map = L.mapquest.map('map', {
+        let map = L.mapquest.map('map', {
           center: [{{N}},  {{E}}],
           layers: L.mapquest.tileLayer('map'),
           zoom: 12
@@ -27,8 +28,9 @@
         {% for r in restaurants %}
         L.marker([{{ r.location.lat }}, {{ r.location.lon }}], {
           icon: L.mapquest.icons.marker(),
+          title: '{{ r.name }}',
           draggable: false
-        }).bindPopup('{{N}}').addTo(map);
+        }).bindPopup('{{N}}').addTo(map)
         {% endfor %}
       };
     </script>
@@ -46,7 +48,7 @@
         <hr>
         <div class="scroll">
           {% for r in restaurants %}
-          <h5>{{ r.name }}</h5>
+          <h4>{{ r.name }}</h4>
           Rating: {{r.rating}} <br>
           Lisätty: {{ r.created_at.strftime("%Y-%m-%d %H:%M:%S") }} <br>
           <a href="/review/{{ r.id }}">Arvostele ravintola</a> |
@@ -59,7 +61,7 @@
    </div>
    <div style="clear:both"></div>
    
-    <p> {{description}}</p>
+    <p> Loppu</p>
   </body>
 </html>
 

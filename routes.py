@@ -4,8 +4,6 @@ import db
 import mainpage
 import utils
 import map as m
-import mainpage
-import sys
 
 @app.route("/")
 def index():
@@ -21,9 +19,9 @@ def create():
     street = request.form["street"]
     city = request.form["city"]
     #Validate address
-    m.location(city, street)
+    #m.location(city, street)
 
-    #db.insert_restaurant(name, street, city)
+    db.insert_restaurant(name, street, city)
     return redirect("/")
 
 @app.route("/review/<int:id>")
@@ -37,7 +35,7 @@ def result(id):
     name = db.restaurant(id)
     text_reviews = db.reviews(id)
     general_grade = db.rating(id)
-    grades = utils.get_grades(id)
+    grades = db.get_grades(id)
     return render_template("result.html", name=name, general_grade=general_grade, grades=grades, reviews=text_reviews)
 
 @app.route("/answer", methods=["POST"])
@@ -52,3 +50,6 @@ def answer():
 def map(city, street):
     return m.show(city, street)
 
+@app.route("/api/restaurants", methods=["GET"])
+def restaurants():
+    return utils.json_restaurants()

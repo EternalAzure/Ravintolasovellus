@@ -1,7 +1,6 @@
 from os import getenv
 import requests
 from flask import render_template
-import sys
 
 key=getenv("API_KEY")
 
@@ -17,6 +16,6 @@ def location(city, street):
     response = requests.get(url, params=load)
     data = response.json()[0]
 
-    coordinates = {"lat": data["lat"], "lon": data["lon"]}
+    coordinates = {"lat": float(data["lat"]), "lng": float(data["lon"])}
     return coordinates
 

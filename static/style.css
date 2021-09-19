@@ -1,0 +1,17 @@
+#map {
+  height: 500px;
+  width: 60%;
+}
+
+div.scroll {
+  width: 90%;
+  height: 800px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  text-align: center;
+  padding: 20px;
+  }
+
+body {
+  background-color: whitesmoke;
+}

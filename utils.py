@@ -1,17 +1,11 @@
 from flask import request
 import db
 from math import inf
+import json
+import collections
+import map
 
 #Small miscelanious functions
-
-#Fecthes average grade for every category separately and returns a list
-def get_grades(id):
-    categories = db.categories()
-    grades = []
-    for c in categories:
-        average = db.get_grades(id, c[0])
-        grades.append(average)
-    return grades
 
 #Gets grades from html radio elements
 #Goes through only if all review categories are rated/graded
@@ -28,3 +22,21 @@ def insert_grades(restaurant):
 
     for grade in buffer:
         db.insert_grade(grade[0], restaurant, grade[1])
+
+def json_restaurants():
+    # Convert query to objects of key-value pairs
+    rows = db.restaurants()
+
+    objects_list = []
+    for row in rows:
+        d = collections.OrderedDict()
+        d["id"] = row[0]
+        d["name"] = row[1]
+        d["created_at"] = str(row[2])
+        d["city"] = row[3]
+        d["street"] = row[4]
+        d["location"] = map.location(row["city"], row["street"])
+        objects_list.append(d)
+    
+    j = json.dumps(objects_list)
+    return j
