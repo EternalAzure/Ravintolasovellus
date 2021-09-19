@@ -1,20 +1,25 @@
-{{ name }}
-<hr>
-<form action="/answer" method="POST">
-{% for c in categories %}
-<p>{{ c.category }} <br>
-<input type="radio" name="{{ c.id }}" value="1">
-<input type="radio" name="{{ c.id }}" value="2">
-<input type="radio" name="{{ c.id }}" value="3">
-<input type="radio" name="{{ c.id }}" value="4">
-<input type="radio" name="{{ c.id }}" value="5">
-</p>
-{% endfor %}
-<p>Arvostelu: <br>
-<textarea name="review" rows="3" cols="50"></textarea></p>
-<p>
-<input type="submit" value="Lähetä">
-<input type="hidden" name="id" value="{{ id }}">
-</form>
-<hr>
-<a href="/">Takaisin</a>
+<body style="
+  text-align: center; 
+  margin-top: 30px; 
+">
+  <h2>{{ name }}</h2>
+  <hr style="width: 25%;">
+  <form action="/answer" method="POST">
+  {% for c in categories %}
+    <p>{{ c.category }} <br>
+    <input type="radio" name="{{ c.id }}" value="1">
+    <input type="radio" name="{{ c.id }}" value="2">
+    <input type="radio" name="{{ c.id }}" value="3">
+    <input type="radio" name="{{ c.id }}" value="4">
+    <input type="radio" name="{{ c.id }}" value="5">
+    </p>
+  {% endfor %}
+    <p>Arvostelu: <br>
+    <textarea name="review" rows="3" cols="50"></textarea></p>
+    <p>
+    <input type="submit" value="Lähetä">
+    <input type="hidden" name="id" value="{{ id }}">
+  </form>
+  <hr style="width: 25%;">
+  <a href="/">Takaisin</a>
+</body>

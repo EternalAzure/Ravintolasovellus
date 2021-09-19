@@ -13,14 +13,20 @@ async function initMap () {
   const map = new google.maps.Map(document.getElementById("map"), {
     zoom: 12,
     center: myLatLng,
-  });
+  })
 
-  restaurants.forEach(r => {
-    new google.maps.Marker({
-    position: r.location,
-    map,
-    title: r.name,
-    });
-  });
-  
+  let markers = []
+  for (let index = 0; index < restaurants.length; index++) {
+    markers[index] = new google.maps.Marker({
+      position: restaurants[index].location,
+      map,
+      title: restaurants[index].name,
+      })
+      
+      markers[index].addListener("click", () => {
+        map.setZoom(13);
+        map.setCenter(markers[index].getPosition());
+      })
+    
+  }
 }

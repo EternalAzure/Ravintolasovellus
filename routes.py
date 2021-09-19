@@ -46,10 +46,6 @@ def answer():
     utils.insert_grades(restaurant)
     return redirect("/result/" + str(restaurant))
 
-@app.route("/map/<city>/<street>", methods=["GET"])
-def map(city, street):
-    return m.show(city, street)
-
 @app.route("/api/restaurants", methods=["GET"])
 def restaurants():
     return utils.json_restaurants()

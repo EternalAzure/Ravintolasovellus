@@ -1,13 +1,44 @@
-<form action="/create" method="POST">
-    <p>Ravintolan nimi:<br>
-        <input type="text" name="name">
-    </p>
-    <p>
-        <b>osoite:</b> </br>
-        <input type="text" placeholder="Kanavaranta 7" name="street">
-        <input type="text" placeholder="Helsinki" name="city">
-    </p>
-    <input type="submit" value="Lisää ravintola">
-    <a href="/" >Takaisin</a>
-    </form>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Lisää ravintola</title>
+        <style>
+            input {
+                height: 35px;
+                font-size: 90;
+            }
+            p {
+                font-size: xx-large;
+            }
+            button {
+                height: 35px;
+                font-size: 20;
+            }
+            body {
+                text-align: center; 
+                margin-top: 30px;
+            }
+            ::placeholder {
+                color: grey;
+                font-size: 30;
+            }
+
+         </style>
+    </head>
     
+    <body>
+        <form action="/create" method="POST">
+            <p>Ravintolan nimi:<br>
+                <input type="text" name="name">
+            </p>
+            <p>
+                Osoite:</br>
+                <input type="text" placeholder="Kanavaranta 7" name="street"> <br>
+                <input type="text" placeholder="Helsinki" name="city">
+            </p>
+            <input type="submit" value="Lisää ravintola"> <br><br>
+            <a href="/" >Takaisin</a>
+        </form>
+    </body>
+        
+</html>

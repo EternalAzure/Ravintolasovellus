@@ -1,67 +1,38 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.js"></script>
-    <link type="text/css" rel="stylesheet" href="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.css"/>
-
-    <style>
-      div.scroll {
-      width: 90%;
-      height: 800px;
-      overflow-x: hidden;
-      overflow-y: auto;
-      text-align: center;
-      padding: 20px;
-      }
-    </style>
-
-    <script type="text/javascript">
-      window.onload = function() {
-        L.mapquest.key = 'lYrP4vF3Uk5zgTiGGuEzQGwGIVDGuy24';
-  
-        let map = L.mapquest.map('map', {
-          center: [{{N}},  {{E}}],
-          layers: L.mapquest.tileLayer('map'),
-          zoom: 12
-        });
-  
-        {% for r in restaurants %}
-        L.marker([{{ r.location.lat }}, {{ r.location.lon }}], {
-          icon: L.mapquest.icons.marker(),
-          title: '{{ r.name }}',
-          draggable: false
-        }).bindPopup('{{N}}').addTo(map)
-        {% endfor %}
-      };
-    </script>
+    <title>Ravintolasovellus</title>
+        <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+    <script async src="{{ url }}"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script type="text/javascript" src="/static/index.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="static/style.css" />
     
   </head>
-  
-  <body style="border: 0; margin: 0;">
-  
-    <div style="width: 100%; text-align: center;">
-      <div id="map" style="float:left; width: 60%; height: 530px;">
+  <body>
+    <div class="top">
+      <div class="left-side">
+        <div id="map"></div>
+        <div id="bottom"></div>
       </div>
-      <div class="right-side" style="float:right; width: 40%; background-color: whitesmoke;">
+      <div class="right-side">
         <h1>Ravintolasovellus</h1>
         <a href="/new">Lisää ravintola</a>
         <hr>
         <div class="scroll">
           {% for r in restaurants %}
-          <h4>{{ r.name }}</h4>
-          Rating: {{r.rating}} <br>
-          Lisätty: {{ r.created_at.strftime("%Y-%m-%d %H:%M:%S") }} <br>
+          <h3>{{ r.name }}</h3>
+           <h4>{{r.rating}}</h4>
           <a href="/review/{{ r.id }}">Arvostele ravintola</a> |
-          <a href="/result/{{ r.id }}">Näytä arvostelut</a> <br>
-          <a href="/map/{{ r.city }}/{{ r.street }}">Katso kartalla</a>
+          <a href="/result/{{ r.id }}">Näytä arvostelut</a>
           <hr>
           {% endfor %}
         </div>
       </div>
-   </div>
+    </div>
    <div style="clear:both"></div>
    
-    <p> Loppu</p>
+    
+
   </body>
 </html>
-

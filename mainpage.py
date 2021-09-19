@@ -13,7 +13,7 @@ def render():
     #{"N": 60.1699, "E": 24.9384}
     restaurants = prepare()
     url = getenv("MAP")
-    return render_template("googlemap.html.j2", url=url, N=(N), E=E, restaurants=restaurants)
+    return render_template("index.html.j2", url=url, N=(N), E=E, restaurants=restaurants)
 
 
 def prepare():
