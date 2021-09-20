@@ -4,7 +4,6 @@ from math import inf
 import sys
 import map
 import db
-import json
 
 def render():
     N = 60.1699
@@ -36,7 +35,6 @@ def prepare():
 def sort_by_rating(e):
     #Descending
     try:
-        #log(e["rating"])
         return 0 - e["rating"]
     except:
         return inf

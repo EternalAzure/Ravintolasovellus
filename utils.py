@@ -4,6 +4,7 @@ from math import inf
 import json
 import collections
 import map
+import sys
 
 #Small miscelanious functions
 
@@ -50,3 +51,7 @@ def stringify(info):
     except AttributeError:
         pass
     return info
+
+
+def log(output):
+    print("log:"+ str(output), file=sys.stdout)

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ravintolat | {% block title %}{% endblock %}</title>
+    <script type="text/javascript"> {% block script %} {% endblock %} </script>
+    <link rel="stylesheet" type="text/css" href="../static/style1.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <div class="top-page">
+      <div class="page-title">
+        <h1>{% block page_title %}{% endblock %}</h1>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="/">Etusivu</a></li>
+          <li> <a href="/login">Kirjautuminen</a></li>
+        </ul>
+      </nav>
+    </div>
+    
+    <hr>
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+  
+  </body>
+</html>

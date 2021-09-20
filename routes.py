@@ -39,10 +39,11 @@ def review(id):
 @app.route("/result/<int:id>")
 def result(id):
     name = db.select_restaurant(id).name
-    text_reviews = db.select_reviews(id)
+    text_reviews = list(db.select_reviews(id))
+    text_reviews.reverse()
     general_grade = db.grades_full_summary(id)
     grades = db.grades_partial_summary(id)
-    return render_template("result.html", name=name, general_grade=general_grade, grades=grades, reviews=text_reviews, id=id)
+    return render_template("result.html.j2", name=name, general_grade=general_grade, grades=grades, reviews=text_reviews, id=id)
 
 @app.route("/answer", methods=["POST"])
 def answer():
