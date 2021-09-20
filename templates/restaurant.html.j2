@@ -52,9 +52,10 @@
 
     <div>
       <p>{{ info.opening }} ─ {{ info.closing }}</p>
+      <h4>Tunnisteet:</h4>
       <ul>
       {% for tag in info.tags %}
-      <li><{{ tag }}</li>
+      <li> {{ tag }} </li>
       {% endfor %}
       </ul>
     </div>

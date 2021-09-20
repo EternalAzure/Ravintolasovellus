@@ -42,7 +42,7 @@ def result(id):
     text_reviews = db.reviews(id)
     general_grade = db.grades_full_summary(id)
     grades = db.grades_partial_summary(id)
-    return render_template("result.html", name=name, general_grade=general_grade, grades=grades, reviews=text_reviews)
+    return render_template("result.html", name=name, general_grade=general_grade, grades=grades, reviews=text_reviews, id=id)
 
 @app.route("/answer", methods=["POST"])
 def answer():
@@ -57,12 +57,18 @@ def restaurant(id):
     data = db.select_restaurant(id)
     info = db.select_info_all(id)
     info = utils.stringify(info)
+    log(info.tags)
     return render_template("restaurant.html.j2", data=data, info=info, id=id)   
 
-@app.route("/delete/<int:id>")
-def delete(id):
+@app.route("/delete_restaurant/<int:id>")
+def delete_restaurant(id):
     db.delete_restaurant(id)
     return redirect("/")
+
+@app.route("/delete_review/<int:id>", methods=["POST"])
+def delete_review(id):
+    db.delete_review(id)
+    return redirect("/result/"+str(id))
 
 @app.route("/api/restaurants", methods=["GET"])
 def restaurants():

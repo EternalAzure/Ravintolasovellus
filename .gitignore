@@ -1,6 +1,7 @@
 .env
 test_map.html
 temp.txt
+Tuntikirjanpito.txt
 
 #directories
 /__pycache__

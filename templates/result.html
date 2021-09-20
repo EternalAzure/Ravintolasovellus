@@ -1,5 +1,12 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <script>
+      function remove_review() {
+
+      }
+    </script>
+  </head>
   <body style="text-align: center; margin-top: 30px;">
     <h2>{{ name }}</h2>
     <hr style="width: 25%;">
@@ -14,8 +21,13 @@
     <div>
       <h3>Arvostelut:</h3>
       {% for r in reviews %}
-      <hr style="width: 25%;">
+      <div>
+        <hr style="width: 25%;">
       {{ r.content }}
+      <form action="/delete_review/{{ id }}" method="POST">
+        <button type="submit" name="button"> Poista </button>
+      </form>
+      </div>
       {% endfor %}
     </div>
   </body>

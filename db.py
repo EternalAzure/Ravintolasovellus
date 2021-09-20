@@ -1,5 +1,6 @@
 from app import app
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import exc
 from os import getenv
 import sys
 
@@ -43,10 +44,13 @@ def delete_restaurant(id):
 
 #Inserting restaurant is dependent on inserting street, city and address
 def insert_restaurant(name, street, city):
-    db.session.begin() #Transaction begins
+    log("FUNCTION")
     street_id = insert_street(street)
+    log(street_id)
     city_id = insert_city(city)
+    log(city_id)
     address_id = insert_address(street_id, city_id)
+    log(address_id)
 
     sql = "INSERT INTO restaurants (name, address_id, created_at) VALUES (:name, :address_id, NOW()) RETURNING id"
     result = db.session.execute(sql, {"name":name, "address_id":address_id})
@@ -57,16 +61,16 @@ def insert_restaurant(name, street, city):
 def insert_address(s_id, c_id): #INSERT ADDRESS
     sql = "INSERT INTO addresses (street_id, city_id) VALUES (:s_id, :c_id) RETURNING id"
     result = db.session.execute(sql, {"s_id":s_id, "c_id":c_id})
-    #db.session.commit()
+    db.session.commit()
     return result.fetchone()[0]
 
 def insert_street(street): #INSERT STREET
     try:
         sql = "INSERT INTO streets (street) VALUES (:street) RETURNING id"
         result = db.session.execute(sql, {"street":street})
-        #db.session.commit()
+        db.session.commit()
         return result.fetchone()[0]
-    except:
+    except exc.IntegrityError:
         db.session.commit()
         return get_street_id(street)
     
@@ -74,9 +78,9 @@ def insert_city(city): #INSERT CITY
     try:
         sql = "INSERT INTO cities (city) VALUES (:city) RETURNING id"
         result = db.session.execute(sql, {"city":city})
-        #db.session.commit()
+        db.session.commit()
         return result.fetchone()[0]
-    except:
+    except exc.IntegrityError:
         db.session.commit()
         return get_city_id(city)
 
@@ -93,6 +97,12 @@ def reviews(id):
     sql = "SELECT id, content, sent_at FROM reviews WHERE restaurant_id=:id"
     result = db.session.execute(sql, {"id":id})
     return result.fetchall()
+
+def delete_review(id):
+    sql ="DELETE FROM reviews WHERE restaurant_id=:id"
+    db.session.execute(sql, {"id":id})
+    db.session.commit()
+
 
 #USER TABLE
 #----------------
