@@ -39,7 +39,7 @@ def review(id):
 @app.route("/result/<int:id>")
 def result(id):
     name = db.select_restaurant(id).name
-    text_reviews = db.reviews(id)
+    text_reviews = db.select_reviews(id)
     general_grade = db.grades_full_summary(id)
     grades = db.grades_partial_summary(id)
     return render_template("result.html", name=name, general_grade=general_grade, grades=grades, reviews=text_reviews, id=id)
@@ -67,7 +67,10 @@ def delete_restaurant(id):
 
 @app.route("/delete_review/<int:id>", methods=["POST"])
 def delete_review(id):
-    db.delete_review(id)
+    log("DELETE_REVIEW")
+    review_id = request.form["review_id"]
+    log(review_id)
+    db.delete_review(review_id)
     return redirect("/result/"+str(id))
 
 @app.route("/api/restaurants", methods=["GET"])

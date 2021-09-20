@@ -93,13 +93,17 @@ def insert_review(review, restaurant):
     db.session.execute(sql, {"review":review, "restaurant":restaurant})
     db.session.commit()
 
-def reviews(id):
+def select_reviews(id):
+    #
+    #
+    #Order by sent_at
     sql = "SELECT id, content, sent_at FROM reviews WHERE restaurant_id=:id"
     result = db.session.execute(sql, {"id":id})
     return result.fetchall()
 
 def delete_review(id):
-    sql ="DELETE FROM reviews WHERE restaurant_id=:id"
+    log("DB DELETE_REVIEW("+str(id)+")")
+    sql ="DELETE FROM reviews WHERE id=:id"
     db.session.execute(sql, {"id":id})
     db.session.commit()
 
