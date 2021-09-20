@@ -3,7 +3,11 @@ from flask import render_template, request, redirect
 import db
 import mainpage
 import utils
-import map as m
+import update_info
+import sys
+
+def log(m):
+    print("LOG: " + str(m), file=sys.stdout)
 
 @app.route("/")
 def index():
@@ -20,22 +24,24 @@ def create():
     city = request.form["city"]
     #Validate address
     #m.location(city, street)
-
-    db.insert_restaurant(name, street, city)
+    #
+    #
+    restaurant_id = db.insert_restaurant(name, street, city)
+    db.insert_info_all(None, None, "", [], restaurant_id)
     return redirect("/")
 
 @app.route("/review/<int:id>")
 def review(id):
-    name = db.restaurant(id)
+    name = db.select_restaurant(id).name
     categories = db.categories()
     return render_template("review.html", id=id, name=name, categories=categories)
 
 @app.route("/result/<int:id>")
 def result(id):
-    name = db.restaurant(id)
+    name = db.select_restaurant(id).name
     text_reviews = db.reviews(id)
-    general_grade = db.rating(id)
-    grades = db.get_grades(id)
+    general_grade = db.grades_full_summary(id)
+    grades = db.grades_partial_summary(id)
     return render_template("result.html", name=name, general_grade=general_grade, grades=grades, reviews=text_reviews)
 
 @app.route("/answer", methods=["POST"])
@@ -48,13 +54,25 @@ def answer():
 
 @app.route("/restaurant/<int:id>", methods=["GET"])
 def restaurant(id):
-    return    
+    data = db.select_restaurant(id)
+    info = db.select_info_all(id)
+    info = utils.stringify(info)
+    return render_template("restaurant.html.j2", data=data, info=info, id=id)   
 
 @app.route("/delete/<int:id>")
 def delete(id):
-    db.delete(id)
+    db.delete_restaurant(id)
     return redirect("/")
 
 @app.route("/api/restaurants", methods=["GET"])
 def restaurants():
     return utils.json_restaurants()
+
+@app.route("/update_info", methods=["POST"])
+def update():
+    opening = request.form["opening"]
+    closing = request.form["closing"]
+    description = request.form["description"]
+    tag = request.form["tag"]
+    id = request.form["id"]
+    return update_info.handle_input(opening, closing, description, tag, id)

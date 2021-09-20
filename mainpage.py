@@ -17,13 +17,13 @@ def render():
 
 
 def prepare():
-    restaurants = db.restaurants()
+    restaurants = db.select_restaurants_all()
     list = [None] * len(restaurants)
     i = 0
     for r in restaurants:
         list[i] = {
             "name": r.name, 
-            "rating": db.rating(r.id), 
+            "rating": db.grades_full_summary(r.id), 
             "created_at": r.created_at, 
             "id": r.id, "city": r.city, 
             "street": r.street,

@@ -49,7 +49,7 @@ CREATE TABLE reviews (
 
 CREATE TABLE info (
     id SERIAL PRIMARY KEY,
-    description TEXT,
+    descript TEXT,
     opening TIME,
     closing TIME,
     tags TEXT[],
@@ -63,3 +63,7 @@ CREATE TABLE users (
     pwhash TEXT,
     role TEXT
 );
+
+INSERT INTO review_categories (category) VALUES ('viihtyisyys');
+INSERT INTO review_categories (category) VALUES ('hinta-laatu');
+INSERT INTO review_categories (category) VALUES ('maukkaus');

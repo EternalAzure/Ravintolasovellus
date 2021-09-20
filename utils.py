@@ -25,7 +25,7 @@ def insert_grades(restaurant):
 
 def json_restaurants():
     # Convert query to objects of key-value pairs
-    rows = db.restaurants()
+    rows = db.select_restaurants_all()
 
     objects_list = []
     for row in rows:
@@ -40,3 +40,13 @@ def json_restaurants():
     
     j = json.dumps(objects_list)
     return j
+
+def stringify(info):
+    try:
+        opening = info.opening.strftime("%H:%M")
+        closing = info.closing.strftime("%H:%M")
+        info.opening = opening
+        info.closing = closing
+    except AttributeError:
+        pass
+    return info
