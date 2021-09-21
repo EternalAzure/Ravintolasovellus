@@ -1,0 +1,26 @@
+{% extends "layout.html.j2" %}
+{% block title%}Kirjautuminen{% endblock%}
+{% block page_title %}Kirjautuminen{% endblock%}
+{% block content %}
+
+{% if session.username %}
+  <div class="center">
+    <p>Olet kirjautunut nimellä {{ session.username }}</p>
+    <a href="/logout">Kirjaudu ulos</a>
+  </div>
+{% else %}
+
+<div class="center">
+  {% if message %}
+  {{ message }}
+  {% endif %}
+  <form action="/login" method="POST">
+    <p>Tunnus:<br>
+    <input type="text" name="username"></p>
+    <p>Salasana:<br>
+    <input type="password" name="password"></p>
+    <input type="submit" value="Kirjaudu">
+  </form>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "layout.html.j2" %}
+{% block title%}Rekisteröityminen{% endblock%}
+{% block page_title %}Rekisteröityminen{% endblock%}
+{% block content %}
+
+{% if session.username %}
+  <div class="center">
+    <p>Olet kirjautunut nimellä {{ session.username }}</p>
+    <a href="/logout">Kirjaudu ulos</a>
+  </div>
+{% else %}
+
+{% if message %}
+<div class="center">{{ message }}</div>
+{% endif %}
+
+<div class="center">
+  <form action="/register" method="POST">
+    <p>Tunnus:<br>
+    <input type="text" name="username"></p>
+    <p>Salasana:<br>
+    <input type="password" name="password"></p>
+    <input type="submit" value="Rekisteröidy">
+  </form>
+</div>
+{% endif %}
+{% endblock %}

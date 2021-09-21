@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import exc
 from os import getenv
 import sys
+from werkzeug.security import check_password_hash, generate_password_hash
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_DATABASE_URI"] = getenv("DATABASE_URL")
@@ -110,12 +111,33 @@ def delete_review(id):
 
 #USER TABLE
 #----------------
-def insert_user(username, pwhash, role):
-    sql = "INSERT INTO users (user, pwhash, role) VALUES (:username, :pwhash, :role)"
-    db.session.execute(sql, {"username": username, "pwhash": pwhash, "role": role})
+def insert_user(username, password):
+    hash_value = generate_password_hash(password)
+    sql = "INSERT INTO users (username, pwhash, role) VALUES (:username, :pwhash, :role)"
+    db.session.execute(sql, {"username": username, "pwhash": hash_value, "role": "user"})
     db.session.commit()
 
+def verify_user(username, password):
+    sql = "SELECT id, pwhash FROM users WHERE username=:username"
+    result = db.session.execute(sql, {"username":username})
+    user = result.fetchone()    
 
+    if not user:
+        return False
+    else:
+        hash_value = user.pwhash
+        if check_password_hash(hash_value, password):
+           return True
+        else:
+            return False
+
+def is_username_taken(username):
+    sql = "SELECT 1 FROM users WHERE username=:username"
+    result = db.session.execute(sql, {"username": username})
+    row = result.fetchone()
+
+    if row: return True
+    return False
 
 #GRADES TABLE
 #----------------

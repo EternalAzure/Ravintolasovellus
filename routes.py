@@ -1,9 +1,11 @@
 from app import app
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, session
 import db
 import mainpage
 import utils
 import update_info
+import register as r
+import login as l
 import sys
 
 def log(m):
@@ -15,20 +17,7 @@ def index():
 
 @app.route("/new")
 def new():
-    return render_template("new.html")
-
-@app.route("/create", methods=["POST"])
-def create():
-    name = request.form["name"]
-    street = request.form["street"]
-    city = request.form["city"]
-    #Validate address
-    #m.location(city, street)
-    #
-    #
-    restaurant_id = db.insert_restaurant(name, street, city)
-    db.insert_info_all(None, None, "", [], restaurant_id)
-    return redirect("/")
+    return render_template("new.html.j2")
 
 @app.route("/review/<int:id>")
 def review(id):
@@ -45,21 +34,21 @@ def result(id):
     grades = db.grades_partial_summary(id)
     return render_template("result.html.j2", name=name, general_grade=general_grade, grades=grades, reviews=text_reviews, id=id)
 
-@app.route("/answer", methods=["POST"])
-def answer():
-    restaurant = request.form["id"]
-    review =request.form["review"]
-    db.insert_review(review, restaurant)
-    utils.insert_grades(restaurant)
-    return redirect("/result/" + str(restaurant))
-
 @app.route("/restaurant/<int:id>", methods=["GET"])
 def restaurant(id):
     data = db.select_restaurant(id)
     info = db.select_info_all(id)
     info = utils.stringify(info)
     log(info.tags)
-    return render_template("restaurant.html.j2", data=data, info=info, id=id)   
+    return render_template("restaurant.html.j2", data=data, info=info, id=id)  
+
+@app.route("/login_page") 
+def login_page():
+    return render_template("login_page.html.j2")
+
+@app.route("/register_page")
+def register_page():
+    return render_template("register_page.html.j2")
 
 @app.route("/delete_restaurant/<int:id>")
 def delete_restaurant(id):
@@ -86,3 +75,38 @@ def update():
     tag = request.form["tag"]
     id = request.form["id"]
     return update_info.handle_input(opening, closing, description, tag, id)
+
+@app.route("/create", methods=["POST"])
+def create():
+    name = request.form["name"]
+    street = request.form["street"]
+    city = request.form["city"]
+    #Validate address
+    #m.location(city, street)
+    #
+    #
+    restaurant_id = db.insert_restaurant(name, street, city)
+    db.insert_info_all(None, None, "", [], restaurant_id)
+    return redirect("/")
+
+@app.route("/answer", methods=["POST"])
+def answer():
+    restaurant = request.form["id"]
+    review =request.form["review"]
+    db.insert_review(review, restaurant)
+    utils.insert_grades(restaurant)
+    return redirect("/result/" + str(restaurant))
+
+@app.route("/register", methods=["POST"])
+def register():
+    return r.register()
+
+
+@app.route("/login",methods=["POST"])
+def login():
+    return l.login()
+
+@app.route("/logout")
+def logout():
+    del session["username"]
+    return redirect("/")

@@ -8,7 +8,6 @@ import db
 def render():
     N = 60.1699
     E = 24.9384
-    description = "Ravintola"
     #{"N": 60.1699, "E": 24.9384}
     restaurants = prepare()
     url = getenv("MAP")
