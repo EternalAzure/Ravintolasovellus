@@ -14,13 +14,11 @@
 <hr>
 
 <div class="center">
-  <a href="/">Takaisin</a>
-  
-  <h3>Arvostelut:</h3>
+  <h1>Arvostelut:</h1>
   {% for r in reviews %}
   <hr>
   <div class="background">
-      {{ r.content }}
+      <p>{{ r.content }}</p>
       <form action="/delete_review/{{ id }}" method="POST">
         <button type="submit" name="button"> Poista </button>
         <input type="hidden" value="{{ r.id }}" name="review_id">

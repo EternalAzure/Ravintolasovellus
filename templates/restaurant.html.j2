@@ -1,64 +1,69 @@
-<!DOCTYPE html>
-<html>
-  <head>
-  <title>{{ data.name }}</title>
-  <style>
-    .description {
-      min-height: 200px; 
-      max-width: 400px; 
-      margin: 0 auto;
-      margin-top: 30px;
-    }
-    h1 {
-      margin-top: 30px;
-    }
-  </style>
-  </head>
-  <body style="text-align: center; margin: 0 auto;">
-    <h1>{{ data.name }}</h1>
-    <button type="button" id="show">Päivitä tietoja</button> <br>
-    <button type="button" id="hide" style="display: none">Sulje lomake</button>
+{% extends "layout.html.j2" %}
+{% block title %}Tiedot{% endblock %}
+{% block page_title %}{{ data.name }}{% endblock %}
+{% block content %}
 
-    <form action="/update_info" method="POST" id="form" style="display: none">
-      <p>Muuta tai lisää aukioloajat:<br>
-      <input type="text" name="opening">─
-      <input type="text" name="closing">
-      </p>
+<div class="center">
+  <button type="button" id="show">Päivitä tietoja</button> <br>
+  <button type="button" id="hide" style="display: none">Sulje lomake</button>
+</div>
+<hr>
+
+<form class="center" action="/update_info" method="POST" id="form" style="display: none">
+  <p>Muuta tai lisää aukioloajat:<br>
+    <input type="text" name="opening"> ─
+    <input type="text" name="closing">
+  </p>
       
-      <p>Lisää kuvaus ravintolasta:<br>
-      <textarea name="description" rows="10" cols="50"></textarea>
-      </p>
+  <p>Lisää kuvaus ravintolasta:<br>
+    <textarea name="description" rows="10" cols="50"></textarea>
+  </p>
 
-      <p>Lisää tunniste:<br>
-        <input type="text" placeholder="yksi sana" name="tag"> <br><br>
-      </p>
-      <input type="submit" value="Lähetä lomake"> <br><br>
-      <input type="hidden" name="id" value="{{ id }}">
-    </form>
-    <script>
-      document.getElementById("show").onclick = function() {
-        document.getElementById("form").style.display = "";
-        document.getElementById("show").style.display = "none";
-        document.getElementById("hide").style.display = "";
-      }
-      document.getElementById("hide").onclick = function() {
-        document.getElementById("form").style.display = "none";
-        document.getElementById("show").style.display = "";
-        document.getElementById("hide").style.display = "none";
-      }
-    </script>
+  <p>Lisää tunniste:<br>
+    <input type="text" placeholder="yksi sana" name="tag">
+  </p>
+  <input type="submit" value="Lähetä lomake"> <br><br>
+  <input type="hidden" name="id" value="{{ id }}">
+</form>
+<script>
+  document.getElementById("show").onclick = function() {
+    document.getElementById("form").style.display = "";
+    document.getElementById("show").style.display = "none";
+    document.getElementById("hide").style.display = "";
+  }
+  document.getElementById("hide").onclick = function() {
+    document.getElementById("form").style.display = "none";
+    document.getElementById("show").style.display = "";
+    document.getElementById("hide").style.display = "none";
+  }
+</script>
 
-    <div class="description"> {{ info.descript }} </div>
-
-    <div>
-      <p>{{ info.opening }} ─ {{ info.closing }}</p>
-      <h4>Tunnisteet:</h4>
-      <ul>
-      {% for tag in info.tags %}
-      <li> {{ tag }} </li>
-      {% endfor %}
-      </ul>
-    </div>
-    <a href="/" >Takaisin</a>
-  </body>
-</html>
+<div class=background style="min-height: 4em">
+  <div class="center"> 
+    {{ info.descript }} 
+  </div>
+</div>
+<hr>
+<div class="center">
+  <label>Aukioloajat:</label>
+  <div class="grid-container">
+    <div class="grid">
+    <label>MA</label> <label>{{ info.opening }} ─ {{ info.closing }}</label>
+    <label>TI</label> <label>{{ info.opening }} ─ {{ info.closing }}</label>
+    <label>KE</label> <label>{{ info.opening }} ─ {{ info.closing }}</label>
+    <label>TO</label> <label>{{ info.opening }} ─ {{ info.closing }}</label>
+    <label>PE</label> <label>{{ info.opening }} ─ {{ info.closing }}</label>
+    <label>LA</label> <label>{{ info.opening }} ─ {{ info.closing }}</label>
+    <label>SU</label> <label>{{ info.opening }} ─ {{ info.closing }}</label>
+  </div>
+  </div>
+  <h4>Tunnisteet:</h4>
+  <ul>
+    {% for tag in info.tags %}
+    <li> {{ tag }} </li>
+    {% endfor %}
+  </ul>
+</div>
+  
+{% endblock %}
+ 

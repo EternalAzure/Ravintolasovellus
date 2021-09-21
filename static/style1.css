@@ -2,6 +2,7 @@ body {
   margin: auto;
   max-width: 55em;
   font-family: 'Helvetica', 'Arial', sans-serif;
+  font-size: 1.5em;
   background: rgb(2,0,36);
   background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,116,121,1) 25%, rgba(0,212,255,1) 50%); 
 }
@@ -24,7 +25,7 @@ nav li {
 }
 
 .top-page {
-  background: rgba(0,212,255,1);
+  background: rgba(0,212,255,0.2);
   border-radius: 1em;
   height: 17em;
   margin-top: 0;
@@ -35,7 +36,7 @@ hr {
 }
 h1 {
   text-align: center;
-  color:black
+  color:azure
 }
 h2 {
   text-align: center;
@@ -43,7 +44,7 @@ h2 {
 }
 h3 {
   text-align: center;
-  border: azure;
+  color: azure;
 }
 h4 {
   text-align: center;
@@ -67,7 +68,20 @@ ul {
 }
 button {
   background: rgba(255,116,121,0.7);
-  color: aliceblue;
+  color: azure;
   border-radius: 0.5em;
   border-width: 0.1em;
+  text-align: center;
+}
+main {
+  margin-bottom: 2em;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1em 10em;
+  grid-row-gap: .1em;
+  grid-column-gap: 1em;
+}
+.grid-container {
+  padding-left: 40%;
 }

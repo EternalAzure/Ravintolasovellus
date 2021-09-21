@@ -34,7 +34,7 @@ def create():
 def review(id):
     name = db.select_restaurant(id).name
     categories = db.categories()
-    return render_template("review.html", id=id, name=name, categories=categories)
+    return render_template("review.html.j2", id=id, name=name, categories=categories)
 
 @app.route("/result/<int:id>")
 def result(id):

@@ -1,0 +1,30 @@
+{% extends "layout.html.j2" %}
+{% block title %}Vastaus{% endblock %}
+{% block script %}
+function hide() {
+    document.getElementById("input_list").style.display="none";
+  }
+{% endblock %}
+{% block page_title %}Tiedot päivitetty{% endblock %}
+{% block content %}
+
+<div class="center">
+  Syötetty oikein:
+  <ul>
+    {% for key in correct_input.keys() %}
+      <li>{{ key }}</li>
+    {% endfor %}
+  </ul>
+  <a href="/restaurant/{{ id }}">Takaisin</a>
+</div>
+<div class="center">
+  {% if not "id" in correct_input.keys() %}
+    <hr>
+    Ravintolaa, jonka tietoja päivitit ei löytynyt
+    <script>
+      hide()
+    </script>
+  {% endif %}
+</div> <br>
+
+{% endblock %}

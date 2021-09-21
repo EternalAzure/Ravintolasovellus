@@ -18,7 +18,7 @@ def handle_input(opening, closing, description, tag, id):
     input["id"] = int(id)
     log("id is valid")
   else:
-    return render_template("update_response.html", correct_input=input, id=id)
+    return render_template("update_response.html.j2", correct_input=input, id=id)
   if validate_opening(opening):
     input["opening"] = opening
     log("opening is valid")
@@ -32,13 +32,11 @@ def handle_input(opening, closing, description, tag, id):
     input["tag"] = tag
     log("tag is valid")
 
-  log("INPUT DICT")
-  log(input)
   #2. Use data
   update(input)
 
   #3. User feedback
-  return render_template("update_response.html", correct_input=input, id=id)
+  return render_template("update_response.html.j2", correct_input=input, id=id)
 
 def validate_id(id):
   #Check such restaurant exists
