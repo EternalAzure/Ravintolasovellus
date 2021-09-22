@@ -1,0 +1,115 @@
+{% extends "layout.html.j2" %}
+{% block  title%}Tiedot{% endblock %}
+{% block page_title %}{{ data.name }} {% endblock %}
+{% block script %}
+
+{% endblock %}
+{% block content %}
+
+<div class="center">
+  <button type="button" id="show">Päivitä tietoja</button> <br>
+  <button type="button" id="hide" style="display: none">Sulje lomake</button>
+</div>
+
+<hr>
+
+{% with messages = get_flashed_messages() %}
+   {% if messages %}
+      <div class="center">
+      {% for message in messages %}
+         {{ message }}
+      {% endfor %}
+      </div>
+      <hr>
+   {% endif %}
+{% endwith %}
+
+<div id="form" style="display: none">
+  <form class="center" 
+        action="/send" 
+        method="POST" 
+        enctype="multipart/form-data">
+    File: <input type="file" name="file">
+    <p>
+    <input type="submit" value="Lähetä kuva">
+    <input type="hidden" value="{{ id }}" name="restaurant_id">
+  </form>
+  <form class="center" 
+      action="/update_info" 
+      enctype="multipart/form-data"
+      method="POST">
+
+    <p>Muuta tai lisää aukioloajat:<br>
+      <input type="text" name="opening"> ─
+      <input type="text" name="closing">
+    </p>
+      
+    <p>Lisää kuvaus ravintolasta:<br>
+      <textarea name="description" rows="10" cols="50"></textarea>
+    </p>
+
+    <p>Lisää tunniste:<br>
+      <input type="text" placeholder="yksi sana" name="tag">
+    </p>
+
+    <p>Kuva:<br>
+      <input type="file" name="file">
+    </p>
+    <input type="submit" value="Lähetä lomake"> 
+    <input type="hidden" name="id" value="{{ id }}">
+    <hr>
+  </form>
+</div>
+
+<script>
+  document.getElementById("show").onclick = function() {
+    document.getElementById("form").style.display = "";
+    document.getElementById("show").style.display = "none";
+    document.getElementById("hide").style.display = "";
+  }
+  document.getElementById("hide").onclick = function() {
+    document.getElementById("form").style.display = "none";
+    document.getElementById("show").style.display = "";
+    document.getElementById("hide").style.display = "none";
+  }
+</script>
+
+
+<div class="container">
+  <div class="left-side">
+	  <div id="image">
+      <img src="/show/{{ id }}" width="600">
+	  </div>
+    <div>
+      <a href="/delete_restaurant/{{ id }}"> Poista</a> | 
+      <a href="/review/{{ id }}"> Arvostele ravintola</a> | 
+      <a href="/result/{{ id }}"> Näytä arvostelut</a>
+    </div>
+    <div> 
+      {{ info.descript }} 
+    </div> 
+  </div>
+
+  <div class="right-side">
+    <h2>{{ rating }}</h2>
+    <div class="center">
+      <label>Aukioloajat:</label>
+      <div class="grid-container">
+        <div class="grid">
+          <label>MA</label> <label>{{ info.opening }} ─ {{ info.closing }}</label>
+          <label>TI</label> <label>{{ info.opening }} ─ {{ info.closing }}</label>
+          <label>KE</label> <label>{{ info.opening }} ─ {{ info.closing }}</label>
+          <label>TO</label> <label>{{ info.opening }} ─ {{ info.closing }}</label>
+          <label>PE</label> <label>{{ info.opening }} ─ {{ info.closing }}</label>
+          <label>LA</label> <label>{{ info.opening }} ─ {{ info.closing }}</label>
+          <label>SU</label> <label>{{ info.opening }} ─ {{ info.closing }}</label>
+        </div>
+      </div>
+      <h4>Tunnisteet:</h4>
+      <div>{{ tags }}</div>
+    </div>      
+  </div>
+  <div style="clear:both"></div>
+</div>
+
+{% endblock %}

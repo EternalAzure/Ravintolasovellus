@@ -9,10 +9,10 @@ function hide() {
 {% block content %}
 
 <div class="center">
-  Syötetty oikein:
+  Virheet:
   <ul>
-    {% for key in correct_input.keys() %}
-      <li>{{ key }}</li>
+    {% for err in errors %}
+      <li>{{ err }}</li>
     {% endfor %}
   </ul>
   <a href="/restaurant/{{ id }}">Takaisin</a>

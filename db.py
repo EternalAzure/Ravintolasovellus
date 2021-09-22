@@ -4,10 +4,29 @@ from sqlalchemy import exc
 from os import getenv
 import sys
 from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.utils import secure_filename
+from flask import make_response
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_DATABASE_URI"] = getenv("DATABASE_URL")
 db = SQLAlchemy(app)
+
+#IMAGES
+def select_image(id):
+    sql = "SELECT data FROM images WHERE r_id=:id"
+    result = db.session.execute(sql, {"id":id})
+    try:
+        data = result.fetchone()[0]
+        response = make_response(bytes(data))
+        response.headers.set("Content-Type", "image/jpeg")
+        return response
+    except TypeError:
+        return None
+
+def insert_image(name, data, r_id):
+    sql = "INSERT INTO images (name,data,r_id) VALUES (:name,:data,:r_id)"
+    db.session.execute(sql, {"name":name, "data":data, "r_id":r_id})
+    db.session.commit()
 
 #CATEGORIES TABLE
 #----------------
@@ -180,6 +199,7 @@ def select_info_tags(id):
     tags_array = result.fetchone()[0]
     return tags_array
 
+
 def insert_info_all(opening, closing, description, tags, id):
     sql = "INSERT INTO info (opening, closing, descript, tags, restaurant_id) VALUES (:o, :c, :d, :t, :r)"
     db.session.execute(sql, {"o": opening, "c": closing, "d": description, "t": tags, "r": id})
@@ -196,7 +216,6 @@ def update_info_closing(input, id):
     db.session.commit()
 
 def update_info_description(input, id):
-    log("Call")
     sql = "UPDATE info SET descript=:input WHERE restaurant_id=:id;"
     res = db.session.execute(sql, {"input": input, "id": id})
     db.session.commit()
@@ -205,6 +224,7 @@ def update_info_tags(input, id):
     sql = "UPDATE info SET tags=:input WHERE restaurant_id=:id"
     db.session.execute(sql, {"input": input, "id": id})
     db.session.commit()
+
 
 #Auxiliary for intenal use
 def get_street_id(street):

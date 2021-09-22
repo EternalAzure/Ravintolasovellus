@@ -64,6 +64,15 @@ CREATE TABLE users (
     role TEXT
 );
 
+CREATE TABLE images (
+    id SERIAL PRIMARY KEY, 
+    name TEXT, 
+    data BYTEA, 
+    r_id INTEGER REFERENCES restaurants
+    ON DELETE CASCADE
+);
+
+
 INSERT INTO review_categories (category) VALUES ('viihtyisyys');
 INSERT INTO review_categories (category) VALUES ('hinta-laatu');
 INSERT INTO review_categories (category) VALUES ('maukkaus');

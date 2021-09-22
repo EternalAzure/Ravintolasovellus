@@ -17,18 +17,12 @@ def handle_input(opening, closing, description, tag, id):
   log(id)
   log("/INPUT")
 
-  #TODO
-  #Add errors to HTML page and refactor wrong id error response
-  #
-  #
-  #
-
   #1. Validate input
   if validate_id(id):
     input["id"] = int(id)
     log("id is valid")
   else:
-    return render_template("update_response.html.j2", errors=errors, correct_input=input, id=id)
+    return render_template("update_response.html.j2", errors=errors, id=id)
   if validate_time(opening):
     input["opening"] = opening
     log("opening is valid")
@@ -46,6 +40,7 @@ def handle_input(opening, closing, description, tag, id):
   update(input)
 
   #3. User feedback
+  log(errors)
   return render_template("update_response.html.j2", correct_input=input, id=id)
 
 #Check if such restaurant exists
@@ -125,8 +120,15 @@ def update(input):
     pass
   except KeyError:
     pass
+  try:
+    db.update_info_file(input["file"], input["id"])
+  except TypeError:
+    pass
+  except KeyError:
+    pass
   log("/UPDATE")
   
+
 
 def log(m):
     print("LOG: " + str(m), file=sys.stdout)
