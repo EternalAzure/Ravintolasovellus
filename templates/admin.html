@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="static/style.css">
+  </head>
+  <body>
+    {% if session.username %}
+    <div class="center">
+      <p>Olet kirjautunut nimellä {{ session.username }}</p>
+      <a href="/logout">Kirjaudu ulos</a>
+    </div>
+    {% else %}
+    <div class="center background">
+      {% if message %}
+      {{ message }}
+      {% endif %}
+      <form action="/register_admin" method="POST">
+        <p>Tunnus:<br>
+        <input type="text" name="username"></p>
+        <p>Salasana:<br>
+        <input type="password" name="password"></p>
+        <input type="submit" value="Rekisteröidy">
+      </form>
+    </div>
+    {% endif %}
+  </body>
+</html>

@@ -39,10 +39,13 @@
       enctype="multipart/form-data"
       method="POST">
 
-    <p>Muuta tai lisää aukioloajat:<br>
-      <input type="text" name="opening"> ─
-      <input type="text" name="closing">
-    </p>
+    <label>Muuta tai lisää aukioloajat:</label><br>
+      <div class="grid1">
+      {% for day in ["Ma", "Ti", "Ke", "To", "Pe", "La", "Su"] %}
+        <label>{{ day }}</label>
+        <input type="text" name="opening_{{ day }}"><label> ─ </label><input type="text" name="closing_{{ day }}">
+      {% endfor %}
+      </div>
       
     <p>Lisää kuvaus ravintolasta:<br>
       <textarea name="description" rows="10" cols="50"></textarea>
@@ -52,9 +55,6 @@
       <input type="text" placeholder="yksi sana" name="tag">
     </p>
 
-    <p>Kuva:<br>
-      <input type="file" name="file">
-    </p>
     <input type="submit" value="Lähetä lomake"> 
     <input type="hidden" name="id" value="{{ id }}">
     <hr>
@@ -95,14 +95,10 @@
     <div class="center">
       <label>Aukioloajat:</label>
       <div class="grid-container">
-        <div class="grid">
-          <label>MA</label> <label>{{ info.opening }} ─ {{ info.closing }}</label>
-          <label>TI</label> <label>{{ info.opening }} ─ {{ info.closing }}</label>
-          <label>KE</label> <label>{{ info.opening }} ─ {{ info.closing }}</label>
-          <label>TO</label> <label>{{ info.opening }} ─ {{ info.closing }}</label>
-          <label>PE</label> <label>{{ info.opening }} ─ {{ info.closing }}</label>
-          <label>LA</label> <label>{{ info.opening }} ─ {{ info.closing }}</label>
-          <label>SU</label> <label>{{ info.opening }} ─ {{ info.closing }}</label>
+        <div class="grid2">
+          {% for i in range(7) %}
+          <label>{{days[i]}}</label> <label>{{ hours[i][0] }} ─ {{ hours[i][1] }}</label>
+          {% endfor %}
         </div>
       </div>
       <h4>Tunnisteet:</h4>

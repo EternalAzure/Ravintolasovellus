@@ -44,14 +44,14 @@ CREATE TABLE reviews (
     content TEXT,
     sent_at TIMESTAMP,
     restaurant_id INTEGER REFERENCES restaurants
-    ON DELETE CASCADE
+    ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users
 );
 
 CREATE TABLE info (
     id SERIAL PRIMARY KEY,
     descript TEXT,
-    opening TIME,
-    closing TIME,
+    service_hours TEXT[],
     tags TEXT[],
     restaurant_id INTEGER REFERENCES restaurants
     ON DELETE CASCADE
@@ -61,7 +61,8 @@ CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username TEXT UNIQUE,
     pwhash TEXT,
-    role TEXT
+    role TEXT,
+    city TEXT
 );
 
 CREATE TABLE images (

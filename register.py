@@ -1,33 +1,51 @@
-from flask import render_template, request, session, redirect
-from db import insert_user, is_username_taken
+from flask import render_template, request, session
+from db import insert_user, is_username_taken, select_users_id
 import sys
 
 def log(m):
     print("LOG: " + str(m), file=sys.stdout)
 
-
-def register():
+def register_user():
   username = request.form["username"]
   password = request.form["password"]
-  
+  city = request.form["city"].lower()
+
   a = validate_username_format(username)
   b = validate_password(password)
   message = "Nimen pitää olla enintään 15 merkkiä ja \n" \
             "salasanan välillä 5 - 50 merkkiä"
   if a and b:
-    log("SYÖTE KUNNOSSA")
     if is_username_taken(username):
       message = "Username is taken"
-      log("USERNAME TAKEN")
       return render_template("register_page.html.j2", message=message)
     else:
-      log("USER REGISTERED")
-      insert_user(username, password)
+      insert_user(username, password, "user", city)
       session["username"] = username
+      session["role"] = "user"
+      session["user_id"] = select_users_id(username)
       return render_template("register_page.html.j2")
 
-  log("SYÖTE EI KUNNOSSA")
   return render_template("register_page.html.j2", message=message)
+
+def register_admin():
+  username = request.form["username"]
+  password = request.form["password"]
+  a = validate_username_format(username)
+  b = validate_password(password)
+  message = "Nimen pitää olla enintään 15 merkkiä ja \n" \
+            "salasanan välillä 5 - 50 merkkiä"
+  if a and b:
+    if is_username_taken(username):
+      message = "Username is taken"
+      return render_template("admin.html", message=message)
+    else:
+      insert_user(username, password, "admin")
+      session["username"] = username
+      session["role"] = "admin"
+      session["user_id"] = select_users_id(username)
+      return render_template("admin.html")
+
+  return render_template("admin.html", message=message)
 
   
 def validate_username_format(username):

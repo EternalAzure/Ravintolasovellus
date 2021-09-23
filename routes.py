@@ -7,6 +7,7 @@ import update_info
 import register as r
 import login as l
 import sys
+from os import getenv
 
 
 # IMAGE
@@ -19,8 +20,9 @@ def send():
         flash('Kelvoton tiedostonimi. Käytä .jpg')
         return redirect(request.referrer)
     data = file.read()
-    if len(data) > 100*1024:
-        return "Too big file"
+    if len(data) > 200*1024:
+        flash('Tiedosto saa olla enintään 204kt')
+        return redirect(request.referrer)
     db.insert_image(name, data, r_id)
     flash("Kuva ladattiin onnistuneesti")
     return redirect(request.referrer)
@@ -30,14 +32,7 @@ def show(id):
     image = db.select_image(id)
     if image:return image
     return "No image"
-
-@app.route("/foo")
-def foo():
-    return render_template("mat_form.html")
 # /IMAGE
-
-def log(m):
-    print("LOG: " + str(m), file=sys.stdout)
 
 @app.route("/")
 def index():
@@ -49,10 +44,13 @@ def new():
 
 @app.route("/restaurant/<int:id>", methods=["GET"])
 def restaurant(id):
+    log("ROUTE /RESTAURANT")
     data = db.select_restaurant(id)
     info = db.select_info_all(id)
-    info = utils.stringify(info)
-    return render_template("info.html.j2", data=data, info=info, id=id)
+    days = ["Ma", "Ti", "Ke", "To", "Pe", "La", "Su"]
+    hours = db.select_info_hours(id)
+    log(hours)
+    return render_template("info.html.j2", data=data, info=info, days=days, hours=hours, id=id)
 
 @app.route("/review/<int:id>")
 def review(id):
@@ -94,12 +92,17 @@ def restaurants():
 
 @app.route("/update_info", methods=["POST"])
 def update():
-    opening = request.form["opening"]
-    closing = request.form["closing"]
+    log("ROUTE /update_info")
+    days = ["Ma", "Ti", "Ke", "To", "Pe", "La", "Su"]
+    hours = []
+    for d in days:
+        opening = request.form["opening_"+d]
+        closing = request.form["closing_"+d]
+        hours.append([opening, closing])
     description = request.form["description"]
     tag = request.form["tag"]
     id = request.form["id"]
-    return update_info.handle_input(opening, closing, description, tag, id)
+    return update_info.handle_input(hours, description, tag, id)
 
 @app.route("/create", methods=["POST"])
 def create():
@@ -111,11 +114,12 @@ def create():
     #
     #
     restaurant_id = db.insert_restaurant(name, street, city)
-    db.insert_info_all(None, None, "", [], restaurant_id)
+    db.initiate_info(restaurant_id)
     return redirect("/")
 
 @app.route("/answer", methods=["POST"])
 def answer():
+    log("ROUTE /answer")
     restaurant = request.form["id"]
     review =request.form["review"]
     db.insert_review(review, restaurant)
@@ -124,7 +128,7 @@ def answer():
 
 @app.route("/register", methods=["POST"])
 def register():
-    return r.register()
+    return r.register_user()
 
 
 @app.route("/login",methods=["POST"])
@@ -134,4 +138,24 @@ def login():
 @app.route("/logout")
 def logout():
     del session["username"]
+    del session["user_id"]
+    del session["role"]
     return redirect("/")
+
+@app.route("/admin")
+def admin():
+    log("ROUTE /ADMIN")
+    log(request.remote_addr)
+    log(getenv("TRUSTED_IP"))
+    if request.remote_addr == getenv("TRUSTED_IP"):
+        log("admin!")
+        return render_template("admin.html")
+    log("Nope :(")
+    redirect("/")
+
+@app.route("/register_admin", methods=["POST"])
+def register_admin():
+    return r.register_admin()
+
+def log(m):
+    print("LOG: " + str(m), file=sys.stdout)

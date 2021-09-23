@@ -6,22 +6,24 @@ import collections
 import map
 import sys
 
+#
 #Small miscelanious functions
+#
 
-#Gets grades from html radio elements
 #Goes through only if all review categories are rated/graded
 def insert_grades(restaurant):
     categories = db.categories()
-    buffer = [None] * len(categories)
+    final = [""] * len(categories)
     i = 0
     try:
         for c in categories:
-            buffer[i] = (request.form[str(c.id)], c.id)
+            final[i] = (request.form[str(c.id)], c.id)
             i += 1
     except:
+        log("exc")
         return
 
-    for grade in buffer:
+    for grade in final:
         db.insert_grade(grade[0], restaurant, grade[1])
 
 def json_restaurants():
@@ -41,18 +43,6 @@ def json_restaurants():
     
     j = json.dumps(objects_list)
     return j
-
-def stringify(info):
-    try:
-        opening = info.opening.strftime("%H:%M")
-        closing = info.closing.strftime("%H:%M")
-        info.opening = opening
-        info.closing = closing
-    except AttributeError:
-        pass
-    return info
-
-    
 
 def log(output):
     print("log:"+ str(output), file=sys.stdout)

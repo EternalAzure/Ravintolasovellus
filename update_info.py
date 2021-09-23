@@ -6,12 +6,10 @@ import re
 # For user to read in update_response.html.j2
 errors = []
 
-def handle_input(opening, closing, description, tag, id):
-  
+def handle_input(hours, description, tag, id):
   input = {}
   log("INPUT")
-  log(opening)
-  log(closing)
+  log(hours)
   log(description)
   log(tag)
   log(id)
@@ -20,21 +18,16 @@ def handle_input(opening, closing, description, tag, id):
   #1. Validate input
   if validate_id(id):
     input["id"] = int(id)
-    log("id is valid")
   else:
     return render_template("update_response.html.j2", errors=errors, id=id)
-  if validate_time(opening):
-    input["opening"] = opening
-    log("opening is valid")
-  if validate_time(closing):
-    input["closing"] = closing
-    log("closing is valid")
+  
   if validate_description(description):
     input["description"] = description
-    log("description is valid")
+  
   if validate_tag(tag):
     input["tag"] = tag
-    log("tag is valid")
+  
+  input["hours"] = validate_hours(hours, id)
 
   #2. Use data
   update(input)
@@ -46,15 +39,45 @@ def handle_input(opening, closing, description, tag, id):
 #Check if such restaurant exists
 def validate_id(id):
   restaurant = db.select_restaurant(id)
-  if restaurant:
-    return True
-  else:
+  if not restaurant:
+    errors.append("Ravintolaa, jonka tietoja päivitit ei löytynyt")
     return False
+
+  if not db.is_info_ref(id):
+    print("row in table info for "+id+" was not initiated", file=sys.stderr)
+    db.initiate_info(id)
+    
+  return True
+
+def validate_hours(hours, id):
+  log("VALIDATE HOURS")
+  previous = db.select_info_hours(id)
+  # valid = [[None]*2]*7 DO NOT INITIALIZE LIST LIKE THIS
+  valid = [[1,10],[2,20],[3,30],[4,40],[5,50],[6,60],[7,70]]
+  log(valid)
+  log(previous)
+  log(hours)
+
+  for i in range(7):
+    log(i)
+    #opening
+    if validate_time(hours[i][0]):
+      valid[i][0] = hours[i][0]
+    else:
+      valid[i][0] = previous[i][0]
+    #closing
+    if validate_time(hours[i][1]):
+      valid[i][1] = hours[i][1]
+    else:
+      valid[i][1] = previous[i][1]
+    log(valid)
+
+  return valid
 
 # 24-hour format 
 def validate_time(input):
-  if input == "":
-        return False
+  if input == "suljettu": return True
+  if input == "": return False
          
   regex = "^([01]?[0-9]|2[0-3]):[0-5][0-9]$"
   format = re.compile(regex)  
@@ -93,14 +116,9 @@ def validate_tag(input):
 
 def update(input):
   log("UPDATE")
+  log(input["hours"])
   try:
-    db.update_info_opening(input["opening"], input["id"])
-  except TypeError:
-    pass
-  except KeyError:
-    pass
-  try:
-    db.update_info_closing(input["closing"], input["id"])
+    db.update_info_hours(input["hours"], input["id"])
   except TypeError:
     pass
   except KeyError:
@@ -116,12 +134,6 @@ def update(input):
     tags = db.select_info_tags(input["id"])
     tags.append(input["tag"])
     db.update_info_tags(tags, input["id"])
-  except TypeError:
-    pass
-  except KeyError:
-    pass
-  try:
-    db.update_info_file(input["file"], input["id"])
   except TypeError:
     pass
   except KeyError:

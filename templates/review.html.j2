@@ -3,7 +3,6 @@
 {% block page_title %}{{ name }}{% endblock %}
 {% block content %}
 
-<hr>
 <form class="center" action="/answer" method="POST">
   {% for c in categories %}
     <p>{{ c.category }} <br>

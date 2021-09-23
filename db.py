@@ -4,8 +4,7 @@ from sqlalchemy import exc
 from os import getenv
 import sys
 from werkzeug.security import check_password_hash, generate_password_hash
-from werkzeug.utils import secure_filename
-from flask import make_response
+from flask import make_response, session as browsing_session
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_DATABASE_URI"] = getenv("DATABASE_URL")
@@ -43,6 +42,14 @@ def category(id):
 
 #RESTAURANT TABLE & *
 #----------------
+def select_restaurants_limited(city):
+    sql = "SELECT restaurants.id, name, created_at, city, street FROM addresses, restaurants, streets, cities " \
+          "WHERE restaurants.address_id=addresses.id AND addresses.city_id=cities.id AND addresses.street_id=streets.id " \
+          "AND city=:city"
+    result = db.session.execute(sql, {"city": city})
+    return result.fetchall()
+
+#Soon redundant??
 def select_restaurants_all():
     sql = "SELECT restaurants.id, name, created_at, city, street FROM addresses, restaurants, streets, cities " \
           "WHERE restaurants.address_id=addresses.id AND addresses.city_id=cities.id AND addresses.street_id=streets.id"
@@ -64,13 +71,9 @@ def delete_restaurant(id):
 
 #Inserting restaurant is dependent on inserting street, city and address
 def insert_restaurant(name, street, city):
-    log("FUNCTION")
     street_id = insert_street(street)
-    log(street_id)
     city_id = insert_city(city)
-    log(city_id)
     address_id = insert_address(street_id, city_id)
-    log(address_id)
 
     sql = "INSERT INTO restaurants (name, address_id, created_at) VALUES (:name, :address_id, NOW()) RETURNING id"
     result = db.session.execute(sql, {"name":name, "address_id":address_id})
@@ -109,15 +112,16 @@ def insert_city(city): #INSERT CITY
 #----------------
 def insert_review(review, restaurant):
     if review == "": return
-    sql = "INSERT INTO reviews (content, restaurant_id, sent_at) VALUES (:review, :restaurant, NOW())"
-    db.session.execute(sql, {"review":review, "restaurant":restaurant})
+    user = browsing_session["user_id"] # alias session
+    sql = "INSERT INTO reviews (content, restaurant_id, user_id, sent_at) VALUES (:review, :restaurant, :user, NOW())"
+    db.session.execute(sql, {"review":review, "restaurant":restaurant, "user": user})
     db.session.commit()
 
 def select_reviews(id):
     #
     #
     #Order by sent_at
-    sql = "SELECT id, content, sent_at FROM reviews WHERE restaurant_id=:id"
+    sql = "SELECT * FROM reviews WHERE restaurant_id=:id"
     result = db.session.execute(sql, {"id":id})
     return result.fetchall()
 
@@ -130,10 +134,10 @@ def delete_review(id):
 
 #USER TABLE
 #----------------
-def insert_user(username, password):
+def insert_user(username, password, role, city):
     hash_value = generate_password_hash(password)
-    sql = "INSERT INTO users (username, pwhash, role) VALUES (:username, :pwhash, :role)"
-    db.session.execute(sql, {"username": username, "pwhash": hash_value, "role": "user"})
+    sql = "INSERT INTO users (username, pwhash, role, city) VALUES (:username, :pwhash, :role, :city)"
+    db.session.execute(sql, {"username": username, "pwhash": hash_value, "role": role, "city": city})
     db.session.commit()
 
 def verify_user(username, password):
@@ -157,6 +161,16 @@ def is_username_taken(username):
 
     if row: return True
     return False
+
+def select_users_id(username):
+    sql = "SELECT id FROM users WHERE username=:username"
+    result = db.session.execute(sql, {"username": username})
+    return result.fetchone()[0]
+
+def select_users_role(username):
+    sql = "SELECT role FROM users WHERE username=:username"
+    result = db.session.execute(sql, {"username": username})
+    return result.fetchone()[0]
 
 #GRADES TABLE
 #----------------
@@ -193,31 +207,46 @@ def select_info_all(id):
         row = None
     return row
 
+def is_info_ref(id):
+    sql = "SELECT 1 FROM info WHERE restaurant_id=:id"
+    result = db.session.execute(sql, {"id":id})
+    row = result.fetchone()
+    if row: return True
+    return False
+
+def select_info_hours(id):
+    log("DB")
+    sql = "SELECT service_hours FROM info WHERE restaurant_id=:id"
+    result = db.session.execute(sql, {"id":id})
+    hours = result.fetchone()[0]
+    default = [["",""]]*7
+    if hours == None:
+        return default
+    return hours
+
 def select_info_tags(id):
     sql = "SELECT tags FROM info WHERE restaurant_id=:id"
     result = db.session.execute(sql, {"id": id})
     tags_array = result.fetchone()[0]
-    return tags_array
+    if tags_array: return tags_array
+    else: return [None]
 
 
-def insert_info_all(opening, closing, description, tags, id):
-    sql = "INSERT INTO info (opening, closing, descript, tags, restaurant_id) VALUES (:o, :c, :d, :t, :r)"
-    db.session.execute(sql, {"o": opening, "c": closing, "d": description, "t": tags, "r": id})
+def initiate_info(id):
+    sql = "INSERT INTO info (restaurant_id) VALUES (:r)"
+    db.session.execute(sql, {"r": id})
     db.session.commit()
 
-def update_info_opening(input, id):
-    sql = "UPDATE info SET opening=:input WHERE restaurant_id=:id"
-    db.session.execute(sql, {"input": input, "id": id})
-    db.session.commit()
-
-def update_info_closing(input, id):
-    sql = "UPDATE info SET closing=:input WHERE restaurant_id=:id"
+def update_info_hours(input, id):
+    log("DB UPDATE HOURS")
+    log(input)
+    sql = "UPDATE info SET service_hours=:input WHERE restaurant_id=:id"
     db.session.execute(sql, {"input": input, "id": id})
     db.session.commit()
 
 def update_info_description(input, id):
     sql = "UPDATE info SET descript=:input WHERE restaurant_id=:id;"
-    res = db.session.execute(sql, {"input": input, "id": id})
+    db.session.execute(sql, {"input": input, "id": id})
     db.session.commit()
 
 def update_info_tags(input, id):
