@@ -39,6 +39,14 @@ CREATE TABLE grades (
     ON DELETE CASCADE
 );
 
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username TEXT UNIQUE,
+    pwhash TEXT,
+    role TEXT,
+    city_id INTEGER REFERENCES cities
+);
+
 CREATE TABLE reviews (
     id SERIAL PRIMARY KEY,
     content TEXT,
@@ -52,17 +60,8 @@ CREATE TABLE info (
     id SERIAL PRIMARY KEY,
     descript TEXT,
     service_hours TEXT[],
-    tags TEXT[],
     restaurant_id INTEGER REFERENCES restaurants
     ON DELETE CASCADE
-);
-
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    username TEXT UNIQUE,
-    pwhash TEXT,
-    role TEXT,
-    city TEXT
 );
 
 CREATE TABLE images (
@@ -70,6 +69,19 @@ CREATE TABLE images (
     name TEXT, 
     data BYTEA, 
     r_id INTEGER REFERENCES restaurants
+    ON DELETE CASCADE
+);
+
+CREATE TABLE tags (
+    id SERIAL PRIMARY KEY,
+    tag TEXT UNIQUE
+);
+
+CREATE TABLE tag_relations (
+    id SERIAL PRIMARY KEY,
+    tag_id INTEGER REFERENCES tags
+    ON DELETE CASCADE,
+    restaurant_id INTEGER REFERENCES restaurants
     ON DELETE CASCADE
 );
 

@@ -3,7 +3,6 @@ from flask import flash, session
 import sys
 
 def set_city(city):
-  log("func set_city")
   regex = "\\b[A-Z].*?\\b"
   format = re.compile(regex)  
   k = re.search(format, city)

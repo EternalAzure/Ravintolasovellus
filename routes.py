@@ -47,12 +47,17 @@ def new():
 def restaurant(id):
     log("ROUTE /RESTAURANT")
     data = db.select_restaurant(id)
-    info = db.select_info_all(id)
+    description = db.select_info_description(id)
     days = ["Ma", "Ti", "Ke", "To", "Pe", "La", "Su"]
     hours = db.select_info_hours(id)
-    tags = db.select_info_tags(id)
+    tags = db.select_tags(id)
     log(tags)
-    return render_template("info.html.j2", data=data, tags=tags, info=info, days=days, hours=hours, id=id)
+    return render_template("info.html.j2", data=data, tags=tags, description=description, days=days, hours=hours, id=id)
+
+@app.route("/search_page", methods=["GET"])
+def search_page():
+    log("ROUTE /SEARCH_PAGE")
+    return render_template("search_page.html.j2")
 
 @app.route("/review/<int:id>")
 def review(id):
@@ -100,6 +105,10 @@ def delete_review(id):
 @app.route("/api/restaurants", methods=["GET"])
 def restaurants():
     return utils.json_restaurants()
+
+@app.route("/api/location", methods=["GET"])
+def location():
+    return utils.json_location()
 
 @app.route("/update_info", methods=["POST"])
 def update():
@@ -150,6 +159,7 @@ def login():
 def logout():
     delete = [key for key in session]
     for key in delete: del session[key]
+    session["city"] = "Helsinki"
     return redirect("/")
 
 @app.route("/admin")

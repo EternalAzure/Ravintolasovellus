@@ -1,7 +1,7 @@
-from flask import render_template
+from flask import render_template, flash
+from werkzeug.utils import redirect
 import db
 import sys
-import re
 import time
 
 # For user to read in update_response.html.j2
@@ -14,7 +14,9 @@ def handle_input(hours, description, tag, id):
   if validate_id(id):
     input["id"] = int(id)
   else:
-    return render_template("update_response.html.j2", errors=errors, id=id)
+    for err in errors:
+      flash(err)
+    return render_template("info.html.j2", errors=errors, id=id)
   
   if validate_description(description):
     input["description"] = description
@@ -28,7 +30,9 @@ def handle_input(hours, description, tag, id):
   update(input)
 
   #3. User feedback
-  return render_template("update_response.html.j2", correct_input=input, id=id)
+  for err in errors:
+      flash(err)
+  return redirect("/restaurant/"+str(id))
 
 #Check if such restaurant exists
 def validate_id(id):
@@ -63,14 +67,14 @@ def validate_hours(hours, id):
   return valid
 
 
-# No more than 1500 characters
+# Limit to about 130 in finnish
 def validate_description(input):
   if not input:
     return False
 
   value = str(input)
-  if len(value) > 1500:
-    errors.append("Ravintolan kuvaus on liian pitkä. Käytä enintään 1500 merkkiä")
+  if len(value) > 875:
+    errors.append("Käytä enintään 875 merkkiä eli noin 130 sanaa")
     return False
 
   return True
@@ -90,7 +94,6 @@ def validate_tag(input):
 
 def update(input):
   log("UPDATE")
-  log(input["hours"])
   try:
     db.update_info_hours(input["hours"], input["id"])
   except TypeError:
@@ -103,11 +106,8 @@ def update(input):
     pass
   except KeyError:
     pass
-  tags = []
   try:
-    tags = db.select_info_tags(input["id"])
-    tags.append(input["tag"])
-    db.update_info_tags(tags, input["id"])
+    db.update_tags(input["tag"], input["id"])
   except TypeError:
     pass
   except KeyError:

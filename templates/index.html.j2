@@ -15,7 +15,8 @@
         <div id="map"></div>
         <div id="bottom">
           <form action="/set_city" method="POST">
-            Kaupunki:<input type="text" value="Tampere" name="city">
+            <label style="background: white; padding-bottom: 0.1em" > Kaupunki: </label>
+            <input type="text" placeholder="Tampere" name="city">
             <input type="submit" value="Aseta">
           </form>
           {% with messages = get_flashed_messages() %}
@@ -36,10 +37,12 @@
         {% if session.username %}
         <a href="/new">Lisää ravintola</a> | 
         <a href="/logout">Kirjaudu ulos</a> | 
+        <a href="/search_page">Haku sivu</a>
         {% else %}
         <a href="/new">Lisää ravintola</a> | 
         <a href="/login_page">Kirjautuminen</a> | 
-        <a href="/register_page">Luo käyttäjä</a>
+        <a href="/register_page">Luo käyttäjä</a> |
+        <a href="/search_page">Haku sivu</a>
         {% endif %}
         <hr>
 

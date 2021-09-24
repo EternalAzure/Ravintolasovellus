@@ -1,10 +1,11 @@
-from flask import request
+from flask import request, session
 import db
-from math import inf
 import json
 import collections
 import map
 import sys
+import re
+import map
 
 #
 #Small miscelanious functions
@@ -28,21 +29,44 @@ def insert_grades(restaurant):
 
 def json_restaurants():
     # Convert query to objects of key-value pairs
-    rows = db.select_restaurants_all()
+    log("JSON_RESTAURANTS")
+    rows = db.select_restaurants_limited(session["city"])
+    log(rows[0])
+    log(db.select_restaurants_all()[0].city)
 
     objects_list = []
     for row in rows:
         d = collections.OrderedDict()
         d["id"] = row[0]
         d["name"] = row[1]
-        d["created_at"] = str(row[2])
+        d["street"] = row[2]
         d["city"] = row[3]
-        d["street"] = row[4]
+        d["created_at"] = str(row[4])
         d["location"] = map.location(row["city"], row["street"])
         objects_list.append(d)
     
     j = json.dumps(objects_list)
+    log("/JSON_RESTAURANTS")
     return j
+
+def json_location():
+    log("/JSON_LOCATION")
+    city = session["city"]
+    location =map.location(city, "")
+    j = json.dumps(location)
+    log("/JSON_LOCATION")
+    return j
+
+def firts_letter_capital(word):
+    regex = "\\b[A-Z].*?\\b"
+    format = re.compile(regex)  
+    r = re.search(format, word)
+
+    if r is None :
+        return False
+       
+    else :
+        return True
 
 def log(output):
     print("log:"+ str(output), file=sys.stdout)

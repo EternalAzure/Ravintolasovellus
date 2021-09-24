@@ -12,7 +12,6 @@ def render():
     E = 24.9384
     #{"N": 60.1699, "E": 24.9384}
     restaurants = prepare()
-    log(restaurants)
     url = getenv("MAP")
     log("/MAINPAGE")
     return render_template("index.html.j2", url=url, N=(N), E=E, restaurants=restaurants)

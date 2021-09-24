@@ -1,14 +1,17 @@
 from flask import render_template, request, session
 from db import insert_user, is_username_taken, select_users_id
 import sys
-
+import utils
 def log(m):
     print("LOG: " + str(m), file=sys.stdout)
 
 def register_user():
   username = request.form["username"]
   password = request.form["password"]
-  city = request.form["city"].lower()
+  city = request.form["city"]
+
+  if not utils.firts_letter_capital(city):
+    return render_template("register_page.html.j2", message="Iso alkukirjain kaupungin nimeen")
 
   a = validate_username_format(username)
   b = validate_password(password)

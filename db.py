@@ -5,6 +5,7 @@ from os import getenv
 import sys
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask import make_response, session as browsing_session
+import logging
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_DATABASE_URI"] = getenv("DATABASE_URL")
@@ -68,9 +69,12 @@ def select_restaurants_all():
     return result.fetchall()
 
 def select_restaurant(id):
-    sql = "SELECT restaurants.id, name, created_at, city, street FROM addresses, restaurants, streets, cities " \
-          "WHERE restaurants.address_id=addresses.id AND addresses.city_id=cities.id AND addresses.street_id=streets.id " \
-          "AND restaurants.id=:id"
+    sql =   "SELECT restaurants.id, name, created_at, city, street " \
+            "FROM addresses, restaurants, streets, cities " \
+            "WHERE restaurants.address_id=addresses.id " \
+            "AND addresses.city_id=cities.id " \
+            "AND addresses.street_id=streets.id " \
+            "AND restaurants.id=:id"
     result = db.session.execute(sql, {"id":id})
     restaurant = result.fetchone()# <-- don't put that [0] there
     return restaurant
@@ -147,8 +151,10 @@ def delete_review(id):
 #----------------
 def insert_user(username, password, role, city):
     hash_value = generate_password_hash(password)
-    sql = "INSERT INTO users (username, pwhash, role, city) VALUES (:username, :pwhash, :role, :city)"
-    db.session.execute(sql, {"username": username, "pwhash": hash_value, "role": role, "city": city})
+
+    city_id = insert_city(city)
+    sql = "INSERT INTO users (username, pwhash, role, city_id) VALUES (:username, :pwhash, :role, :city_id)"
+    db.session.execute(sql, {"username": username, "pwhash": hash_value, "role": role, "city_id": city_id})
     db.session.commit()
 
 def verify_user(username, password):
@@ -184,7 +190,7 @@ def select_users_role(username):
     return result.fetchone()[0]
 
 def select_users_city(username):
-    sql = "SELECT city FROM users WHERE username=:username"
+    sql = "SELECT city FROM users, cities WHERE username=:username AND city_id=cities.id"
     result = db.session.execute(sql, {"username": username})
     return result.fetchone()[0]
 
@@ -214,13 +220,15 @@ def grades_partial_summary(restaurant):
 
 #INFO TABLE
 #----------------
-def select_info_all(id):
-    sql = "SELECT * FROM info WHERE restaurant_id=:id"
+def select_info_description(id):
+    sql = "SELECT descript FROM info WHERE restaurant_id=:id"
     result = db.session.execute(sql, {"id":id})
+
     try:
-        row = result.fetchall()[0]
+        row = result.fetchone()[0]
     except IndexError:
         row = None
+ 
     return row
 
 def is_info_ref(id):
@@ -239,16 +247,6 @@ def select_info_hours(id):
         return default
     return hours
 
-def select_info_tags(id):
-    log("DB SELECT_INFO_TAGS")
-    sql = "SELECT tags FROM info WHERE restaurant_id=:id"
-    result = db.session.execute(sql, {"id": id})
-    tags_array = result.fetchone()[0]
-    log(tags_array)
-    if tags_array: return tags_array
-    else: return []
-
-
 def initiate_info(id):
     sql = "INSERT INTO info (restaurant_id) VALUES (:r)"
     db.session.execute(sql, {"r": id})
@@ -264,11 +262,43 @@ def update_info_description(input, id):
     db.session.execute(sql, {"input": input, "id": id})
     db.session.commit()
 
-def update_info_tags(input, id):
-    sql = "UPDATE info SET tags=:input WHERE restaurant_id=:id"
-    db.session.execute(sql, {"input": input, "id": id})
+
+# TAGS
+#----------------
+def update_tags(input, id):
+    log("DB UPDATE_TAGS")
+    if is_tag_in_tag_relations(input, id): return
+
+    sql = "INSERT INTO tags (tag) VALUES (:tag) RETURNING id"
+    tag_id = None
+    try:
+        result = db.session.execute(sql, {"tag":input})
+        tag_id = result.fetchone()[0]
+        db.session.commit()
+    except exc.IntegrityError:
+        db.session.commit()
+        sql = "SELECT id FROM tags WHERE tag=:tag"
+        result = db.session.execute(sql, {"tag":input})
+        tag_id = result.fetchone()[0]
+
+    sql = "INSERT INTO tag_relations (tag_id, restaurant_id) VALUES (:tag_id, :id)"
+    db.session.execute(sql, {"tag_id":tag_id, "id": id})
     db.session.commit()
 
+def is_tag_in_tag_relations(tag, id):
+    sql =   "SELECT 1 FROM tag_relations as t, restaurants, " \
+            "(SELECT id FROM tags WHERE tag=:tag) as tags " \
+            "WHERE t.tag_id=tags.id " \
+            "AND t.restaurant_id=:id"
+    result = db.session.execute(sql, {"tag": tag, "id":id})
+    row = result.fetchone()
+    if row: return True
+    return False
+
+def select_tags(id):
+    sql = "SELECT tag FROM tag_relations, tags WHERE tag_id=tags.id AND restaurant_id=:id"
+    result = db.session.execute(sql, {"id": id})
+    return result.fetchall()
 
 #Auxiliary for intenal use
 def get_street_id(street):

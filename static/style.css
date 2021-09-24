@@ -111,3 +111,12 @@ main {
   float:left;
   width: 50%;
 }
+div.scroll {
+  width: 90%;
+  min-height: 50%;
+  height: 700px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  text-align: center;
+  padding: 20px;
+}
