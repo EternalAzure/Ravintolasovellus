@@ -22,6 +22,15 @@ nav li {
   margin-top: 0em;
   position: absolute;
 }
+.tag {
+  display: inline;
+  width: fit-content;
+  background: linear-gradient(90deg, rgba(0,210,250,0.95) 20%, rgba(20,10,36,0.1) 60%, rgba(0,210,250,0.95) 90%);
+  color: black;
+  border-radius: 1em;
+  padding-left: 0.5em;
+  padding: 0em 0.5em 0em 0.5em;
+}
 .top-page {
   background: rgba(0,212,255,0.2);
   border-radius: 1em;

@@ -2,18 +2,13 @@ from flask import render_template
 import db
 import sys
 import re
+import time
 
 # For user to read in update_response.html.j2
 errors = []
 
 def handle_input(hours, description, tag, id):
   input = {}
-  log("INPUT")
-  log(hours)
-  log(description)
-  log(tag)
-  log(id)
-  log("/INPUT")
 
   #1. Validate input
   if validate_id(id):
@@ -33,7 +28,6 @@ def handle_input(hours, description, tag, id):
   update(input)
 
   #3. User feedback
-  log(errors)
   return render_template("update_response.html.j2", correct_input=input, id=id)
 
 #Check if such restaurant exists
@@ -50,44 +44,24 @@ def validate_id(id):
   return True
 
 def validate_hours(hours, id):
-  log("VALIDATE HOURS")
-  previous = db.select_info_hours(id)
-  # valid = [[None]*2]*7 DO NOT INITIALIZE LIST LIKE THIS
-  valid = [[1,10],[2,20],[3,30],[4,40],[5,50],[6,60],[7,70]]
-  log(valid)
-  log(previous)
-  log(hours)
+  valid = db.select_info_hours(id)
 
   for i in range(7):
-    log(i)
-    #opening
-    if validate_time(hours[i][0]):
-      valid[i][0] = hours[i][0]
-    else:
-      valid[i][0] = previous[i][0]
-    #closing
-    if validate_time(hours[i][1]):
-      valid[i][1] = hours[i][1]
-    else:
-      valid[i][1] = previous[i][1]
-    log(valid)
+    opening = hours[i][0]
+    closing = hours[i][1]
+    try:
+      #Check if 24h format
+      opening_time = time.strptime(opening, '%H:%M')
+      closing_time = time.strptime(closing, '%H:%M')
+      #Check times are logical
+      if opening_time < closing_time:
+        valid[i][0] = opening
+        valid[i][1] = closing
+    except ValueError: # default to previous
+      pass
 
   return valid
 
-# 24-hour format 
-def validate_time(input):
-  if input == "suljettu": return True
-  if input == "": return False
-         
-  regex = "^([01]?[0-9]|2[0-3]):[0-5][0-9]$"
-  format = re.compile(regex)  
-  k = re.search(format, input)
-
-  if k is None :
-    errors.append("Esitä aika 24 tunnin muodossa kuten 9:30 tai 22:00")
-    return False
-  else :
-    return True
 
 # No more than 1500 characters
 def validate_description(input):

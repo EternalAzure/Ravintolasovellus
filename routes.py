@@ -6,8 +6,9 @@ import utils
 import update_info
 import register as r
 import login as l
-import sys
+from set_city import set_city as set_session_city
 from os import getenv
+import sys
 
 
 # IMAGE
@@ -49,8 +50,9 @@ def restaurant(id):
     info = db.select_info_all(id)
     days = ["Ma", "Ti", "Ke", "To", "Pe", "La", "Su"]
     hours = db.select_info_hours(id)
-    log(hours)
-    return render_template("info.html.j2", data=data, info=info, days=days, hours=hours, id=id)
+    tags = db.select_info_tags(id)
+    log(tags)
+    return render_template("info.html.j2", data=data, tags=tags, info=info, days=days, hours=hours, id=id)
 
 @app.route("/review/<int:id>")
 def review(id):
@@ -60,12 +62,21 @@ def review(id):
 
 @app.route("/result/<int:id>")
 def result(id):
+    log("ROUTE /RESULT/" + str(id))
     name = db.select_restaurant(id).name
     text_reviews = list(db.select_reviews(id))
     text_reviews.reverse()
     general_grade = db.grades_full_summary(id)
     grades = db.grades_partial_summary(id)
     return render_template("result.html.j2", name=name, general_grade=general_grade, grades=grades, reviews=text_reviews, id=id)
+
+@app.route("/set_city", methods=["POST"])
+def set_city():
+    log("ROUTE /set_city")
+    city = request.form["city"]
+    log(city)
+    set_session_city(city)
+    return redirect("/")
       
 @app.route("/login_page") 
 def login_page():
@@ -121,7 +132,7 @@ def create():
 def answer():
     log("ROUTE /answer")
     restaurant = request.form["id"]
-    review =request.form["review"]
+    review = request.form["review"]
     db.insert_review(review, restaurant)
     utils.insert_grades(restaurant)
     return redirect("/result/" + str(restaurant))
@@ -137,9 +148,8 @@ def login():
 
 @app.route("/logout")
 def logout():
-    del session["username"]
-    del session["user_id"]
-    del session["role"]
+    delete = [key for key in session]
+    for key in delete: del session[key]
     return redirect("/")
 
 @app.route("/admin")
@@ -148,9 +158,7 @@ def admin():
     log(request.remote_addr)
     log(getenv("TRUSTED_IP"))
     if request.remote_addr == getenv("TRUSTED_IP"):
-        log("admin!")
         return render_template("admin.html")
-    log("Nope :(")
     redirect("/")
 
 @app.route("/register_admin", methods=["POST"])

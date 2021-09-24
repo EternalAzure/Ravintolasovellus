@@ -43,9 +43,20 @@ def category(id):
 #RESTAURANT TABLE & *
 #----------------
 def select_restaurants_limited(city):
-    sql = "SELECT restaurants.id, name, created_at, city, street FROM addresses, restaurants, streets, cities " \
-          "WHERE restaurants.address_id=addresses.id AND addresses.city_id=cities.id AND addresses.street_id=streets.id " \
-          "AND city=:city"
+    sql =   "SELECT restaurants.id as id, name, street, city, created_at "\
+            "FROM "\
+            "(SELECT "\
+            "addresses.id as id, "\
+            "addresses.street_id as street_id, "\
+            "cities.city as city "\
+            "FROM addresses, "\
+            "(SELECT id, city FROM cities "\
+            "WHERE city=:city) as cities "\
+            "WHERE city_id=cities.id) as addresses, "\
+            "streets, restaurants "\
+            "WHERE addresses.street_id=streets.id "\
+            "AND restaurants.address_id=addresses.id;"\
+          
     result = db.session.execute(sql, {"city": city})
     return result.fetchall()
 
@@ -172,6 +183,11 @@ def select_users_role(username):
     result = db.session.execute(sql, {"username": username})
     return result.fetchone()[0]
 
+def select_users_city(username):
+    sql = "SELECT city FROM users WHERE username=:username"
+    result = db.session.execute(sql, {"username": username})
+    return result.fetchone()[0]
+
 #GRADES TABLE
 #----------------
 def insert_grade(grade, restaurant, category):
@@ -215,7 +231,6 @@ def is_info_ref(id):
     return False
 
 def select_info_hours(id):
-    log("DB")
     sql = "SELECT service_hours FROM info WHERE restaurant_id=:id"
     result = db.session.execute(sql, {"id":id})
     hours = result.fetchone()[0]
@@ -225,11 +240,13 @@ def select_info_hours(id):
     return hours
 
 def select_info_tags(id):
+    log("DB SELECT_INFO_TAGS")
     sql = "SELECT tags FROM info WHERE restaurant_id=:id"
     result = db.session.execute(sql, {"id": id})
     tags_array = result.fetchone()[0]
+    log(tags_array)
     if tags_array: return tags_array
-    else: return [None]
+    else: return []
 
 
 def initiate_info(id):
@@ -238,8 +255,6 @@ def initiate_info(id):
     db.session.commit()
 
 def update_info_hours(input, id):
-    log("DB UPDATE HOURS")
-    log(input)
     sql = "UPDATE info SET service_hours=:input WHERE restaurant_id=:id"
     db.session.execute(sql, {"input": input, "id": id})
     db.session.commit()

@@ -13,10 +13,15 @@
       <input type="radio" name="{{ c.id }}" value="5">
     </p>
   {% endfor %}
+  {% if session.username %}
     <p>Arvostelu: <br>
     <textarea name="review" rows="3" cols="50"></textarea></p>
-    <input type="submit" value="Lähetä">
-    <input type="hidden" name="id" value="{{ id }}">
+  {% else %}
+  <p>Kirjaudu sisään antaaksesi sanallisen arvostelun<p>
+  {% endif %}
+  <input type="hidden" name="id" value="{{ id }}">
+  <input type="hidden" name="review" value="" >
+  <input type="submit" value="Lähetä">
 </form>
 <hr>
 

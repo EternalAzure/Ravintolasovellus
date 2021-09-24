@@ -1,9 +1,6 @@
 {% extends "layout.html.j2" %}
 {% block  title%}Tiedot{% endblock %}
 {% block page_title %}{{ data.name }} {% endblock %}
-{% block script %}
-
-{% endblock %}
 {% block content %}
 
 <div class="center">
@@ -102,7 +99,11 @@
         </div>
       </div>
       <h4>Tunnisteet:</h4>
-      <div>{{ tags }}</div>
+      <div>
+      {% for tag in tags %}
+      <div class="tag">{{ tag }}</div>
+      {% endfor %}
+      </div>
     </div>      
   </div>
   <div style="clear:both"></div>

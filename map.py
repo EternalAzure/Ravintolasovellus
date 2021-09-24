@@ -1,6 +1,5 @@
 from os import getenv
 import requests
-from flask import render_template
 
 key=getenv("API_KEY")
 

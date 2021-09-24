@@ -23,6 +23,7 @@ def register_user():
       session["username"] = username
       session["role"] = "user"
       session["user_id"] = select_users_id(username)
+      session["city"] = city
       return render_template("register_page.html.j2")
 
   return render_template("register_page.html.j2", message=message)

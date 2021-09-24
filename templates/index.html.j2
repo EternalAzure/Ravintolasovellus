@@ -13,7 +13,22 @@
     <div class="container">
       <div class="left-side">
         <div id="map"></div>
-        <div id="bottom"></div>
+        <div id="bottom">
+          <form action="/set_city" method="POST">
+            Kaupunki:<input type="text" value="Tampere" name="city">
+            <input type="submit" value="Aseta">
+          </form>
+          {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="left-side">
+              {% for message in messages %}
+              {{ message }}
+              {% endfor %}
+            </div>
+            <hr>
+          {% endif %}
+          {% endwith %}
+        </div>
       </div>
       <div class="right-side">
         <h1 style="font-size: 4em">Ravintolasovellus</h1>
