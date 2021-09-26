@@ -2,6 +2,7 @@
 Sovelluksessa näkyy valitun kaupungin ravintolat, joista voi etsiä tietoa ja lukea arvioita. Jokainen käyttäjä on peruskäyttäjä tai ylläpitäjä.
 
 - Käyttäjä voi kirjautua sisään ja ulos sekä luoda uuden tunnuksen.
+- Ylläpitäjäksi voi rekisteröityä osoitteessa '/admin', jonne ei ole linkkiä ja reitti on IP suojattu.
 - Käyttäjä näkee ravintolat kartalla.
 - Käyttäjä voi antaa arvion (tähdet ja kommentti) ravintolasta ja lukea muiden antamia arvioita.
 - Kuka tahansa voi lisätä ravintolan, mutta vain ylläpitäjä voi poistaa sen.
