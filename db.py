@@ -4,7 +4,7 @@ from sqlalchemy import exc
 from os import getenv
 import sys
 from werkzeug.security import check_password_hash, generate_password_hash
-from flask import make_response, session as browsing_session
+from flask import make_response
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_DATABASE_URI"] = getenv("DATABASE_URL")
@@ -60,13 +60,6 @@ def select_restaurants_limited(city):
     result = db.session.execute(sql, {"city": city})
     return result.fetchall()
 
-#Soon redundant??
-def select_restaurants_all():
-    sql = "SELECT restaurants.id, name, created_at, city, street FROM addresses, restaurants, streets, cities " \
-          "WHERE restaurants.address_id=addresses.id AND addresses.city_id=cities.id AND addresses.street_id=streets.id"
-    result = db.session.execute(sql)
-    return result.fetchall()
-
 def select_restaurant(id):
     sql =   "SELECT restaurants.id, name, created_at, city, street " \
             "FROM addresses, restaurants, streets, cities " \
@@ -85,7 +78,6 @@ def select_restaurants_name(query):
     return result.fetchall()
 
 def select_restaurants_tag(query):
-    log("DB select tags")
     sql =   "SELECT r.id, name, city FROM cities, addresses a, tags, restaurants r, tag_relations t " \
             "WHERE restaurant_id=r.id AND tag_id=tags.id " \
             "AND tag=:query AND address_id=a.id AND cities.id=city_id " \
@@ -93,13 +85,17 @@ def select_restaurants_tag(query):
     result = db.session.execute(sql, {"query": query})
     list = result.fetchall()
     try:
-        log(list)
-        log("/DB")
         return list
     except IndexError:
-        log("err")
-        log("/DB")
         return 
+def is_restaurant_tag(tag, restaurant_id):
+    sql =   "SELECT 1 FROM restaurants r, tags, tag_relations t " \
+            "WHERE r.id=t.restaurant_id AND tags.id=t.tag_id " \
+            "AND tags.tag=:tag AND r.id=:restaurant_id"
+    result = db.session.execute(sql, {"tag": tag, "restaurant_id": restaurant_id})
+    row = result.fetchone()
+    if row: return True
+    return False
 
 def delete_restaurant(id):
     sql = "DELETE FROM restaurants WHERE id=:id"
@@ -147,9 +143,8 @@ def insert_city(city): #INSERT CITY
 
 #REVIEW TABLE
 #----------------
-def insert_review(review, restaurant):
+def insert_review(review, restaurant, user):
     if review == "": return
-    user = browsing_session["user_id"] # alias session
     sql = "INSERT INTO reviews (content, restaurant_id, user_id, sent_at) VALUES (:review, :restaurant, :user, NOW())"
     db.session.execute(sql, {"review":review, "restaurant":restaurant, "user": user})
     db.session.commit()
@@ -332,5 +327,3 @@ def get_city_id(city):
     result = db.session.execute(sql, {"city": city})
     return result.fetchone()[0]
 
-def log(m):
-    print("LOG: " + str(m), file=sys.stdout)

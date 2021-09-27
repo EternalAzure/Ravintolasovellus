@@ -1,15 +1,38 @@
 from flask import request, session
-import db
-import json
-import collections
-import map
-import sys
-import re
-import map
+import db, json, collections
+import map, sys, re, map
+from math import inf
 
-#
 #Small miscelanious functions
-#
+
+def sorted_restaurants():
+    city = "Helsinki"
+    if "city" in session:
+        city = session["city"]
+
+    restaurants = db.select_restaurants_limited(city)
+    list = [None] * len(restaurants)
+    i = 0
+    for r in restaurants:
+        list[i] = {
+            "name": r.name, 
+            "rating": db.grades_full_summary(r.id), 
+            "created_at": r.created_at, 
+            "id": r.id, "city": r.city, 
+            "street": r.street
+            }
+        i += 1
+
+    list.sort(key=sort_by_rating)
+    return list
+
+
+def sort_by_rating(e):
+    #Descending
+    try:
+        return 0 - e["rating"]
+    except:
+        return inf
 
 #Goes through only if all review categories are rated/graded
 def insert_grades(restaurant):
@@ -21,7 +44,6 @@ def insert_grades(restaurant):
             final[i] = (request.form[str(c.id)], c.id)
             i += 1
     except:
-        log("exc")
         return
 
     for grade in final:
@@ -29,7 +51,6 @@ def insert_grades(restaurant):
 
 def json_restaurants():
     # Convert query to objects of key-value pairs
-    log("JSON_RESTAURANTS")
     city = "Helsinki"
     if "city" in session:
         city = session["city"]
@@ -48,17 +69,14 @@ def json_restaurants():
         objects_list.append(d)
     
     j = json.dumps(objects_list)
-    log("/JSON_RESTAURANTS")
     return j
 
 def json_location():
-    log("/JSON_LOCATION")
     city = "Helsinki"
     if "city" in session:
         city = session["city"]
     location =map.location(city, "")
     j = json.dumps(location)
-    log("/JSON_LOCATION")
     return j
 
 def firts_letter_capital(word):

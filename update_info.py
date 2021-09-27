@@ -93,7 +93,6 @@ def validate_tag(input):
   return True
 
 def update(input):
-  log("UPDATE")
   try:
     db.update_info_hours(input["hours"], input["id"])
   except TypeError:
@@ -112,9 +111,3 @@ def update(input):
     pass
   except KeyError:
     pass
-  log("/UPDATE")
-  
-
-
-def log(m):
-    print("LOG: " + str(m), file=sys.stdout)

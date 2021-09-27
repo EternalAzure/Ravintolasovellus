@@ -11,9 +11,16 @@
 {% else %}
 
 <div class="center">
-  {% if message %}
-  {{ message }}
-  {% endif %}
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="center">
+      {% for message in messages %}
+        {{ message }}
+      {% endfor %}
+      </div>
+      <hr>
+    {% endif %}
+  {% endwith %}
   <form action="/login" method="POST">
     <p>Tunnus:<br>
     <input type="text" name="username"></p>

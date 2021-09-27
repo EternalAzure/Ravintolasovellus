@@ -32,12 +32,14 @@
       <input type="text" name="tag" >
       <input type="submit" value="Etsi"> <br>
       Hakutila: 
-      <input type="radio" name="mode" value="AND" checked>ja
-      <input type="radio" name="mode" value="OR">tai</p>
+      <input type="radio" name="mode" value="AND" title="Antaa tulokseksi ravintolat, joissa on kaikki tunnisteista" checked>ja
+      <input type="radio" name="mode" value="OR" title="Antaa tulokseksi ravintolat, joissa on ainakin yksi tunnisteista" >tai <br>
+      <a href="/search_page">Tyhjennä</a> </p>
     </form>
+
     <div>
-      {%for tag in session.search_tags %}
-      <div class="tag">{{ tag }}</div>
+      {%for key in session.search_tags %}
+      <div class="tag">{{ session.search_tags[key] }}</div>
       {% endfor %}
     </div>
   </div>

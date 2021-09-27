@@ -1,14 +1,17 @@
 from app import app
 from flask_cors import CORS
 from flask import render_template, request, redirect, session, flash
-import mainpage, utils, update_info, search, db, sys
+import utils, update_info, search, db, sys
 import register as r
 import login as l
 from set_city import set_city as set_session_city
 from os import getenv
+
+#Let's client request data from static/index.js through api
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-
+#RESOURCES
+#----------------
 # IMAGE
 @app.route("/send", methods=["POST"])
 def send():
@@ -33,16 +36,23 @@ def show(id):
     return "No image"
 # /IMAGE
 
+#WEB PAGES
+#----------------
 @app.route("/")
 def index():
-    return mainpage.render()
+    #url for map API with secret api key
+    url = getenv("MAP")
+    list = utils.sorted_restaurants()
+    return render_template("index.html.j2", url=url, restaurants=list)
 
 @app.route("/new")
 def new():
+    #New restaurant page
     return render_template("new.html.j2")
 
 @app.route("/restaurant/<int:id>", methods=["GET"])
 def restaurant(id):
+    #Information page
     data = db.select_restaurant(id)
     description = db.select_info_description(id)
     days = ["Ma", "Ti", "Ke", "To", "Pe", "La", "Su"]
@@ -52,17 +62,19 @@ def restaurant(id):
 
 @app.route("/search_page", methods=["GET"])
 def search_page():
-    session["search_tags"] = []
+    session["search_tags"] = {}
     return render_template("search_page.html.j2")
 
 @app.route("/review/<int:id>")
 def review(id):
+    #Make review page
     name = db.select_restaurant(id).name
     categories = db.categories()
     return render_template("review.html.j2", id=id, name=name, categories=categories)
 
 @app.route("/result/<int:id>")
 def result(id):
+    #Read reviews page
     name = db.select_restaurant(id).name
     text_reviews = list(db.select_reviews(id))
     text_reviews.reverse()
@@ -70,44 +82,49 @@ def result(id):
     grades = db.grades_partial_summary(id)
     return render_template("result.html.j2", name=name, general_grade=general_grade, grades=grades, reviews=text_reviews, id=id)
 
+@app.route("/register_page")
+def register_page():
+    return render_template("register_page.html.j2")
+
+@app.route("/login_page") 
+def login_page():
+    return render_template("login_page.html.j2")
+
+@app.route("/admin")
+def admin():
+    #Admin register page
+    try:
+        if request.remote_addr == getenv("TRUSTED_IP"):
+            return render_template("admin.html")
+    except:
+        flash("Jotain meni pahasti pieleen")
+    flash("Non allowed IP address")
+    return redirect("/")
+
+#FUNCTIONALITY
+#----------------
 @app.route("/set_city", methods=["POST"])
 def set_city():
     city = request.form["city"]
     set_session_city(city)
     return redirect("/")
       
-@app.route("/login_page") 
-def login_page():
-    return render_template("login_page.html.j2")
-
-@app.route("/register_page")
-def register_page():
-    return render_template("register_page.html.j2")
-
 @app.route("/delete_restaurant/<int:id>")
 def delete_restaurant(id):
-    db.delete_restaurant(id)
-    return redirect("/")
+    if "user_id" in session:
+        db.delete_restaurant(id)
+        return redirect("/")
+    flash("Istunto on vanhentunut")
+    return render_template("login_page.html.j2")
 
 @app.route("/delete_review/<int:id>", methods=["POST"])
 def delete_review(id):
-    review_id = request.form["review_id"]
-    db.delete_review(review_id)
-    return redirect("/result/"+str(id))
-
-@app.route("/api/restaurants", methods=["GET"])
-def restaurants():
-    log("/api/restaurants")
-    response = utils.json_restaurants()
-    log(response)
-    return response
-
-@app.route("/api/location", methods=["GET"])
-def location():
-    log("/api/locations")
-    response = utils.json_location()
-    log(response)
-    return response
+    if "user_id" in session:
+        review_id = request.form["review_id"]
+        db.delete_review(review_id)
+        return redirect("/result/"+str(id))
+    flash("Istunto on vanhentunut")
+    return render_template("login_page.html.j2")
 
 @app.route("/update_info", methods=["POST"])
 def update():
@@ -127,22 +144,29 @@ def create():
     name = request.form["name"]
     street = request.form["street"]
     city = request.form["city"]
-    restaurant_id = db.insert_restaurant(name, street, city)
-    db.initiate_info(restaurant_id)
-    return redirect("/")
+    if city and street and name:
+        restaurant_id = db.insert_restaurant(name, street, city)
+        db.initiate_info(restaurant_id)
+        return redirect("/")
+    flash("Täytä nimi ja osoite tiedot")
+    return redirect(request.referrer)
 
 @app.route("/answer", methods=["POST"])
 def answer():
     restaurant = request.form["id"]
     review = request.form["review"]
-    db.insert_review(review, restaurant)
-    utils.insert_grades(restaurant)
-    return redirect("/result/" + str(restaurant))
+    if "user_id" in session:
+        log("Key found")
+        user = session["user_id"]
+        db.insert_review(review, restaurant, user)
+        utils.insert_grades(restaurant)
+        return redirect("/result/" + str(restaurant))
+    flash("Istunto on vanhentunut")
+    return render_template("login_page.html.j2")
 
 @app.route("/register", methods=["POST"])
 def register():
     return r.register_user()
-
 
 @app.route("/login",methods=["POST"])
 def login():
@@ -153,15 +177,6 @@ def logout():
     delete = [key for key in session]
     for key in delete: del session[key]
     session["city"] = "Helsinki"
-    return redirect("/")
-
-@app.route("/admin")
-def admin():
-    try:
-        if request.remote_addr == getenv("TRUSTED_IP"):
-            return render_template("admin.html")
-    except:
-        flash("Jotain meni pahasti pieleen")
     return redirect("/")
 
 @app.route("/register_admin", methods=["POST"])
@@ -177,8 +192,29 @@ def search_name():
 @app.route("/search/tag")
 def search_tag():
     tag = request.args["tag"]
-    restaurants = search.tag_and(tag)
+    mode = request.args["mode"]
+    if not tag: redirect(request.referrer)
+
+    restaurants = {}
+    if mode == "OR":
+        #inclusive search
+        restaurants = search.tag_or(tag)
+    else:
+        #exclusive search
+        restaurants = search.tag_and(tag)
     return render_template("search_page.html.j2", restaurants=restaurants)
+
+#API
+#----------------
+@app.route("/api/restaurants", methods=["GET"])
+def restaurants():
+    response = utils.json_restaurants()
+    return response
+
+@app.route("/api/location", methods=["GET"])
+def location():
+    response = utils.json_location()
+    return response
 
 
 def log(output):
