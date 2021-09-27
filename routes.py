@@ -162,7 +162,7 @@ def admin():
             return render_template("admin.html")
     except:
         flash("Jotain meni pahasti pieleen")
-    redirect("/")
+    return redirect("/")
 
 @app.route("/register_admin", methods=["POST"])
 def register_admin():

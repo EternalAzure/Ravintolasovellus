@@ -47,3 +47,5 @@ async function initMap () {
     
   }
 }
+
+initMap()
