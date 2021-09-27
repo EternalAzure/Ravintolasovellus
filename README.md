@@ -9,6 +9,7 @@ Sovelluksessa näkyy valitun kaupungin ravintolat, joista voi etsiä tietoa ja l
 - Käyttäjä voi etsiä kaikki ravintolat, joilla on tunnisteena annettu sana.
 - Käyttäjä näkee myös listan, jossa ravintolat on järjestetty parhaimmasta huonoimpaan arvioiden mukaisesti.
 - Ylläpitäjä voi tarvittaessa poistaa käyttäjän antaman arvion.
+https://git.heroku.com/polar-scrubland-57061.git
 
 ### Työn alla/harkinnassa:
 - Käyttäjä näkee ravintolat kartalla ja voi painaa ravintolasta, jolloin siitä näytetään lisää tietoa (kuten kuvaus ja aukioloajat).
