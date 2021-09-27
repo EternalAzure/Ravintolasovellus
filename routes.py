@@ -96,12 +96,17 @@ def delete_review(id):
 
 @app.route("/api/restaurants", methods=["GET"])
 def restaurants():
-    
-    return utils.json_restaurants()
+    log("/api/restaurants")
+    response = utils.json_restaurants()
+    log(response)
+    return response
 
 @app.route("/api/location", methods=["GET"])
 def location():
-    return utils.json_location()
+    log("/api/locations")
+    response = utils.json_location()
+    log(response)
+    return response
 
 @app.route("/update_info", methods=["POST"])
 def update():
