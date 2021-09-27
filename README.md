@@ -8,7 +8,7 @@ Sovelluksessa näkyy valitun kaupungin ravintolat, joista voi etsiä tietoa ja l
 - Kuka tahansa voi lisätä ravintolan, mutta vain ylläpitäjä voi poistaa sen.
 - Käyttäjä voi etsiä kaikki ravintolat, joilla on tunnisteena annettu sana.
 - Käyttäjä näkee myös listan, jossa ravintolat on järjestetty parhaimmasta huonoimpaan arvioiden mukaisesti.
-- Ylläpitäjä voi tarvittaessa poistaa käyttäjän antaman arvion.
+- Ylläpitäjä voi tarvittaessa poistaa käyttäjän antaman arvion. <br>
 https://git.heroku.com/polar-scrubland-57061.git
 
 ### Työn alla/harkinnassa:
