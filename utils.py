@@ -30,9 +30,11 @@ def insert_grades(restaurant):
 def json_restaurants():
     # Convert query to objects of key-value pairs
     log("JSON_RESTAURANTS")
-    rows = db.select_restaurants_limited(session["city"])
-    log(rows[0])
-    log(db.select_restaurants_all()[0].city)
+    city = "Helsinki"
+    if "city" in session:
+        city = session["city"]
+    rows = None
+    rows = db.select_restaurants_limited(city)
 
     objects_list = []
     for row in rows:
@@ -51,7 +53,9 @@ def json_restaurants():
 
 def json_location():
     log("/JSON_LOCATION")
-    city = session["city"]
+    city = "Helsinki"
+    if "city" in session:
+        city = session["city"]
     location =map.location(city, "")
     j = json.dumps(location)
     log("/JSON_LOCATION")
