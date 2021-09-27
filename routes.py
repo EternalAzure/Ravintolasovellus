@@ -1,12 +1,13 @@
 from app import app
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from flask import render_template, request, redirect, session, flash
 import mainpage, utils, update_info, search, db, sys
 import register as r
 import login as l
 from set_city import set_city as set_session_city
 from os import getenv
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+#cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+
 
 # IMAGE
 @app.route("/send", methods=["POST"])
@@ -95,6 +96,7 @@ def delete_review(id):
     return redirect("/result/"+str(id))
 
 @app.route("/api/restaurants", methods=["GET"])
+@cross_origin()
 def restaurants():
     log("/api/restaurants")
     response = utils.json_restaurants()
@@ -102,6 +104,7 @@ def restaurants():
     return response
 
 @app.route("/api/location", methods=["GET"])
+@cross_origin()
 def location():
     log("/api/locations")
     response = utils.json_location()

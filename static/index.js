@@ -25,6 +25,7 @@ async function initMap () {
   console.log("Google maps API initiated")
   const restaurants = await (await getRestaurants()).json()
   const myLatLng = await (await getCityLocation()).json()   // { lat: 60.1699, lng: 24.9384 };
+  console.log("myLatLng:", myLatLng)
 
   const map = new google.maps.Map(document.getElementById("map"), {
     zoom: 12,
