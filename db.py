@@ -85,7 +85,7 @@ def select_restaurants_name(query):
     return result.fetchall()
 
 def select_restaurants_tag(query):
-    log("DB")
+    log("DB select tags")
     sql =   "SELECT r.id, name, city FROM cities, addresses a, tags, restaurants r, tag_relations t " \
             "WHERE restaurant_id=r.id AND tag_id=tags.id " \
             "AND tag=:query AND address_id=a.id AND cities.id=city_id " \
@@ -163,7 +163,6 @@ def select_reviews(id):
     return result.fetchall()
 
 def delete_review(id):
-    log("DB DELETE_REVIEW("+str(id)+")")
     sql ="DELETE FROM reviews WHERE id=:id"
     db.session.execute(sql, {"id":id})
     db.session.commit()
@@ -289,7 +288,6 @@ def update_info_description(input, id):
 # TAGS
 #----------------
 def update_tags(input, id):
-    log("DB UPDATE_TAGS")
     if is_tag_in_tag_relations(input, id): return
 
     sql = "INSERT INTO tags (tag) VALUES (:tag) RETURNING id"
