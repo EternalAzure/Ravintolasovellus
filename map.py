@@ -1,7 +1,7 @@
 from os import getenv
 import requests
 
-key=getenv("API_KEY")
+key=getenv("MAPQUEST_KEY")
 
 def location(city, street):
     url = "http://open.mapquestapi.com/nominatim/v1/search.php"

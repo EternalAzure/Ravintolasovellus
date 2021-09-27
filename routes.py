@@ -8,7 +8,6 @@ import register as r
 import login as l
 from set_city import set_city as set_session_city
 from os import getenv
-import sys
 import search
 
 
@@ -46,18 +45,15 @@ def new():
 
 @app.route("/restaurant/<int:id>", methods=["GET"])
 def restaurant(id):
-    log("ROUTE /RESTAURANT")
     data = db.select_restaurant(id)
     description = db.select_info_description(id)
     days = ["Ma", "Ti", "Ke", "To", "Pe", "La", "Su"]
     hours = db.select_info_hours(id)
     tags = db.select_tags(id)
-    log(tags)
     return render_template("info.html.j2", data=data, tags=tags, description=description, days=days, hours=hours, id=id)
 
 @app.route("/search_page", methods=["GET"])
 def search_page():
-    log("ROUTE /SEARCH_PAGE")
     session["search_tags"] = []
     return render_template("search_page.html.j2")
 
@@ -69,7 +65,6 @@ def review(id):
 
 @app.route("/result/<int:id>")
 def result(id):
-    log("ROUTE /RESULT/" + str(id))
     name = db.select_restaurant(id).name
     text_reviews = list(db.select_reviews(id))
     text_reviews.reverse()
@@ -79,9 +74,7 @@ def result(id):
 
 @app.route("/set_city", methods=["POST"])
 def set_city():
-    log("ROUTE /set_city")
     city = request.form["city"]
-    log(city)
     set_session_city(city)
     return redirect("/")
       
@@ -114,7 +107,6 @@ def location():
 
 @app.route("/update_info", methods=["POST"])
 def update():
-    log("ROUTE /update_info")
     days = ["Ma", "Ti", "Ke", "To", "Pe", "La", "Su"]
     hours = []
     for d in days:
@@ -131,17 +123,12 @@ def create():
     name = request.form["name"]
     street = request.form["street"]
     city = request.form["city"]
-    #Validate address
-    #m.location(city, street)
-    #
-    #
     restaurant_id = db.insert_restaurant(name, street, city)
     db.initiate_info(restaurant_id)
     return redirect("/")
 
 @app.route("/answer", methods=["POST"])
 def answer():
-    log("ROUTE /answer")
     restaurant = request.form["id"]
     review = request.form["review"]
     db.insert_review(review, restaurant)
@@ -166,9 +153,6 @@ def logout():
 
 @app.route("/admin")
 def admin():
-    log("ROUTE /ADMIN")
-    log(request.remote_addr)
-    log(getenv("TRUSTED_IP"))
     if request.remote_addr == getenv("TRUSTED_IP"):
         return render_template("admin.html")
     redirect("/")
@@ -179,20 +163,12 @@ def register_admin():
 
 @app.route("/search/name")
 def search_name():
-    log("ROUTE /SEARCH_NAME")
     name = request.args["name"]
     restaurants = db.select_restaurants_name(name)
-    log(restaurants)
     return render_template("search_page.html.j2", restaurants=restaurants)
 
 @app.route("/search/tag")
 def search_tag():
-    log("ROUTE /SEARCH_TAG")
     tag = request.args["tag"]
     restaurants = search.tag_and(tag)
-    log(restaurants)
-    log("/ROUTE")
     return render_template("search_page.html.j2", restaurants=restaurants)
-
-def log(m):
-    print("LOG: " + str(m), file=sys.stdout)
