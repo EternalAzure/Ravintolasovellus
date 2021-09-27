@@ -93,7 +93,10 @@ def login_page():
 @app.route("/admin")
 def admin():
     #Admin register page
+    log("ADMIN")
     try:
+        log(request.remote_addr)
+        log(getenv("TRUSTED_IP"))
         if request.remote_addr == getenv("TRUSTED_IP"):
             return render_template("admin.html")
     except:
