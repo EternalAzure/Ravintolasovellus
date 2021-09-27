@@ -153,8 +153,11 @@ def logout():
 
 @app.route("/admin")
 def admin():
-    if request.remote_addr == getenv("TRUSTED_IP"):
-        return render_template("admin.html")
+    try:
+        if request.remote_addr == getenv("TRUSTED_IP"):
+            return render_template("admin.html")
+    except:
+        flash("Jotain meni pahasti pieleen")
     redirect("/")
 
 @app.route("/register_admin", methods=["POST"])
