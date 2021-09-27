@@ -1,5 +1,4 @@
-//const baseUrl = "https://polar-scrubland-57061.herokuapp.com"
-const baseUrl = "http://localhost:5000"
+const baseUrl = "https://polar-scrubland-57061.herokuapp.com"
 const headers = new Headers();
 headers.append("Access-Control-Allow-Origin", baseUrl);
 
