@@ -1,9 +1,12 @@
+const baseUrl = "https://polar-scrubland-57061.herokuapp.com/"
+const headers = new Headers();
+headers.append('Access-Control-Allow-Origin', baseUrl);
 
-const baseUrl = "https://polar-scrubland-57061.herokuapp.com"
 const getRestaurants = async () => {
   //Gets restaurants in selected city
   const url = baseUrl + "/api/restaurants"
-  const response = await fetch(url)
+  const response = await fetch(url, {method: 'GET', headers: headers})
+  console.log(response)
 
   return response
 }

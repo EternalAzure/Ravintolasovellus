@@ -1,15 +1,13 @@
 from app import app
+from flask_cors import CORS
 from flask import render_template, request, redirect, session, flash
 import db
-import mainpage
-import utils
-import update_info
+import mainpage, utils, update_info, search
 import register as r
 import login as l
 from set_city import set_city as set_session_city
 from os import getenv
-import search
-
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # IMAGE
 @app.route("/send", methods=["POST"])
