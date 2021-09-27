@@ -77,10 +77,12 @@
 	  <div id="image">
       <img src="/show/{{ id }}" width="600">
 	  </div>
-    <div>
-      <a href="/delete_restaurant/{{ id }}"> Poista</a> | 
-      <a href="/review/{{ id }}"> Arvostele ravintola</a> | 
-      <a href="/result/{{ id }}"> Näytä arvostelut</a>
+    <div style="color:azure;">
+      {% if session.role == "admin" %}
+      <a style="color:azure;" href="/delete_restaurant/{{ id }}"> Poista</a> | 
+      {% endif %}
+      <a style="color:azure;" href="/review/{{ id }}"> Arvostele ravintola</a> | 
+      <a style="color:azure;" href="/result/{{ id }}"> Näytä arvostelut</a>
     </div>
     <div> 
       {{ description }} 
@@ -98,6 +100,7 @@
           {% endfor %}
         </div>
       </div>
+      <label>{{ data.street }}, {{ data.city }}</label>
       <h4>Tunnisteet:</h4>
       <div>
       {% for tag in tags %}

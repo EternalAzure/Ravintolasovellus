@@ -1,14 +1,45 @@
 {% extends "layout.html.j2" %}
 {% block title %}Haku{% endblock%}
 {% block page_title %}Etsi ravintola{% endblock%}
-
+{% block script %}
+  let tagList = []
+  function addToList(tag) {
+    tagList.concat(tag)
+  }
+  function getList() {
+    return tagList
+  }
+{% endblock %}
 {% block content %}
 <div>
   <div class="left-side">
-  <div class="scroll"></div>
+    <div class="scroll">
+      {% for r in restaurants %}
+      <p style="color:azure;"><b>{{ r.name }}</b>, {{ r.city }} <br>
+      <a href="/restaurant/{{ r.id }}">Katso</a></p>
+      <hr>
+      {% endfor %}
+    </div>
   </div>
   <div class="right-side">
-    
+    <form action="/search/name" method="GET">
+      <p>Etsi nimen perusteella <br>
+      <input type="text" name="name" >
+      <input type="submit" value="Etsi"></p>
+    </form>
+    <form action="/search/tag" method="GET">
+      <p>Etsi tunnisteiden perusteella <br>
+      <input type="text" name="tag" >
+      <input type="submit" value="Etsi"> <br>
+      Hakutila: 
+      <input type="radio" name="mode" value="AND" checked>ja
+      <input type="radio" name="mode" value="OR">tai</p>
+    </form>
+    <div>
+      {%for tag in session.search_tags %}
+      <div class="tag">{{ tag }}</div>
+      {% endfor %}
+    </div>
   </div>
 </div>
 

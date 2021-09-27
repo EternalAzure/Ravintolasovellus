@@ -43,7 +43,7 @@ def register_admin():
       message = "Username is taken"
       return render_template("admin.html", message=message)
     else:
-      insert_user(username, password, "admin")
+      insert_user(username, password, "admin", "Helsinki")
       session["username"] = username
       session["role"] = "admin"
       session["user_id"] = select_users_id(username)

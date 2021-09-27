@@ -5,7 +5,6 @@ from os import getenv
 import sys
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask import make_response, session as browsing_session
-import logging
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_DATABASE_URI"] = getenv("DATABASE_URL")
@@ -78,6 +77,29 @@ def select_restaurant(id):
     result = db.session.execute(sql, {"id":id})
     restaurant = result.fetchone()# <-- don't put that [0] there
     return restaurant
+
+def select_restaurants_name(query):
+    sql =   "SELECT r.id, name, city FROM restaurants r, addresses a, cities " \
+            "WHERE name LIKE :query AND address_id=a.id AND cities.id=city_id"
+    result = db.session.execute(sql, {"query":"%"+query+"%"})
+    return result.fetchall()
+
+def select_restaurants_tag(query):
+    log("DB")
+    sql =   "SELECT r.id, name, city FROM cities, addresses a, tags, restaurants r, tag_relations t " \
+            "WHERE restaurant_id=r.id AND tag_id=tags.id " \
+            "AND tag=:query AND address_id=a.id AND cities.id=city_id " \
+            "GROUP BY r.id, city"
+    result = db.session.execute(sql, {"query": query})
+    list = result.fetchall()
+    try:
+        log(list)
+        log("/DB")
+        return list
+    except IndexError:
+        log("err")
+        log("/DB")
+        return 
 
 def delete_restaurant(id):
     sql = "DELETE FROM restaurants WHERE id=:id"
@@ -221,6 +243,7 @@ def grades_partial_summary(restaurant):
 #INFO TABLE
 #----------------
 def select_info_description(id):
+    # fetchall() truncates text when queried
     sql = "SELECT descript FROM info WHERE restaurant_id=:id"
     result = db.session.execute(sql, {"id":id})
 

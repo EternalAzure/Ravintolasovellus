@@ -9,6 +9,7 @@ import login as l
 from set_city import set_city as set_session_city
 from os import getenv
 import sys
+import search
 
 
 # IMAGE
@@ -57,6 +58,7 @@ def restaurant(id):
 @app.route("/search_page", methods=["GET"])
 def search_page():
     log("ROUTE /SEARCH_PAGE")
+    session["search_tags"] = []
     return render_template("search_page.html.j2")
 
 @app.route("/review/<int:id>")
@@ -174,6 +176,23 @@ def admin():
 @app.route("/register_admin", methods=["POST"])
 def register_admin():
     return r.register_admin()
+
+@app.route("/search/name")
+def search_name():
+    log("ROUTE /SEARCH_NAME")
+    name = request.args["name"]
+    restaurants = db.select_restaurants_name(name)
+    log(restaurants)
+    return render_template("search_page.html.j2", restaurants=restaurants)
+
+@app.route("/search/tag")
+def search_tag():
+    log("ROUTE /SEARCH_TAG")
+    tag = request.args["tag"]
+    restaurants = search.tag_and(tag)
+    log(restaurants)
+    log("/ROUTE")
+    return render_template("search_page.html.j2", restaurants=restaurants)
 
 def log(m):
     print("LOG: " + str(m), file=sys.stdout)
