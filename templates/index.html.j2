@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Ravintolat | etusivu</title>
+    <meta name=viewport content="width=device-width, initial-scale=1">
         <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
     <script async src="{{ url }}"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
@@ -12,7 +13,9 @@
   <body>
     <div class="container">
       <div class="left-side">
-        <div id="map"></div>
+        <div id="map">
+          <script>initMap()</script>
+        </div>
         <div id="bottom">
           <form action="/set_city" method="POST">
             <label style="background: white; padding-bottom: 0.1em" > Kaupunki: </label>
