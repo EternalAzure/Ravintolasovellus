@@ -1,8 +1,7 @@
 from app import app
 from flask_cors import CORS
 from flask import render_template, request, redirect, session, flash
-import db
-import mainpage, utils, update_info, search
+import mainpage, utils, update_info, search, db, sys
 import register as r
 import login as l
 from set_city import set_city as set_session_city
@@ -97,6 +96,7 @@ def delete_review(id):
 
 @app.route("/api/restaurants", methods=["GET"])
 def restaurants():
+    
     return utils.json_restaurants()
 
 @app.route("/api/location", methods=["GET"])
@@ -173,3 +173,7 @@ def search_tag():
     tag = request.args["tag"]
     restaurants = search.tag_and(tag)
     return render_template("search_page.html.j2", restaurants=restaurants)
+
+
+def log(output):
+    print("log:"+ str(output), file=sys.stdout)
