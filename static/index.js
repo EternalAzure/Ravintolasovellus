@@ -1,4 +1,5 @@
 const baseUrl = "https://polar-scrubland-57061.herokuapp.com"
+//const baseUrl = "http://localhost:5000"
 const headers = new Headers();
 headers.append("Access-Control-Allow-Origin", baseUrl);
 
@@ -39,10 +40,20 @@ const initMap = async () => {
       map,
       title: restaurants[index].name,
       })
+      const contentString =
+        "<div>" +
+        "<a href='"+baseUrl+"/restaurant/"+restaurants[index].id+"'>" +
+        "Siirry katsomaan tiedot</a>" +
+        "</div>"
       
       markers[index].addListener("click", () => {
         map.setZoom(16);
-        map.setCenter(markers[index].getPosition());
+        map.setCenter(markers[index].getPosition())
+        
+        infowindow.setContent(contentString)
+        infowindow.setPosition(markers[index].getPosition())
+        infowindow.open(map)
+        fetch(url, {method: "GET", headers: {"Access-Control-Allow-Origin": baseUrl}})
       })
     
   }
