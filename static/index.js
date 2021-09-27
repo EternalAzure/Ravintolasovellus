@@ -1,7 +1,8 @@
 
+const baseUrl = "https://polar-scrubland-57061.herokuapp.com"
 const getRestaurants = async () => {
   //Gets restaurants in selected city
-  const url = "http://localhost:5000/api/restaurants"
+  const url = baseUrl + "/api/restaurants"
   const response = await fetch(url)
 
   return response
@@ -9,13 +10,14 @@ const getRestaurants = async () => {
 
 const getCityLocation = async () => {
   //Gets restaurants in selected city
-  const url = "http://localhost:5000/api/location"
+  const url = baseUrl + "/api/location"
   const response = await fetch(url)
 
   return response
 }
 
 async function initMap () {
+  console.log("Google maps API initiated")
   const restaurants = await (await getRestaurants()).json()
   const myLatLng = await (await getCityLocation()).json()   // { lat: 60.1699, lng: 24.9384 };
 
