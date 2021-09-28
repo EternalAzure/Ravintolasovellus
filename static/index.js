@@ -1,11 +1,7 @@
-//const baseUrl = "https://polar-scrubland-57061.herokuapp.com"
-const baseUrl = "http://localhost:5000"
-const headers = new Headers();
-headers.append("Access-Control-Allow-Origin", baseUrl);
-
+const baseUrl = "https://polar-scrubland-57061.herokuapp.com"
+//const baseUrl = "http://localhost:5000"
 
 const getRestaurants = async () => {
-  console.log("getRestaurants")
   //Gets restaurants in selected city
   const url = baseUrl + "/api/restaurants"
   const response = await fetch(url, {method: "GET", headers: {"Access-Control-Allow-Origin": baseUrl}})
@@ -13,7 +9,6 @@ const getRestaurants = async () => {
 }
 
 const getCityLocation = async () => {
-  console.log("getLocation")
   //Gets restaurants in selected city
   const url = baseUrl + "/api/location"
   const response = await fetch(url, {method: "GET", headers: {"Access-Control-Allow-Origin": baseUrl}})
@@ -23,8 +18,7 @@ const getCityLocation = async () => {
 const initMap = async () => {
   console.log("Google maps API initiated")
   const restaurants = await (await getRestaurants()).json()
-  const myLatLng = await (await getCityLocation()).json()   // { lat: 60.1699, lng: 24.9384 };
-  console.log("myLatLng:", myLatLng)
+  const myLatLng = await (await getCityLocation()).json()
 
   const map = new google.maps.Map(document.getElementById("map"), {
     zoom: 12,

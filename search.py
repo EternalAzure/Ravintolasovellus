@@ -1,9 +1,10 @@
 from flask import session
 import sys
-from db import select_restaurants_name, select_restaurants_tag, select_restaurants_limited, is_restaurant_tag
+from db import select_restaurants_tag, select_restaurants_limited, is_restaurant_tag
 
 def tag_or(key):
     #inclusive search
+    #very inefficient
     log("tag_OR")
     search_tags = session["search_tags"]
     search_tags[key] = key

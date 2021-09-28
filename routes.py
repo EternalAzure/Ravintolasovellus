@@ -93,8 +93,6 @@ def login_page():
 @app.route("/admin")
 def admin():
     #Admin register page
-    log("ADMIN")
-    return render_template("admin.html")
     try:
         log(request.remote_addr)
         log(getenv("TRUSTED_IP"))
