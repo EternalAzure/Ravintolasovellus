@@ -1,5 +1,9 @@
-const baseUrl = "https://polar-scrubland-57061.herokuapp.com"
-//const baseUrl = "http://localhost:5000"
+//const baseUrl = "https://polar-scrubland-57061.herokuapp.com"
+const baseUrl = "http://localhost:5000"
+
+let map
+let restaurants
+let markers
 
 const getRestaurants = async () => {
   //Gets restaurants in selected city
@@ -17,17 +21,17 @@ const getCityLocation = async () => {
 
 const initMap = async () => {
   console.log("Google maps API initiated")
-  const restaurants = await (await getRestaurants()).json()
+  restaurants = await (await getRestaurants()).json()
   const myLatLng = await (await getCityLocation()).json()
 
-  const map = new google.maps.Map(document.getElementById("map"), {
+  map = new google.maps.Map(document.getElementById("map"), {
     zoom: 12,
     center: myLatLng,
   })
 
   infowindow = new google.maps.InfoWindow();
 
-  let markers = []
+  markers = []
   for (let index = 0; index < restaurants.length; index++) {
     markers[index] = new google.maps.Marker({
       position: restaurants[index].location,
@@ -47,10 +51,30 @@ const initMap = async () => {
         infowindow.setContent(contentString)
         infowindow.setPosition(markers[index].getPosition())
         infowindow.open(map)
-        fetch(url, {method: "GET", headers: {"Access-Control-Allow-Origin": baseUrl}})
+        //fetch(url, {method: "GET", headers: {"Access-Control-Allow-Origin": baseUrl}})
       })
     
   }
+}
+
+const focusOnMap = async (restaurantName) => {
+  const index = await findRestaurant(restaurantName)
+  if (index < 0) return
+  
+  map.setZoom(16)
+  map.setCenter(markers[index].getPosition())
+}
+
+const findRestaurant = async restaurantName => {
+  let i = 0
+  let res = -1
+  await markers.forEach(marker => {
+    if (marker.title === restaurantName) {
+      res = i
+    }
+    i++
+  });
+  return res
 }
 
 //This puts the ball rolling
