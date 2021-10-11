@@ -43,12 +43,12 @@ def index():
     #url for map API with secret api key
     url = getenv("MAP")
     list = utils.sorted_restaurants()
-    return render_template("index.html.j2", url=url, restaurants=list)
+    return render_template("index.html", url=url, restaurants=list)
 
 @app.route("/new")
 def new():
     #New restaurant page
-    return render_template("new.html.j2")
+    return render_template("new.html")
 
 @app.route("/restaurant/<int:id>", methods=["GET"])
 def restaurant(id):
@@ -58,19 +58,19 @@ def restaurant(id):
     days = ["Ma", "Ti", "Ke", "To", "Pe", "La", "Su"]
     hours = db.select_info_hours(id)
     tags = db.select_tags(id)
-    return render_template("info.html.j2", data=data, tags=tags, description=description, days=days, hours=hours, id=id)
+    return render_template("info.html", data=data, tags=tags, description=description, days=days, hours=hours, id=id)
 
 @app.route("/search_page", methods=["GET"])
 def search_page():
     session["search_tags"] = {}
-    return render_template("search_page.html.j2")
+    return render_template("search_page.html")
 
 @app.route("/review/<int:id>")
 def review(id):
     #Make review page
     name = db.select_restaurant(id).name
     categories = db.categories()
-    return render_template("review.html.j2", id=id, name=name, categories=categories)
+    return render_template("review.html", id=id, name=name, categories=categories)
 
 @app.route("/result/<int:id>")
 def result(id):
@@ -83,15 +83,15 @@ def result(id):
     grades = db.grades_partial_summary(id)
     previous = request.referrer
     log(previous)
-    return render_template("result.html.j2", name=name, general_grade=general_grade, grades=grades, reviews=text_reviews, id=id, previous=previous)
+    return render_template("result.html", name=name, general_grade=general_grade, grades=grades, reviews=text_reviews, id=id, previous=previous)
 
 @app.route("/register_page")
 def register_page():
-    return render_template("register_page.html.j2")
+    return render_template("register_page.html")
 
 @app.route("/login_page") 
 def login_page():
-    return render_template("login_page.html.j2")
+    return render_template("login_page.html")
 
 @app.route("/admin")
 def admin():
@@ -118,7 +118,7 @@ def delete_restaurant(id):
         db.delete_restaurant(id)
         return redirect("/")
     flash("Istunto on vanhentunut")
-    return render_template("login_page.html.j2")
+    return render_template("login_page.html")
 
 @app.route("/delete_review/<int:id>", methods=["POST"])
 def delete_review(id):
@@ -127,7 +127,7 @@ def delete_review(id):
         db.delete_review(review_id)
         return redirect("/result/"+str(id))
     flash("Istunto on vanhentunut")
-    return render_template("login_page.html.j2")
+    return render_template("login_page.html")
 
 @app.route("/update_info", methods=["POST"])
 def update():
@@ -164,7 +164,7 @@ def answer():
         utils.insert_grades(restaurant)
         return redirect("/result/" + str(restaurant))
     flash("Istunto on vanhentunut")
-    return render_template("login_page.html.j2")
+    return render_template("login_page.html")
 
 @app.route("/register", methods=["POST"])
 def register():
@@ -189,7 +189,7 @@ def register_admin():
 def search_name():
     name = request.args["name"]
     restaurants = db.select_restaurants_name(name)
-    return render_template("search_page.html.j2", restaurants=restaurants)
+    return render_template("search_page.html", restaurants=restaurants)
 
 @app.route("/search/tag")
 def search_tag():
@@ -204,7 +204,7 @@ def search_tag():
     else:
         #exclusive search
         restaurants = search.tag_and(tag)
-    return render_template("search_page.html.j2", restaurants=restaurants)
+    return render_template("search_page.html", restaurants=restaurants)
 
 #API
 #----------------
