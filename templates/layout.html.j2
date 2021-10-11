@@ -16,10 +16,17 @@
       <nav>
         <ul>
           <li><a href="/">Etusivu</a></li>
-          <li> <a href="/login_page">Kirjautuminen</a></li>
+          <li> <div id="login"><a href="/login_page">Kirjautuminen</a></div></li>
           <li> <a href="/search_page">Hakusivu</a></li>
           <li>{% block navigation_link %} {% endblock %}</li>
         </ul>
+        <script type="text/javascript">
+          title = document.querySelector("title").text;
+          if (title === "Ravintolat | Kirjautuminen") {
+            document.getElementById("login").style.display = "none";
+          }
+
+    </script>
       </nav>
     </div>
     
