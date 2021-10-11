@@ -32,6 +32,7 @@ def handle_input(hours, description, tag, id):
   #3. User feedback
   for err in errors:
       flash(err)
+      errors.clear()
   return redirect("/restaurant/"+str(id))
 
 #Check if such restaurant exists
