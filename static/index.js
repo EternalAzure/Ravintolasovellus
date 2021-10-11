@@ -1,5 +1,5 @@
-//const baseUrl = "https://polar-scrubland-57061.herokuapp.com"
-const baseUrl = "http://localhost:5000"
+const baseUrl = "https://polar-scrubland-57061.herokuapp.com"
+//const baseUrl = "http://localhost:5000"
 
 const getRestaurants = async () => {
   //Gets restaurants in selected city
