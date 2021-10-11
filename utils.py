@@ -71,6 +71,7 @@ def json_restaurants():
         d["city"] = row[3]
         d["created_at"] = str(row[4])
         d["location"] = map.location(row["city"], row["street"])
+        log(d)
         objects_list.append(d)
     
     j = json.dumps(objects_list)
