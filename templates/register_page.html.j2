@@ -23,6 +23,7 @@
     <p>Kaupunki:<br>
     <input type="text" name="city"></p>
     <input type="submit" value="Rekisteröidy">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
   </form>
 </div>
 {% endif %}

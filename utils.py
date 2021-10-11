@@ -81,6 +81,7 @@ def json_location():
     city = "Helsinki"
     if "city" in session:
         city = session["city"]
+        log(city)
     location =map.location(city, "")
     j = json.dumps(location)
     return j

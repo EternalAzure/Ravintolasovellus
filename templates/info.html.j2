@@ -30,6 +30,7 @@
     <p>
     <input type="submit" value="Lähetä kuva">
     <input type="hidden" value="{{ id }}" name="restaurant_id">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
   </form>
   <form class="center" 
       action="/update_info" 
@@ -54,6 +55,7 @@
 
     <input type="submit" value="Lähetä lomake"> 
     <input type="hidden" name="id" value="{{ id }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <hr>
   </form>
 </div>

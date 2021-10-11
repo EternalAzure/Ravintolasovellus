@@ -51,7 +51,6 @@ const initMap = async () => {
         infowindow.setContent(contentString)
         infowindow.setPosition(markers[index].getPosition())
         infowindow.open(map)
-        //fetch(url, {method: "GET", headers: {"Access-Control-Allow-Origin": baseUrl}})
       })
     
   }
