@@ -9,4 +9,4 @@ def login():
       session["user_id"] = select_users_id(username)
       session["role"] = select_users_role(username)
       session["city"] = select_users_city(username)
-  return render_template("/login_page.html.j2", message="Väärä käyttäjänimi tai salasana")
+  return render_template("/login_page.html", message="Väärä käyttäjänimi tai salasana")

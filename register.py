@@ -11,7 +11,7 @@ def register_user():
   city = request.form["city"]
 
   if not utils.firts_letter_capital(city):
-    return render_template("register_page.html.j2", message="Iso alkukirjain kaupungin nimeen")
+    return render_template("register_page.html", message="Iso alkukirjain kaupungin nimeen")
 
   a = validate_username_format(username)
   b = validate_password(password)
@@ -20,14 +20,14 @@ def register_user():
   if a and b:
     if is_username_taken(username):
       message = "Username is taken"
-      return render_template("register_page.html.j2", message=message)
+      return render_template("register_page.html", message=message)
     else:
       insert_user(username, password, "user", city)
       session["username"] = username
       session["role"] = "user"
       session["user_id"] = select_users_id(username)
       session["city"] = city
-      return render_template("register_page.html.j2")
+      return render_template("register_page.html")
 
   return render_template("register_page.html.j2", message=message)
 
