@@ -16,8 +16,27 @@ Tunnisteiden ja ravintoloiden välillä on monen suhde moneen. Hyvän tavan muka
 vaan tunnisteet on yhdistetty ravintoloihin taululla ```tag_relations```. Osoitteita ei ole tallennettu ravintolat tauluun vaan omiin tauluihinsa tiedon 
 toisteisuuden välttämiseksi.
 
-## Muuta
+## Kartta
+Karttaan liittyvät tiedostot ```index.js```, ```index.html.j2```, ```map.py```, ```utils.py```. <br>
 Ohjelmisto on legacya syntyessään. ```map.py``` käyttää yhä MapQuest kartta apia.<br>
-```cors = CORS(app, resources={r"/api/*": {"origins": "*"}})``` Asettaa response Access-Control-Allow-Origin headerit kaikille "/api/" alkuisille routeille, joka
-mahdollistaa pyynnöt klientista production vaiheessa.
+```index.html.j2``` suorittaa ```index.js```. <br>
+```index.js``` tekee fetch() pyynnöt osoitteisiin baseUrl + /api/restaurants ja baseUrl + /api/location <br>
+```utils.py``` palauttaa json muotoisen vastauksen. ```map.py``` palauttaa koordinaatit osoitteen perusteella<br>
+
+#### CORS
+
+```
+index.js
+const response = await fetch(url, {method: "GET", headers: {"Access-Control-Allow-Origin": baseUrl}})
+```
+Asettaa ```request``` Access-Control-Allow-Origin headerit.
+```
+routes.py
+from flask_cors import CORS
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+``` 
+Asettaa ```response``` Access-Control-Allow-Origin headerit kaikille "/api/" alkuisille routeille, joka
+mahdollistaa pyynnöt klientista tuotanto vaiheessa.
+
+## Muuta
 ```search.py``` funktiot ovat hieman hitaita, sillä niiden pahin tapaus on O(n²). Sen kehittäminen kuitenkin jää.
