@@ -75,12 +75,15 @@ def review(id):
 @app.route("/result/<int:id>")
 def result(id):
     #Read reviews page
+    log("ROUTE /RESULT")
     name = db.select_restaurant(id).name
     text_reviews = list(db.select_reviews(id))
     text_reviews.reverse()
     general_grade = db.grades_full_summary(id)
     grades = db.grades_partial_summary(id)
-    return render_template("result.html.j2", name=name, general_grade=general_grade, grades=grades, reviews=text_reviews, id=id)
+    previous = request.referrer
+    log(previous)
+    return render_template("result.html.j2", name=name, general_grade=general_grade, grades=grades, reviews=text_reviews, id=id, previous=previous)
 
 @app.route("/register_page")
 def register_page():
@@ -94,8 +97,6 @@ def login_page():
 def admin():
     #Admin register page
     try:
-        log(request.remote_addr)
-        log(getenv("TRUSTED_IP"))
         if request.remote_addr == getenv("TRUSTED_IP"):
             return render_template("admin.html")
     except:
@@ -158,7 +159,6 @@ def answer():
     restaurant = request.form["id"]
     review = request.form["review"]
     if "user_id" in session:
-        log("Key found")
         user = session["user_id"]
         db.insert_review(review, restaurant, user)
         utils.insert_grades(restaurant)

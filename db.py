@@ -212,10 +212,23 @@ def select_users_city(username):
 
 #GRADES TABLE
 #----------------
-def insert_grade(grade, restaurant, category):
-    sql = "INSERT INTO grades (grade, restaurant_id, category_id) VALUES (:grade, :r_id, :c_id)"
-    db.session.execute(sql, {"grade":grade, "r_id":restaurant, "c_id":category})
+def insert_grade(grade, user, restaurant, category):
+    print("INSERT", grade, user, restaurant, category)
+    sql = "INSERT INTO grades (grade, user_id, restaurant_id, category_id) VALUES (:grade, :u_id, :r_id, :c_id)"
+    db.session.execute(sql, {"grade":grade, "u_id":user, "r_id":restaurant, "c_id":category})
     db.session.commit()
+
+def update_grade(grade, user, restaurant, category):
+    sql = "UPDATE grades SET grade=:grade WHERE user_id=:u_id AND restaurant_id=:r_id AND category_id=:c_id"
+    db.session.execute(sql, {"grade":grade, "u_id":user, "r_id":restaurant, "c_id":category})
+    db.session.commit()
+
+def is_grade(user):
+    sql = "SELECT 1 FROM grades WHERE user_id=:u_id"
+    result = db.session.execute(sql, {"u_id":user})
+    row = result.fetchone()
+    if row: return True
+    return False
 
 def grades_full_summary(id):
     sql = "SELECT 1.0*SUM(grade)/NULLIF(COUNT(grade), 0) AS average FROM grades " \
@@ -327,3 +340,5 @@ def get_city_id(city):
     result = db.session.execute(sql, {"city": city})
     return result.fetchone()[0]
 
+def log(output):
+    print("LOG: ", output)

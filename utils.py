@@ -36,6 +36,7 @@ def sort_by_rating(e):
 
 #Goes through only if all review categories are rated/graded
 def insert_grades(restaurant):
+    user = session["user_id"]
     categories = db.categories()
     final = [""] * len(categories)
     i = 0
@@ -46,8 +47,12 @@ def insert_grades(restaurant):
     except:
         return
 
+    if db.is_grade(user):
+        for grade in final:
+            db.update_grade(grade[0], user, restaurant, grade[1])
+
     for grade in final:
-        db.insert_grade(grade[0], restaurant, grade[1])
+        db.insert_grade(grade[0], user, restaurant, grade[1])
 
 def json_restaurants():
     # Convert query to objects of key-value pairs

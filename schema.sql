@@ -1,3 +1,16 @@
+DROP TABLE IF EXISTS streets CASCADE;
+DROP TABLE IF EXISTS cities CASCADE;
+DROP TABLE IF EXISTS addresses CASCADE;
+DROP TABLE IF EXISTS restaurants CASCADE;
+DROP TABLE IF EXISTS review_categories CASCADE;
+DROP TABLE IF EXISTS grades CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS reviews CASCADE;
+DROP TABLE IF EXISTS info CASCADE;
+DROP TABLE IF EXISTS images CASCADE;
+DROP TABLE IF EXISTS tags CASCADE;
+DROP TABLE IF EXISTS tag_relations CASCADE;
+
 CREATE TABLE streets (
     id SERIAL PRIMARY KEY,
     street TEXT UNIQUE
@@ -30,21 +43,22 @@ CREATE TABLE review_categories (
     category TEXT UNIQUE
 );
 
-CREATE TABLE grades (
-    id SERIAL PRIMARY KEY,
-    grade INTEGER,
-    restaurant_id INTEGER REFERENCES restaurants
-    ON DELETE CASCADE,
-    category_id INTEGER REFERENCES review_categories
-    ON DELETE CASCADE
-);
-
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username TEXT UNIQUE,
     pwhash TEXT,
     role TEXT,
     city_id INTEGER REFERENCES cities
+);
+
+CREATE TABLE grades (
+    id SERIAL PRIMARY KEY,
+    grade INTEGER,
+    user_id INTEGER REFERENCES users,
+    restaurant_id INTEGER REFERENCES restaurants
+    ON DELETE CASCADE,
+    category_id INTEGER REFERENCES review_categories
+    ON DELETE CASCADE
 );
 
 CREATE TABLE reviews (
@@ -56,6 +70,7 @@ CREATE TABLE reviews (
     user_id INTEGER REFERENCES users
 );
 
+
 CREATE TABLE info (
     id SERIAL PRIMARY KEY,
     descript TEXT,
@@ -64,6 +79,7 @@ CREATE TABLE info (
     ON DELETE CASCADE
 );
 
+
 CREATE TABLE images (
     id SERIAL PRIMARY KEY, 
     name TEXT, 
@@ -71,6 +87,7 @@ CREATE TABLE images (
     r_id INTEGER REFERENCES restaurants
     ON DELETE CASCADE
 );
+
 
 CREATE TABLE tags (
     id SERIAL PRIMARY KEY,
