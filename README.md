@@ -15,7 +15,7 @@ Sovelluksessa näkyy valitun kaupungin ravintolat, joista voi etsiä tietoa ja l
 <br>
 <p>https://polar-scrubland-57061.herokuapp.com/
 admin:admin <br>
-Sovelluksen kehittäminen on lopetettu</p>
+</p>
 <br>
 
 <img src="https://github.com/EternalAzure/Ravintolasovellus/blob/main/pictures/etusivu.jpg" width="961" height="502" />
