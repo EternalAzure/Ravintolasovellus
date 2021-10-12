@@ -11,6 +11,7 @@ Sovelluksessa näkyy valitun kaupungin ravintolat, joista voi etsiä tietoa ja l
 - [x] Käyttäjä voi etsiä kaikki ravintolat, joilla on tunnisteena annettu sana.
 - [x] Tunnistehaussa on kaksi haku moodia: inklusiivinen ja eksklusiivinen.
 - [x] Käyttäjä näkee myös listan, jossa ravintolat on järjestetty parhaimmasta huonoimpaan arvioiden mukaisesti.
+- [x] 'Näytä kartalla' toteutettu. 
 - [x] Ylläpitäjä voi tarvittaessa poistaa käyttäjän antaman arvion. <br>
 <br>
 <p>https://polar-scrubland-57061.herokuapp.com/
