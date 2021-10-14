@@ -5,7 +5,6 @@ from db import select_restaurants_tag, select_restaurants_limited, is_restaurant
 def tag_or(key):
     #inclusive search
     #very inefficient
-    log("tag_OR")
     search_tags = session["search_tags"]
     search_tags[key] = key
     session["search_tags"] = search_tags
@@ -23,7 +22,6 @@ def tag_or(key):
 def tag_and(key):
     #exclusive search
     #Some what inefficient
-    log("tag_AND")
     city = "Helsinki"
     if "city" in session:
         city = session["city"]
@@ -49,6 +47,3 @@ def tag_and(key):
     for key in results:
         restaurants.append(results[key])
     return restaurants
-
-def log(m):
-    print("LOG: " + str(m), file=sys.stdout)

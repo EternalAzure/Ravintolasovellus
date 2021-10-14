@@ -45,6 +45,12 @@ def index():
     list = utils.sorted_restaurants()
     return render_template("index.html", url=url, restaurants=list)
 
+@app.route("/demo")
+def demo():
+    url = getenv("MAP")
+    list = utils.sorted_restaurants()
+    return render_template("demo.html", url=url, restaurants=list)
+
 @app.route("/new")
 def new():
     #New restaurant page
@@ -75,6 +81,7 @@ def review(id):
 @app.route("/result/<int:id>")
 def result(id):
     #Read reviews page
+    print("session.role", session["role"])
     name = db.select_restaurant(id).name
     text_reviews = list(db.select_reviews(id))
     text_reviews.reverse()
@@ -192,6 +199,7 @@ def logout():
     delete = [key for key in session]
     for key in delete: del session[key]
     session["city"] = "Helsinki"
+    session["role"] = "user"
     return redirect("/")
 
 @app.route("/register_admin", methods=["POST"])
@@ -206,7 +214,7 @@ def search_name():
 
 @app.route("/search/tag")
 def search_tag():
-    tag = request.args["tag"]
+    tag = request.args["tag"].lower()
     mode = request.args["mode"]
     if not tag: redirect(request.referrer)
 
