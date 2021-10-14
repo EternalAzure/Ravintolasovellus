@@ -19,7 +19,7 @@
   <hr>
   <div class="background">
       <p>{{ r.content }}</p>
-      {% if r.user_id == session.user_id or session.role == admin %}
+      {% if r.user_id == session.user_id or session.role == 'admin' %}
       <form action="/delete_review/{{ id }}" method="POST">
         <button type="submit" name="button"> Poista </button>
         <input type="hidden" value="{{ r.id }}" name="review_id">
