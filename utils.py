@@ -1,9 +1,9 @@
 from flask import request, session
 import db, json, collections
-import map, sys, re, map
+import map, re, map
 from math import inf
 
-#Small miscelanious functions
+# Small miscelanious functions
 
 def sorted_restaurants():
     city = "Helsinki"
@@ -28,31 +28,37 @@ def sorted_restaurants():
 
 
 def sort_by_rating(e):
-    #Descending
+    # Descending
     try:
         return 0 - e["rating"]
     except:
         return inf
 
-#Goes through only if all review categories are rated/graded
+# Fails if not all review categories are rated/graded
 def insert_grades(restaurant):
-    user = session["user_id"]
     categories = db.categories()
-    final = [""] * len(categories)
-    i = 0
+    # List of tuples [(category, grade), ...]
     try:
-        for c in categories:
-            final[i] = (request.form[str(c.id)], c.id)
-            i += 1
+        list = [(request.form[str(c.id)], c.id) for c in categories]
     except:
-        return
+        print("FAILS SO IT WORKS")
+        return False
+    try:
+        user = session["user_id"]
+        logged_in_grading(user, list, restaurant)
+    except KeyError:
+        for tuple in list:
+            db.insert_grade_userless(tuple[0], tuple[1], restaurant)
+    return True
 
-    if db.is_grade(user):
-        for grade in final:
-            db.update_grade(grade[0], user, restaurant, grade[1])
-
-    for grade in final:
-        db.insert_grade(grade[0], user, restaurant, grade[1])
+def logged_in_grading(user, grades, restaurant):
+    # Update previous grading or create new one
+    if db.has_graded(user):
+        for grade in grades:
+            db.update_grade(grade[0], grade[1], user, restaurant)
+    else:
+        for grade in grades:
+            db.insert_grade(grade[0], grade[1], user, restaurant)
 
 def json_restaurants():
     # Convert query to objects of key-value pairs
@@ -71,7 +77,6 @@ def json_restaurants():
         d["city"] = row[3]
         d["created_at"] = str(row[4])
         d["location"] = map.location(row["city"], row["street"])
-        log(d)
         objects_list.append(d)
     
     j = json.dumps(objects_list)
@@ -81,7 +86,6 @@ def json_location():
     city = "Helsinki"
     if "city" in session:
         city = session["city"]
-        log(city)
     location =map.location(city, "")
     j = json.dumps(location)
     return j
@@ -96,6 +100,3 @@ def firts_letter_capital(word):
        
     else :
         return True
-
-def log(output):
-    print("log:"+ str(output), file=sys.stdout)

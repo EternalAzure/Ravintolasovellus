@@ -212,18 +212,25 @@ def select_users_city(username):
 
 #GRADES TABLE
 #----------------
-def insert_grade(grade, user, restaurant, category):
-    print("INSERT", grade, user, restaurant, category)
+def insert_grade(grade, category, user, restaurant):
+    print("INSERT", grade, category, user, restaurant)
     sql = "INSERT INTO grades (grade, user_id, restaurant_id, category_id) VALUES (:grade, :u_id, :r_id, :c_id)"
     db.session.execute(sql, {"grade":grade, "u_id":user, "r_id":restaurant, "c_id":category})
     db.session.commit()
 
-def update_grade(grade, user, restaurant, category):
+def insert_grade_userless(grade, category, restaurant):
+    print("INSERT", grade, category, restaurant)
+    sql = "INSERT INTO grades (grade, category_id, restaurant_id) VALUES (:grade, :c_id, :r_id)"
+    db.session.execute(sql, {"grade":grade, "c_id":category, "r_id":restaurant})
+    db.session.commit()
+
+def update_grade(grade, category, user, restaurant):
+    print("UPDATE", grade, category, user, restaurant)
     sql = "UPDATE grades SET grade=:grade WHERE user_id=:u_id AND restaurant_id=:r_id AND category_id=:c_id"
     db.session.execute(sql, {"grade":grade, "u_id":user, "r_id":restaurant, "c_id":category})
     db.session.commit()
 
-def is_grade(user):
+def has_graded(user):
     sql = "SELECT 1 FROM grades WHERE user_id=:u_id"
     result = db.session.execute(sql, {"u_id":user})
     row = result.fetchone()

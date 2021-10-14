@@ -75,14 +75,12 @@ def review(id):
 @app.route("/result/<int:id>")
 def result(id):
     #Read reviews page
-    log("ROUTE /RESULT")
     name = db.select_restaurant(id).name
     text_reviews = list(db.select_reviews(id))
     text_reviews.reverse()
     general_grade = db.grades_full_summary(id)
     grades = db.grades_partial_summary(id)
     previous = request.referrer
-    log(previous)
     return render_template("result.html", name=name, general_grade=general_grade, grades=grades, reviews=text_reviews, id=id, previous=previous)
 
 @app.route("/register_page")
@@ -158,13 +156,28 @@ def create():
 def answer():
     restaurant = request.form["id"]
     review = request.form["review"]
-    if "user_id" in session:
-        user = session["user_id"]
-        db.insert_review(review, restaurant, user)
-        utils.insert_grades(restaurant)
-        return redirect("/result/" + str(restaurant))
-    flash("Istunto on vanhentunut")
-    return render_template("login_page.html")
+
+    # Anyone can grade a restaurant
+    if not utils.insert_grades(restaurant):
+        flash("Arvostele kaikki kategoriat")
+        print("referrer", request.referrer)
+        return redirect(request.referrer)
+
+    if review:
+        # Only logged in are allowed to give verbal review
+        if "user_id" in session:
+            user = session["user_id"]
+            if db.insert_review(review, restaurant, user):
+                # show all reviews for logged in users
+                return redirect("/result/" + str(restaurant))
+
+        # If there is verbal review but no logged in account
+        # then session is expired
+        flash("Istunto on vanhentunut")
+        return render_template("login_page.html")
+
+    # show all reviews for non logged in users
+    return redirect("/result/" + str(restaurant))
 
 @app.route("/register", methods=["POST"])
 def register():
