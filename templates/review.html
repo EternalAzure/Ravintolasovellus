@@ -36,10 +36,18 @@
 									<li><a href="/#three" class="button scrolly">Kartta</a></li>
 								</ul>
 							</td>
-							{% if not session.username %}
+							{% if session.username %}
 							<td>
 								<ul class="actions special">
-									<li><a href="/#one" class="button scrolly">Kirjaudu | Ei toimi vielä</a></li>
+									<li><a href="/logout" class="button scrolly">Kirjaudu ulos</a></li>
+								</ul>
+							</td>
+							{% endif %}
+
+							{% if session.role == 'admin' %}
+							<td>
+								<ul class="actions special">
+									<li><a href="/delete_restaurant/{{ id }}" class="button scrolly">Poista</a></li>
 								</ul>
 							</td>
 							{% endif %}
@@ -63,7 +71,7 @@
                                 {% for r in reviews %}
                                 {{ r.content }} 
                                     {% if session.role == "admin" or session.user_id == r.user_id %}
-										<form action="/delete_review/{{ r.id }}" method="POST">
+										<form action="/delete_review/{{ id }}" method="POST">
 											<input type="hidden" value="{{r.id}}" name="review_id">
 											<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 											<input type="submit" value="Poista" class="small">

@@ -133,7 +133,7 @@ def delete_review(id):
         if session["user_id"] == id or session["role"] == "admin":
             review_id = request.form["review_id"]
             db.delete_review(review_id)
-            return redirect("/reviews/"+str(id))
+            return redirect("/review/"+str(id))
 
     flash("Istunto on vanhentunut")
     return redirect("/#one")

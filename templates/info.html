@@ -36,6 +36,21 @@
                                 <li><a href="/#three" class="button">Kartta</a></li>
                             </ul>
                         </td>
+                        {% if session.username %}
+                        <td>
+                            <ul class="actions special">
+                                <li><a href="/logout" class="button scrolly">Kirjaudu ulos</a></li>
+                            </ul>
+                        </td>
+                        {% endif %}
+
+                        {% if session.role == 'admin' %}
+                        <td>
+                            <ul class="actions special">
+                                <li><a href="/delete_restaurant/{{ id }}" class="button scrolly">Poista</a></li>
+                            </ul>
+                        </td>
+                        {% endif %}
                     </tr>
                 </table>
             </div>
