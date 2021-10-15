@@ -1,5 +1,4 @@
-from flask import session
-from db import select_restaurants_tag, select_restaurants_all, is_restaurant_tag
+from db import select_restaurants_tag, select_restaurants_all, is_restaurant_tag, select_restaurants_name
 import json, collections
 
 def tag_or(tags):
@@ -50,6 +49,21 @@ def tags(tags, mode):
 
     if not results: return json.dumps([])
 
+    objects_list = []
+    for row in results:
+        d = collections.OrderedDict()
+        d["id"] = row[0]
+        d["name"] = row[1]
+        d["city"] = row[2]
+        objects_list.append(d)
+    
+    j = json.dumps(objects_list)
+    return j
+
+def name(name):
+    results = select_restaurants_name(name)
+    print(results)
+    
     objects_list = []
     for row in results:
         d = collections.OrderedDict()

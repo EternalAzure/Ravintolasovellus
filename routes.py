@@ -186,7 +186,7 @@ def register_admin():
 # Depricated
 # Dont delete change to api format maybe
 @app.route("/search/name")
-def search_name():
+def search_name_depricated():
     name = request.args["name"]
     list = db.select_restaurants_name(name)
     url = getenv("MAP")
@@ -205,7 +205,12 @@ def location():
     return response
 
 @app.route("/api/search/tags", methods=["POST"])
-def seacrh_tags():
+def search_tags():
+    body = request.get_json()
+    return search.tags(body["tags"], body["mode"])
+
+@app.route("/api/search/name", methods=["POST"])
+def search_name():
     body = request.get_json()
     print(body)
-    return search.tags(body["tags"], body["mode"])
+    return search.name(body["name"])

@@ -147,5 +147,26 @@ const clearTags = () => {
     element.innerHTML = ""
 }
 
+const searchByName = async () => {
+    console.log("searchByName")
+    const name = document.getElementById("name").value
+    const csrfToken = document.querySelector('input[name="csrf_token"]').value
+    document.getElementById("name").value = ""
+    const response = await fetch(baseUrl + "/api/search/name" , {
+        method: "POST",
+        body: JSON.stringify({
+            "name": name
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8",
+            "Access-Control-Allow-Origin": baseUrl,
+            "X-CSRFToken": csrfToken
+        }
+    })
+    let result = await response.json()
+    showResult(result)
+}
+
 document.getElementById("clearTags").onclick = clearTags
 document.getElementById("search").onclick = getNewTag
+document.getElementById("searchByName").onclick = searchByName
