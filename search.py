@@ -1,6 +1,6 @@
 from flask import session
-import sys
 from db import select_restaurants_tag, select_restaurants_limited, is_restaurant_tag
+import json, collections
 
 def tag_or(tags):
     #inclusive search
@@ -12,6 +12,7 @@ def tag_or(tags):
             
     restaurants = []
     for key in dictionary:
+        print(key)
         restaurants.append(dictionary[key])
     return restaurants
 
@@ -39,3 +40,26 @@ def tag_and(tags):
     for key in results:
         restaurants.append(results[key])
     return restaurants
+
+
+def tags(tags, mode):
+    results = None
+
+    if mode == "AND":
+        results = tag_and(tags)
+    elif mode == "OR":
+        results = tag_or(tags)
+    else:
+        return json.dumps([])
+
+    if not results: return json.dumps([])
+
+    objects_list = []
+    for row in results:
+        d = collections.OrderedDict()
+        d["id"] = row[0]
+        d["name"] = row[1]
+        objects_list.append(d)
+    
+    j = json.dumps(objects_list)
+    return j

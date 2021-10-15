@@ -1,6 +1,6 @@
 from flask import request, session
 import db, json, collections
-import map, re, map, search
+import map, search
 from math import inf
 
 # Small miscelanious functions
@@ -41,7 +41,6 @@ def insert_grades(restaurant):
     try:
         list = [(request.form[str(c.id)], c.id) for c in categories]
     except:
-        print("FAILS SO IT WORKS")
         return False
     try:
         user = session["user_id"]
@@ -90,35 +89,3 @@ def json_location():
     j = json.dumps(location)
     return j
 
-def json_search_result(tags, mode):
-    rows = None
-
-    if mode == "AND":
-        rows = search.tag_and(tags)
-    elif mode == "OR":
-        rows == search.tag_or(tags)
-    else:
-        return json.dumps([])
-
-    if not rows: return json.dumps([])
-
-    objects_list = []
-    for row in rows:
-        d = collections.OrderedDict()
-        d["id"] = row[0]
-        d["name"] = row[1]
-        objects_list.append(d)
-    
-    j = json.dumps(objects_list)
-    return j
-
-def firts_letter_capital(word):
-    regex = "\\b[A-Z].*?\\b"
-    format = re.compile(regex)  
-    r = re.search(format, word)
-
-    if r is None :
-        return False
-       
-    else :
-        return True

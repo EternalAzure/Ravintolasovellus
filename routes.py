@@ -1,9 +1,8 @@
-import json
 from app import app
 from flask_cors import CORS
 from flask import render_template, request, redirect, session, flash
-import utils, update_info, db
-import auth
+import utils, info, db
+import auth, search
 from set_city import set_city as set_session_city
 from os import getenv
 
@@ -98,15 +97,15 @@ def admin():
 # Update restaurant info
 @app.route("/info/<int:id>/image", methods=["POST"])
 def update_image(id):
-    return update_info.image(request.files["file"], id)
+    return info.image(request.files["file"], id)
 
 @app.route("/info/<int:id>/tag", methods=["POST"])
 def update_tag(id):
-    return update_info.tag(request.form["tag"], id)
+    return info.tag(request.form["tag"], id)
 
 @app.route("/info/<int:id>/description", methods=["POST"])
 def update_description(id):
-    return update_info.description(request.form["description"], id)
+    return info.description(request.form["description"], id)
 
 @app.route("/info/<int:id>/hours", methods=["POST"])
 def update_hours(id):
@@ -116,7 +115,7 @@ def update_hours(id):
         opening = request.form["opening_"+d]
         closing = request.form["closing_"+d]
         hours.append([opening, closing])
-    return update_info.hours(hours, id)
+    return info.hours(hours, id)
 #------
 
 # Delete stuff
@@ -208,4 +207,4 @@ def location():
 def seacrh_tags():
     body = request.get_json()
     print(body)
-    return utils.json_search_result(body["tags"], body["mode"])
+    return search.tags(body["tags"], body["mode"])

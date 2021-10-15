@@ -100,13 +100,11 @@ def validate_hours(hours, id):
         closing = hours[i][1]
         try:
             #Check if 24h format
-            opening_time = time.strptime(opening, '%H:%M')
-            closing_time = time.strptime(closing, '%H:%M')
+            time.strptime(opening, '%H:%M')
+            time.strptime(closing, '%H:%M')
 
-            #Check times are logical
-            if opening_time < closing_time:
-                valid[i][0] = opening
-                valid[i][1] = closing
+            valid[i][0] = opening
+            valid[i][1] = closing
         except ValueError: # default to previous
             pass
     return valid

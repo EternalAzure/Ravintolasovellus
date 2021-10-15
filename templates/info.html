@@ -19,9 +19,25 @@
         <section id="header" class="shallow">
             <h1>{{ data.name }}</h1>
             <div class="inner">
-                <ul class="actions special">
-                    <li><a href="/#one" class="button scrolly">Etusivu</a></li>
-                </ul>
+                <table>
+                    <tr>
+                        <td>
+                            <ul class="actions special">
+                                <li><a href="/#one" class="button">Etusivu</a></li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul class="actions special">
+                                <li><a href="/review/{{ id }}" class="button">Arvostelut</a></li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul class="actions special">
+                                <li><a href="/#three" class="button">Kartta</a></li>
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </section>
 

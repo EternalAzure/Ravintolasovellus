@@ -19,9 +19,32 @@
         <!-- Header -->
 			<section id="header" class="shallow">
 				<div class="inner">
-					<ul class="actions special">
-						<li><a href="/#one" class="button scrolly">Etusivu</a></li>
-					</ul>
+					<table>
+						<tr>
+							<td>
+								<ul class="actions special">
+									<li><a href="/#one" class="button scrolly">Etusivu</a></li>
+								</ul>
+							</td>
+							<td>
+								<ul class="actions special">
+									<li><a href="/info/{{ id }}" class="button scrolly">Tiedot</a></li>
+								</ul>
+							</td>
+							<td>
+								<ul class="actions special">
+									<li><a href="/#three" class="button scrolly">Kartta</a></li>
+								</ul>
+							</td>
+							{% if not session.username %}
+							<td>
+								<ul class="actions special">
+									<li><a href="/#one" class="button scrolly">Kirjaudu | Ei toimi vielä</a></li>
+								</ul>
+							</td>
+							{% endif %}
+						</tr>
+					</table>
 				</div>
 			</section>
 

@@ -1,6 +1,6 @@
 from flask import render_template, request, session, redirect, flash
 from db import insert_user, is_username_taken, select_users_id, verify_user, select_users_city, select_users_role
-import utils
+import re
 
 # This file handles login, register and authentication
 #
@@ -30,7 +30,7 @@ def register_user():
   password = request.form["password"]
   city = request.form["city"]
 
-  if not utils.firts_letter_capital(city):
+  if not firts_letter_capital(city):
     flash("Iso alkukirjain kaupungin nimeen")
     return redirect("/#one")
 
@@ -83,3 +83,14 @@ def validate_password(password):
     if not password: return False
     if len(password) <= 5 or len(password) <= 50 : return False
     return True
+
+def firts_letter_capital(word):
+    regex = "\\b[A-Z].*?\\b"
+    format = re.compile(regex)  
+    r = re.search(format, word)
+
+    if r is None :
+        return False
+       
+    else :
+        return True

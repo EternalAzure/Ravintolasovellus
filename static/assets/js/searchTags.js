@@ -12,7 +12,8 @@ let scrollBar = document.getElementById("restaurants")
 const getNewTag = () => {
     console.log("getNewTag")
     let tags = []
-    let tag = document.getElementById("tag").value
+    const tag = document.getElementById("tag").value
+    document.getElementById("tag").value = ""
     if (tag !== '' && tag !== null) {
         tags.push(String(tag).toLocaleLowerCase())
     }
