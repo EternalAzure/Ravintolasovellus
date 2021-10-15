@@ -13,6 +13,9 @@ def location(city, street):
         data = response.json()[0]
     except IndexError:
         pass
+    except ValueError:
+        print("Err")
+        pass
 
     coordinates = {"lat": float(data["lat"]), "lng": float(data["lon"])}
     

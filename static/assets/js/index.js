@@ -1,5 +1,5 @@
-const baseUrl = "https://polar-scrubland-57061.herokuapp.com"
-//const baseUrl = "http://localhost:5000"
+//const baseUrl = "https://polar-scrubland-57061.herokuapp.com"
+const baseUrl = "http://localhost:5000"
 
 let map
 let restaurants
@@ -40,7 +40,7 @@ const initMap = async () => {
       })
       const contentString =
         "<div>" +
-        "<a href='"+baseUrl+"/restaurant/"+restaurants[index].id+"'>" +
+        "<a href='"+baseUrl+"/info/"+restaurants[index].id+"'>" +
         "Siirry katsomaan tiedot</a>" +
         "</div>"
       
