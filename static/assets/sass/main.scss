@@ -53,6 +53,7 @@
 
 	body {
 		line-height: 1;
+		-webkit-text-size-adjust: none;
 	}
 
 	ol, ul {
@@ -74,10 +75,6 @@
 		border-spacing: 0;
 	}
 
-	body {
-		-webkit-text-size-adjust: none;
-	}
-
 	mark {
 		background-color: transparent;
 		color: inherit;
@@ -93,25 +90,6 @@
 		-webkit-appearance: none;
 		-ms-appearance: none;
 		appearance: none;
-	}
-
-/* Scroll bar */
-	// My addition to this file - EternalAzure
-	.scroll {
-		width: 90%;
-		min-height: 50%;
-		height: 700px;
-		overflow-x: hidden;
-		overflow-y: auto;
-		text-align: center;
-	}
-
-	.scroller {
-		width: 300px;
-		height: 100px;
-		overflow-y: scroll;
-		scrollbar-color: rebeccapurple green;
-		scrollbar-width: thin;
 	}
 	  
 
@@ -490,14 +468,16 @@
 	}
 
 	input[type="checkbox"],
-	input[type="radio"], {
+	input[type="radio"] {
 		@include vendor('appearance', 'none');
 		display: block;
-		float: left;
+		float: right;
 		margin-right: -2em;
-		opacity: 0;
-		width: 1em;
+		opacity: 1;
+		min-width: 1em;
+		min-height: 1em;
 		z-index: -1;
+		color: red;
 
 		& + label {
 			@include icon(false, solid);

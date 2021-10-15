@@ -1,9 +1,6 @@
-from flask import render_template, request, session
+from flask import render_template, request, session, redirect, flash
 from db import insert_user, is_username_taken, select_users_id
-import sys
 import utils
-def log(m):
-    print("LOG: " + str(m), file=sys.stdout)
 
 def register_user():
   username = request.form["username"]
@@ -11,25 +8,27 @@ def register_user():
   city = request.form["city"]
 
   if not utils.firts_letter_capital(city):
-    return render_template("register_page.html", message="Iso alkukirjain kaupungin nimeen")
+    flash("Iso alkukirjain kaupungin nimeen")
+    return redirect("/#one")
 
   a = validate_username_format(username)
   b = validate_password(password)
-  message = "Nimen pitää olla enintään 15 merkkiä ja \n" \
-            "salasanan välillä 5 - 50 merkkiä"
+
   if a and b:
     if is_username_taken(username):
-      message = "Username is taken"
-      return render_template("register_page.html", message=message)
+      flash("Käyttäjänimi on varattu")
+      return redirect("/#one")
     else:
       insert_user(username, password, "user", city)
       session["username"] = username
       session["role"] = "user"
       session["user_id"] = select_users_id(username)
       session["city"] = city
-      return render_template("register_page.html")
+      return redirect("/#one")
 
-  return render_template("register_page.html.j2", message=message)
+  flash("Nimen pitää olla enintään 15 merkkiä ja \n" \
+        "salasanan välillä 5 - 50 merkkiä")
+  return redirect("/#one")
 
 def register_admin():
   username = request.form["username"]
@@ -59,5 +58,5 @@ def validate_username_format(username):
 
 def validate_password(password):
     if not password: return False
-    if len(password) < 5 or len(password) > 50 : return False
+    if len(password) <= 5 or len(password) <= 50 : return False
     return True

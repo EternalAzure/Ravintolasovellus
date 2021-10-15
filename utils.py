@@ -1,6 +1,6 @@
 from flask import request, session
 import db, json, collections
-import map, re, map
+import map, re, map, search
 from math import inf
 
 # Small miscelanious functions
@@ -88,6 +88,28 @@ def json_location():
         city = session["city"]
     location =map.location(city, "")
     j = json.dumps(location)
+    return j
+
+def json_search_result(tags, mode):
+    rows = None
+
+    if mode == "AND":
+        rows = search.tag_and(tags)
+    elif mode == "OR":
+        rows == search.tag_or(tags)
+    else:
+        return json.dumps([])
+
+    if not rows: return json.dumps([])
+
+    objects_list = []
+    for row in rows:
+        d = collections.OrderedDict()
+        d["id"] = row[0]
+        d["name"] = row[1]
+        objects_list.append(d)
+    
+    j = json.dumps(objects_list)
     return j
 
 def firts_letter_capital(word):

@@ -87,7 +87,8 @@ def select_restaurants_tag(query):
     try:
         return list
     except IndexError:
-        return 
+        return
+
 def is_restaurant_tag(tag, restaurant_id):
     sql =   "SELECT 1 FROM restaurants r, tags, tag_relations t " \
             "WHERE r.id=t.restaurant_id AND tags.id=t.tag_id " \
@@ -150,9 +151,9 @@ def insert_review(review, restaurant, user):
     db.session.commit()
 
 def select_reviews(id):
+    # Order by sent_at
+    # currently list is just reversed
     #
-    #
-    #Order by sent_at
     sql = "SELECT * FROM reviews WHERE restaurant_id=:id"
     result = db.session.execute(sql, {"id":id})
     return result.fetchall()

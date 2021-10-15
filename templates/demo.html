@@ -3,6 +3,7 @@
 	Photon by HTML5 UP
 	html5up.net | @ajlkn
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+	Modified by EternalAzure @ github.com/EternalAzure 2021
 -->
 <html>
 	<head>
@@ -10,14 +11,19 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="static/assets/css/main.css" />
+		<link rel="shortcut icon" type="image/jpg" href="static/favicon.ico"/>
 		<noscript><link rel="stylesheet" href="static/assets/css/noscript.css" /></noscript>
+		<!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+		<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVbkIFAsEaly3gXNOiJkHkdDhM55faMlM&callback=initMap&v=weekly"></script>
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+		<script type="text/javascript" src="static/assets/js/index.js" defer></script>
 	</head>
 	<body class="is-preload">
 
 		<!-- Header -->
 			<section id="header">
 				<div class="inner">
-					<span class="icon solid major fa-cloud"></span>
+					<img class="icon" src="static/images/plate_icon.png" style="max-height: 10em;">
 					<h1>Hei, tässä on aineharjoitustyöni <strong>Ravintolasovelus</strong>, joka<br />
 					kerää tietoa ja arvosteluita ravintoloista.</h1>
 					<p>Lähdekoodin löydät täältä <a href="https://github.com/EternalAzure/Ravintolasovellus">GitHub</a>.
@@ -29,97 +35,152 @@
 				</div>
 			</section>
 
-		<!-- One -->
+		<!-- Main -->
 			<section id="one" class="main style1">
 				<div class="container">
 					<div class="row gtr-150">
-						<div class="col-6 col-12-medium">
-							<header class="major">
-								<h2>Ravintolasovellus</h2>
-							</header>
-							<p>
-								{% if session.username %}
-								{{ session.username }} |
-								<a href="/logout">Kirjaudu ulos</a> | 
-								{% else %}
-								<a href="/login_page">Kirjautuminen</a> | 
-								<a href="/register_page">Luo käyttäjä</a> |
-								{% endif %}
-								<a href="/new">Lisää ravintola</a> | 
-								<a href="/search_page">Hakusivu</a>
-							</p>
-						</div>
-
-						<div class="col-6 col-12-medium imp-medium scroll">
-							<div style="
-										width: 100%;
-										max-height: 40em;
-										overflow-y: scroll;
-										scrollbar-color: slategrey midnightblue;
-										scrollbar-width: thin;">
+						
+						<!-- Scroll Bar of Restaurants -->
+						<div class="col-6 col-12-medium imp-medium">
+							<div class="scroll" id="restaurants">
 								{% for r in restaurants %}
 								<h3 style="margin-bottom: -1em;">{{ r.name }} | {{r.rating}}</h3><br>
 								{% if session.role == "admin" %}
 								<a href="/delete_restaurant/{{ r.id }}"> Poista</a> |
 								{% endif %}
-								<a href="/review/{{ r.id }}"> Arvostele ravintola</a> |
-								<a href="/result/{{ r.id }}"> Näytä arvostelut</a> <br>
+								<a href="/review/{{ r.id }}#one"> Arvostelut</a> |
 								<a href="/restaurant/{{ r.id }}"> Katso tiedot</a> |
-								<a onclick="focusOnMap('{{r.name}}'); return true "> Näytä kartalla</a>
+								
+								<a href="#three" onclick="focusOnMap('{{r.name}}'); return true "> Näytä kartalla</a>
 								<hr>
 								{% endfor %}
+							</div>
+						</div>
+
+						<!-- Title and Search Functionality -->
+						<div class="col-6 col-12-medium">
+							<div>
+								<header class="major">
+									<h1>Ravintolasovellus</h1>
+								</header>
+								<!-- Navigation -->
+								<p>
+									{% if session.username %}
+									{{ session.username }} |
+									<a href="/logout">Kirjaudu ulos</a> | 
+									{% else %}
+									<a id="openLoginView">Kirjautuminen</a> | 
+									<a id="openRegisterView">Luo käyttäjä</a> |
+									{% endif %}
+									<a id="openAddView">Lisää ravintola</a> | 
+									<a id="openSearchView">Hakusivu</a>
+								</p>
+								{% with messages = get_flashed_messages() %}
+									{% if messages %}
+									<div class="center">
+									{% for message in messages %}
+										{{ message }}
+									{% endfor %}
+									</div>
+									<hr>
+									{% endif %}
+								{% endwith %}
+							</div>
+							<!-- Only one view open at the time -->
+							<div id="loginView" style="display: none;">
+								<div class="center">
+									<form action="/login" method="POST">
+									  <p>Tunnus:<br>
+									  <input type="text" name="username"></p>
+									  <p>Salasana:<br>
+									  <input type="password" name="password"></p>
+									  <input type="submit" value="Kirjaudu">
+									  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+									</form>
+								  </div>
+							</div>
+							<div id="registerView" style="display: none;">
+								<div class="center">
+									<form action="/register" method="POST">
+									  <p>Tunnus:<br>
+									  <input type="text" name="username"></p>
+									  <p>Salasana:<br>
+									  <input type="password" name="password"></p>
+									  <p>Kaupunki:<br>
+									  <input type="text" name="city"></p>
+									  <input type="submit" value="Rekisteröidy">
+									  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+									</form>
+								  </div>
+							</div>
+							<div id="addView" style="display: none;">
+								<form class="center" action="/create" method="POST">
+									<p>Ravintolan nimi:<br>
+									  <input type="text" name="name">
+									</p>
+									<p>
+									  Osoite:<br>
+									  <input type="text" placeholder="Kanavaranta 7" name="street"> <br>
+									  <input type="text" placeholder="Helsinki" name="city">
+									</p>
+									<input type="submit" value="Lisää ravintola"> <br><br>
+									<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+								</form>
+							</div>
+							<div id="searchView" style="display: none;">
+								<form action="/search/name" method="GET" class="mini-margin">
+									Etsi nimen perusteella <br>
+									<input type="text" name="name" class="mini-margin">
+									<input type="submit" value="Etsi" class="small mini-margin"> <br>
+								</form>
+								<div class="mini-margin">
+									Etsi tunnisteiden perusteella <br>
+									<input type="text" id="tag" class="mini-margin">
+									<button id="search" class="small mini-margin"> Etsi </button> <br>
+									Hakutila: <br>
+									<input type="radio" name="mode" value="AND" title="Antaa tulokseksi ravintolat, joissa on kaikki tunnisteista" >
+									<input type="radio" name="mode" value="OR" title="Antaa tulokseksi ravintolat, joissa on ainakin yksi tunnisteista" checked>
+									<br>
+									Tiukka/Löyhä <br>
+									<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+									<a id="clearTags">Tyhjennä</a>
+								</div>
+							  
+								<div id="tags" style="background-color: ivory;">
+
+								</div>
 							</div>
 						</div>
 						
 					</div>
 				</div>
 			</section>
+			
 
-		<!-- Three -->
-			<section id="three" class="main style1 special">
+		<!-- Google Map -->
+			<section id="three" class="main style2 special" style="padding-top: 1em;">
 				<div class="container">
-					<header class="major">
-						<h2>Adipiscing amet consequat</h2>
+					<header>
+						<h1>Kartta</h1>
 					</header>
-					<p>Ante nunc accumsan et aclacus nascetur ac ante amet sapien sed.</p>
+					<span>Valitse kaupunki ja klikkaa ravintolaa nähdäksesi tietoja.</span>
+
 					<div class="row gtr-150">
-						<div class="col-4 col-12-medium">
-							<span class="image fit"><img src="static/images/pic02.jpg" alt="" /></span>
-							<h3>Magna feugiat lorem</h3>
-							<p>Adipiscing a commodo ante nunc magna lorem et interdum mi ante nunc lobortis non amet vis sed volutpat et nascetur.</p>
-							<ul class="actions special">
-								<li><a href="#" class="button">More</a></li>
-							</ul>
-						</div>
-						<div class="col-4 col-12-medium">
-							<span class="image fit"><img src="static/images/pic03.jpg" alt="" /></span>
-							<h3>Magna feugiat lorem</h3>
-							<p>Adipiscing a commodo ante nunc magna lorem et interdum mi ante nunc lobortis non amet vis sed volutpat et nascetur.</p>
-							<ul class="actions special">
-								<li><a href="#" class="button">More</a></li>
-							</ul>
-						</div>
-						<div class="col-4 col-12-medium">
-							<span class="image fit"><img src="static/images/pic04.jpg" alt="" /></span>
-							<h3>Magna feugiat lorem</h3>
-							<p>Adipiscing a commodo ante nunc magna lorem et interdum mi ante nunc lobortis non amet vis sed volutpat et nascetur.</p>
-							<ul class="actions special">
-								<li><a href="#" class="button">More</a></li>
-							</ul>
-						</div>
+						<form class="center map" action="/set_city" method="POST">
+							<input type="text" placeholder="{{session['city']}}" name="city">
+							<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+						</form>
+					</div>
+					
+
+					<div class="row gtr-150">
+						<div id="map" style="min-width: 100%; height: 800px;"></div>
 					</div>
 				</div>
 			</section>
 
 		<!-- Footer -->
 			<section id="footer">
-				<ul class="icons">
-					<li><a href="#" class="icon brands alt fa-twitter"><span class="label">Twitter</span></a></li>
-					<li><a href="#" class="icon brands alt fa-facebook-f"><span class="label">Facebook</span></a></li>
-					<li><a href="#" class="icon brands alt fa-instagram"><span class="label">Instagram</span></a></li>
-					<li><a href="#" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
-					<li><a href="#" class="icon solid alt fa-envelope"><span class="label">Email</span></a></li>
-				</ul>
 				<ul class="copyright">
 					<li>&copy; Untitled</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
 				</ul>
@@ -132,6 +193,8 @@
 			<script src="static/assets/js/breakpoints.min.js"></script>
 			<script src="static/assets/js/util.js"></script>
 			<script src="static/assets/js/main.js"></script>
+			<script src="static/assets/js/views.js"></script>
+			<script src="static/assets/js/searchTags.js"></script>
 
 	</body>
 </html>
