@@ -40,7 +40,7 @@ const initMap = async () => {
       })
       const contentString =
         "<div>" +
-        "<a href='"+baseUrl+"/restaurant/"+restaurants[index].id+"'>" +
+        "<a href='"+baseUrl+"/info/"+restaurants[index].id+"'>" +
         "Siirry katsomaan tiedot</a>" +
         "</div>"
       

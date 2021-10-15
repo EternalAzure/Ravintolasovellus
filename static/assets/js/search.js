@@ -116,15 +116,25 @@ const restaurantElement = (r) => {
     let title = document.createElement("h3")
     title.innerText = r.name
     let lineBreak = document.createElement("br")
-    let link = document.createElement("a")
-    let linkText = document.createTextNode("Katso tiedot")
-    link.appendChild(linkText)
-    link.href = "/restaurant/" + r.id
+
+    let info = document.createElement("a")
+    let linkText = document.createTextNode("Katso tiedot | ")
+    info.appendChild(linkText)
+    info.href = "/info/" + r.id
+
+    let review = document.createElement("a")
+    linkText = document.createTextNode("Arvostelut | ")
+    review.appendChild(linkText)
+    review.href = "/review/" + r.id
+
+    let city = document.createTextNode(r.city)
     let hr = document.createElement("hr")
 
     restaurantElement.appendChild(title)
     restaurantElement.appendChild(lineBreak)
-    restaurantElement.appendChild(link)
+    restaurantElement.appendChild(info)
+    restaurantElement.appendChild(review)
+    restaurantElement.appendChild(city)
     restaurantElement.appendChild(hr)
 
     return restaurantElement

@@ -1,9 +1,9 @@
 from flask import session
-from db import select_restaurants_tag, select_restaurants_limited, is_restaurant_tag
+from db import select_restaurants_tag, select_restaurants_all, is_restaurant_tag
 import json, collections
 
 def tag_or(tags):
-    #inclusive search
+    #loose search
     dictionary = {}
     for tag in tags:
         result_list = select_restaurants_tag(tag)
@@ -12,19 +12,14 @@ def tag_or(tags):
             
     restaurants = []
     for key in dictionary:
-        print(key)
         restaurants.append(dictionary[key])
+    print(restaurants)
     return restaurants
 
 def tag_and(tags):
-    #exclusive search
-    #Some what inefficient
-    city = "Helsinki"
-    if "city" in session:
-        city = session["city"]
-    
+    #strict search
     results = {}
-    restaurants = select_restaurants_limited(city)
+    restaurants = select_restaurants_all()
     #restaurant has to match all tags
     #breaks loop to save time
     for r in restaurants:
@@ -39,6 +34,7 @@ def tag_and(tags):
     restaurants = []
     for key in results:
         restaurants.append(results[key])
+    print(restaurants)
     return restaurants
 
 
@@ -59,6 +55,7 @@ def tags(tags, mode):
         d = collections.OrderedDict()
         d["id"] = row[0]
         d["name"] = row[1]
+        d["city"] = row[2]
         objects_list.append(d)
     
     j = json.dumps(objects_list)

@@ -21,7 +21,7 @@ def show(id):
 #WEB PAGES
 #----------------
 @app.route("/")
-def demo():
+def index():
     url = getenv("MAP")
     list = utils.sorted_restaurants()
     return render_template("index.html", url=url, restaurants=list)
@@ -188,8 +188,9 @@ def register_admin():
 @app.route("/search/name")
 def search_name():
     name = request.args["name"]
-    restaurants = db.select_restaurants_name(name)
-    return render_template("search_page.html", restaurants=restaurants)
+    list = db.select_restaurants_name(name)
+    url = getenv("MAP")
+    return render_template("index.html", url=url, restaurants=list)
 
 #API
 #----------------

@@ -60,7 +60,7 @@ def select_restaurants_limited(city):
             "WHERE city_id=cities.id) as addresses, "\
             "streets, restaurants "\
             "WHERE addresses.street_id=streets.id "\
-            "AND restaurants.address_id=addresses.id;"\
+            "AND restaurants.address_id=addresses.id;"
           
     result = db.session.execute(sql, {"city": city})
     return result.fetchall()
@@ -75,6 +75,17 @@ def select_restaurant(id):
     result = db.session.execute(sql, {"id":id})
     restaurant = result.fetchone()# <-- don't put that [0] there
     return restaurant
+
+def select_restaurants_all():
+    sql =   "SELECT restaurants.id as id, name, city, street \
+            FROM \
+            addresses, \
+            streets, restaurants, cities \
+            WHERE addresses.street_id=streets.id \
+            AND addresses.city_id = cities.id \
+            AND restaurants.address_id=addresses.id;"
+    result = db.session.execute(sql)
+    return result.fetchall()
 
 def select_restaurants_name(query):
     sql =   "SELECT r.id, name, city FROM restaurants r, addresses a, cities " \
