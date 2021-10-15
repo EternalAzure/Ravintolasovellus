@@ -3,54 +3,29 @@ from app import app
 from flask_cors import CORS
 from flask import render_template, request, redirect, session, flash
 import utils, update_info, db
-import register as r
-import login as l
+import auth
 from set_city import set_city as set_session_city
 from os import getenv
 
 #Lets client request data from static/index.js through API
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-#RESOURCES
-#----------------
 # IMAGE
-@app.route("/send", methods=["POST"])
-def send():
-    file = request.files["file"]
-    name = file.filename
-    r_id = request.form["restaurant_id"]
-    if not name.endswith(".jpg"):
-        flash('Kelvoton tiedostonimi. Käytä .jpg')
-        return redirect(request.referrer)
-    data = file.read()
-    if len(data) > 200*1024:
-        flash('Tiedosto saa olla enintään 204kt')
-        return redirect(request.referrer)
-    db.insert_image(name, data, r_id)
-    flash("Kuva ladattiin onnistuneesti")
-    return redirect(request.referrer)
-
+#----------------
 @app.route("/show/<int:id>")
 def show(id):
     image = db.select_image(id)
     if image:return image
     return "No image"
-# /IMAGE
+
 
 #WEB PAGES
 #----------------
-@app.route("/old")
-def index():
-    #url for map API with secret api key
-    url = getenv("MAP")
-    list = utils.sorted_restaurants()
-    return render_template("index.html", url=url, restaurants=list)
-
 @app.route("/")
 def demo():
     url = getenv("MAP")
     list = utils.sorted_restaurants()
-    return render_template("demo.html", url=url, restaurants=list)
+    return render_template("index.html", url=url, restaurants=list)
 
 @app.route("/refresh")
 def refresh():
@@ -92,20 +67,18 @@ def demo_reviews(id):
 
 @app.route("/grade/<int:id>", methods=["POST"])
 def grade(id):
-     # Anyone can grade a restaurant
     if not utils.insert_grades(id):
         flash("Arvostele kaikki kategoriat")
     return redirect(f"/review/{id}#one")
 
-@app.route("/restaurant/<int:id>", methods=["GET"])
+@app.route("/info/<int:id>", methods=["GET"])
 def restaurant(id):
-    #Information page
     data = db.select_restaurant(id)
     description = db.select_info_description(id)
     days = ["Ma", "Ti", "Ke", "To", "Pe", "La", "Su"]
     hours = db.select_info_hours(id)
     tags = db.select_tags(id)
-    return render_template("demo_info.html", data=data, tags=tags, description=description, days=days, hours=hours, id=id)
+    return render_template("info.html", data=data, tags=tags, description=description, days=days, hours=hours, id=id)
 
 @app.route("/admin")
 def admin():
@@ -114,22 +87,42 @@ def admin():
         if request.remote_addr == getenv("TRUSTED_IP"):
             return render_template("admin.html")
     except:
-        flash("Jotain meni pahasti pieleen")
+        flash("Joko html tiedoston nimi tai sijainti on väärä. \n "\
+            "Tai serverin ympäristömuuttuja on nimetty väärin.")
     flash("Non allowed IP address")
-    return redirect("/")
+    return redirect("/#one")
+
 
 #FUNCTIONALITY
 #----------------
-@app.route("/set_city", methods=["POST"])
-def set_city():
-    city = request.form["city"]
-    set_session_city(city)
-    return redirect("/#three")
-      
-# WARNING WEAK AUTHORIZATION HERE
+# Update restaurant info
+@app.route("/info/<int:id>/image", methods=["POST"])
+def update_image(id):
+    return update_info.image(request.files["file"], id)
+
+@app.route("/info/<int:id>/tag", methods=["POST"])
+def update_tag(id):
+    return update_info.tag(request.form["tag"], id)
+
+@app.route("/info/<int:id>/description", methods=["POST"])
+def update_description(id):
+    return update_info.description(request.form["description"], id)
+
+@app.route("/info/<int:id>/hours", methods=["POST"])
+def update_hours(id):
+    days = ["Ma", "Ti", "Ke", "To", "Pe", "La", "Su"]
+    hours = []
+    for d in days:
+        opening = request.form["opening_"+d]
+        closing = request.form["closing_"+d]
+        hours.append([opening, closing])
+    return update_info.hours(hours, id)
+#------
+
+# Delete stuff
 @app.route("/delete_restaurant/<int:id>")
 def delete_restaurant(id):
-    if "user_id" in session:
+    if "user_id" in session and session["role"] == "admin":
         db.delete_restaurant(id)
         return redirect("/#one")
     flash("Istunto on vanhentunut")
@@ -138,25 +131,23 @@ def delete_restaurant(id):
 @app.route("/delete_review/<int:id>", methods=["POST"])
 def delete_review(id):
     if "user_id" in session:
-        review_id = request.form["review_id"]
-        db.delete_review(review_id)
-        return redirect("/demo_reviews/"+str(id))
+        if session["user_id"] == id or session["role"] == "admin":
+            review_id = request.form["review_id"]
+            db.delete_review(review_id)
+            return redirect("/reviews/"+str(id))
+
     flash("Istunto on vanhentunut")
-    return render_template("login_page.html")
+    return redirect("/#one")
+#------
 
-@app.route("/update_info", methods=["POST"])
-def update():
-    days = ["Ma", "Ti", "Ke", "To", "Pe", "La", "Su"]
-    hours = []
-    for d in days:
-        opening = request.form["opening_"+d]
-        closing = request.form["closing_"+d]
-        hours.append([opening, closing])
-    description = request.form["description"]
-    tag = request.form["tag"]
-    id = request.form["id"]
-    return update_info.handle_input(hours, description, tag, id)
+@app.route("/set_city", methods=["POST"])
+def set_city():
+    city = request.form["city"]
+    set_session_city(city)
+    return redirect("/#three")
+#------
 
+# Create restaurant
 @app.route("/create", methods=["POST"])
 def create():
     #New restaurant
@@ -174,11 +165,11 @@ def create():
 #----------------
 @app.route("/register", methods=["POST"])
 def register():
-    return r.register_user()
+    return auth.register_user()
 
 @app.route("/login",methods=["POST"])
 def login():
-    return l.login()
+    return auth.login()
 
 @app.route("/logout")
 def logout():
@@ -190,9 +181,11 @@ def logout():
 
 @app.route("/register_admin", methods=["POST"])
 def register_admin():
-    return r.register_admin()
+    return auth.register_admin()
+#----------------
 
-#Depricated
+# Depricated
+# Dont delete change to api format maybe
 @app.route("/search/name")
 def search_name():
     name = request.args["name"]

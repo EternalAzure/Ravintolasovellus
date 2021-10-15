@@ -568,6 +568,17 @@ input::-moz-focus-inner {
 
 	}
 
+/* Tag */
+
+	.tag {
+		display: inline;
+		width: fit-content;
+		background: linear-gradient(90deg, azure 20%, rgb(233, 232, 247) 60%, azure 90%);
+		border-radius: 1em;
+		padding-left: 0.5em;
+		padding: 0em 0.5em 0em 0.5em;
+	}
+
 /* Center */
 	.center {
 		margin: auto;

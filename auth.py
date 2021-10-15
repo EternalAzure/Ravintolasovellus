@@ -1,6 +1,29 @@
 from flask import render_template, request, session, redirect, flash
-from db import insert_user, is_username_taken, select_users_id
+from db import insert_user, is_username_taken, select_users_id, verify_user, select_users_city, select_users_role
 import utils
+
+# This file handles login, register and authentication
+#
+#
+#
+
+def verify(id):
+    if not "user_id" in session:
+        return False
+    if session["user_id"] == id or session["role"] == "admin":
+        return True
+
+def login():
+    username = request.form["username"]
+    password = request.form["password"]
+    if verify_user(username, password):
+        session["username"] = username
+        session["user_id"] = select_users_id(username)
+        session["role"] = select_users_role(username)
+        session["city"] = select_users_city(username)
+        return redirect("/#one")
+    flash("Väärä käyttäjänimi tai salasana")
+    return redirect("/#one")
 
 def register_user():
   username = request.form["username"]

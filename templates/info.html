@@ -1,117 +1,222 @@
-{% extends "layout.html" %}
-{% block  title%}Tiedot{% endblock %}
-{% block page_title %}{{ data.name }} {% endblock %}
-{% block content %}
+<!DOCTYPE html>
+<!--
+	Photon by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+	Modified by EternalAzure @ github.com/EternalAzure 2021
+-->
+<html>
+    <head>
+        <title>Ravintolat | Info</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="/static/assets/css/main.css" />
+		<link rel="shortcut icon" type="image/jpg" href="static/favicon.ico"/>
+		<noscript><link rel="stylesheet" href="static/assets/css/noscript.css" /></noscript>
+    </head>
+    <body>
+        <!-- Header -->
+        <section id="header" class="shallow">
+            <h1>{{ data.name }}</h1>
+            <div class="inner">
+                <ul class="actions special">
+                    <li><a href="/#one" class="button scrolly">Etusivu</a></li>
+                </ul>
+            </div>
+        </section>
 
-<div class="center">
-  <button type="button" id="show">Päivitä tietoja</button> <br>
-  <button type="button" id="hide" style="display: none">Sulje lomake</button>
-</div>
+        <!-- Info -->
+        <section id="one" class="main style1">
+            <div class="container">
 
-<hr>
+                <!-- Upper Section one -->
+                <div class="row gtr-150">
 
-{% with messages = get_flashed_messages() %}
-   {% if messages %}
-      <div class="center">
-      {% for message in messages %}
-         {{ message }}
-      {% endfor %}
-      </div>
-      <hr>
-   {% endif %}
-{% endwith %}
+                    <div class="col-6 col-12-medium">
+                        <img src="/show/{{ id }}" width="600">
+                    </div>
 
-<div id="form" style="display: none">
-  <form class="center" 
-        action="/send" 
-        method="POST" 
-        enctype="multipart/form-data">
-    File: <input type="file" name="file">
-    <p>
-    <input type="submit" value="Lähetä kuva">
-    <input type="hidden" value="{{ id }}" name="restaurant_id">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-  </form>
-  <form class="center" 
-      action="/update_info" 
-      enctype="multipart/form-data"
-      method="POST">
+                    <div class="col-6 col-12-medium imp-medium">
+                        <h3>Aukioloajat</h3>
+                        <hr>
+                        <table>
+                            <tr>
+                                <td></td> <td>Avaa</td> <td>Sulkee</td>
+                            </tr>
+                            {% for i in range(7) %}
+                                <tr>
+                                    <td>{{ days[i] }}</td> <td>{{ hours[i][0] }}</td> <td>{{ hours[i][1] }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Lower Section one -->
+                <div class="row gtr-150">
 
-    <label>Muuta tai lisää aukioloajat:</label><br>
-      <div class="grid1">
-      {% for day in ["Ma", "Ti", "Ke", "To", "Pe", "La", "Su"] %}
-        <label>{{ day }}</label>
-        <input type="text" name="opening_{{ day }}"><label> ─ </label><input type="text" name="closing_{{ day }}">
-      {% endfor %}
-      </div>
-      
-    <p>Lisää kuvaus ravintolasta:<br>
-      <textarea name="description" rows="10" cols="50"></textarea>
-    </p>
+                    <div class="col-6 col-12-medium">
+                        <h3>Kuvaus ravintolasta</h3>
+                        <div>
+                            {{ description }}
+                        </div>
+                        <div>
+                            {% for tag in tags %}
+                                <div class="tag">{{ tag.tag }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="col-6 col-12-medium imp-medium">
+                        
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <p>Lisää tunniste:<br>
-      <input type="text" placeholder="yksi sana" name="tag">
-    </p>
+        <!-- Forms -->
+        <section id="two" class="main style2">
+            <div class="container">
 
-    <input type="submit" value="Lähetä lomake"> 
-    <input type="hidden" name="id" value="{{ id }}">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-    <hr>
-  </form>
-</div>
+                <!-- Upper Section two -->
+                <div class="row gtr-150">
 
-<script>
-  document.getElementById("show").onclick = function() {
-    document.getElementById("form").style.display = "";
-    document.getElementById("show").style.display = "none";
-    document.getElementById("hide").style.display = "";
-  }
-  document.getElementById("hide").onclick = function() {
-    document.getElementById("form").style.display = "none";
-    document.getElementById("show").style.display = "";
-    document.getElementById("hide").style.display = "none";
-  }
-</script>
+                    <div class="col-6 col-12-medium">
+                        <h3>Päivitä kuva</h3>
+                        <form   class="info loose"
+                                action="/info/{{ id }}/image" 
+                                method="POST" 
+                                enctype="multipart/form-data">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <input type="submit" value="Päivitä" class="small">
+                                    </td>
+                                    <td>
+                                        <input type="file" name="file">
+                                    </td>
+                                </tr>
+                            </table>
+                            <input type="hidden" value="{{ id }}" name="restaurant_id">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        </form>
+                    </div>
 
+                    <div class="col-6 col-12-medium imp-medium">
+                        <h3>Aukioloajat</h3>
+                        {{ error1 }}
+                        
+                        <form action="/info/{{ id }}/hours" method="POST" class="info">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <input type="submit" value="Päivitä" class="small">
+                                    </td>
+                                    <td>
+                                        <table>
+                                            <tr>
+                                                <td>Ma</td> <td><input type="time" name="opening_Ma"></td> <td><input type="time" name="closing_Ma"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Ti</td> <td><input type="time" name="opening_Ti"></td> <td><input type="time" name="closing_Ti"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Ke</td> <td><input type="time" name="opening_Ke"></td> <td><input type="time" name="closing_Ke"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>To</td> <td><input type="time" name="opening_To"></td> <td><input type="time" name="closing_To"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Pe</td> <td><input type="time" name="opening_Pe"></td> <td><input type="time" name="closing_Pe"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>La</td> <td><input type="time" name="opening_La"></td> <td><input type="time" name="closing_La"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Su</td> <td><input type="time" name="opening_Su"></td> <td><input type="time" name="closing_Su"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        </form>
+                        
+                    </div>
+                </div>
 
-<div class="container">
-  <div class="left-side">
-	  <div id="image">
-      <img src="/show/{{ id }}" width="600">
-	  </div>
-    <div style="color:azure;">
-      {% if session.role == "admin" %}
-      <a style="color:azure;" href="/delete_restaurant/{{ id }}"> Poista</a> | 
-      {% endif %}
-      <a style="color:azure;" href="/review/{{ id }}"> Arvostele ravintola</a> | 
-      <a style="color:azure;" href="/result/{{ id }}"> Näytä arvostelut</a>
-    </div>
-    <div> 
-      {{ description }} 
-    </div> 
-  </div>
+                <!-- Lower Section two -->
+                <div class="row gtr-150">
+                    <div class="col-6 col-12-medium">
+                        <h3>Kuvaus ravintolasta</h3>
+                        <form action="/info/{{ id }}/description" method="POST" class="info">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <input type="submit" value="Päivitä" class="small">
+                                    </td>
+                                    <td>
+                                        <textarea name="description" rows="10" cols="50"></textarea>
+                                    </td>
+                                </tr>
+                            </table>
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        </form>
+                    </div>
 
-  <div class="right-side">
-    <h2>{{ rating }}</h2>
-    <div class="center">
-      <label>Aukioloajat:</label>
-      <div class="grid-container">
-        <div class="grid2">
-          {% for i in range(7) %}
-          <label>{{ days[i] }}</label> <label>{{ hours[i][0] }} ─ {{ hours[i][1] }}</label>
-          {% endfor %}
-        </div>
-      </div>
-      <label>{{ data.street }}, {{ data.city }}</label>
-      <h4>Tunnisteet:</h4>
-      <div>
-      {% for tag in tags %}
-      <div class="tag">{{ tag.tag }}</div>
-      {% endfor %}
-      </div>
-    </div>      
-  </div>
-  <div style="clear:both"></div>
-</div>
+                    <div class="col-6 col-12 imp-medium">
+                        <h3>Tunnisteet</h3>
+                        <form action="/info/{{ id }}/tag" method="POST" class="info loose">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <input type="submit" value="Päivitä" class="small">
+                                    </td>
+                                    <td>
+                                        <input type="text" placeholder="yksi sana" name="tag">
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <input type="hidden" name="id" value="{{ id }}">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-{% endblock %}
+        <!-- Error messages -->
+        <section id="three" class="main style3">
+            <div class="row gtr-150">
+                <div class="col-6 col-12 imp-medium">
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            <div>
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                            </div>
+                            <hr>
+                        {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <section id="footer">
+            <ul class="copyright">
+                <li>&copy; Untitled</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+            </ul>
+        </section>
+
+        <!-- Scripts -->
+        <script src="/static/assets/js/jquery.min.js"></script>
+        <script src="/static/assets/js/jquery.scrolly.min.js"></script>
+        <script src="/static/assets/js/browser.min.js"></script>
+        <script src="/static/assets/js/breakpoints.min.js"></script>
+        <script src="/static/assets/js/util.js"></script>
+        <script src="/static/assets/js/main.js"></script>
+    </body>
+</html>

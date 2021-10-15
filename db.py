@@ -27,6 +27,11 @@ def insert_image(name, data, r_id):
     db.session.execute(sql, {"name":name, "data":data, "r_id":r_id})
     db.session.commit()
 
+def update_image(data, r_id):
+    sql = "UPDATE images SET data=:data WHERE r_id=:r_id"
+    db.session.execute(sql, {"data":data, "r_id":r_id})
+    db.session.commit()
+
 #CATEGORIES TABLE
 #----------------
 def categories():
