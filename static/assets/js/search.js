@@ -1,8 +1,6 @@
 /* 
-    Events flow in order from 1 to 4.
-    When search button is clicked, tags are updated and shown.
-    Then request is made to server and resulting restaurants are shown.
-
+    When the search button is clicked, tags are updated and shown.
+    Then request is made to the server and received restaurants are shown.
 */
 
 let element = document.getElementById("tags")
@@ -29,9 +27,10 @@ const getNewTag = () => {
     localStorage.setItem("tags", tags)
 
     showTags(tags)
+    makeRequest(tags)
 }
 
-// 2.
+// 2.a
 const showTags = (tags) => {
     console.log("showTags")
     element.innerHTML = ""
@@ -40,15 +39,13 @@ const showTags = (tags) => {
         newTag.innerText = tag
         element.appendChild(newTag)
     })
-
-    sendTags(tags)
 }
 
-// 3.
-const sendTags = async (searchTags) => {
-    console.log("sendTags")
-    const searchMode = document.querySelector('input[name="mode"]:checked').value
+// 2.b
+const makeRequest = async (searchTags) => {
+    console.log("makeRequest")
     const csrfToken = document.querySelector('input[name="csrf_token"]').value
+    const searchMode = document.querySelector('input[name="mode"]:checked').value
     console.log("mode:", searchMode)
     console.log("tags:", searchTags)
     console.log("token:", csrfToken)
@@ -65,30 +62,26 @@ const sendTags = async (searchTags) => {
             "X-CSRFToken": csrfToken
         }
     })
-    let result = await response.json()
-    console.log("Response:", result)
-
+    const result = await response.json()
     showResult(result)
 }
 
-// 4.
+// 3.
 const showResult = (restaurants) => {
     console.log("showResult")
     scrollBar.innerHTML = ""
+
     if (restaurants.length === 0) {
-        console.log("empty list")
-        noResult = noResultsElement()
+        let noResult = noResultsElement()
         scrollBar.appendChild(noResult)
         return
     }
     
     restaurants.forEach(r => {
-        e = restaurantElement(r)
-        scrollBar.appendChild(e)
+        scrollBar.appendChild(restaurantElement(r))
     })
 }
 
-// Build no results element
 const noResultsElement = () => {
     let element = document.createElement("div")
     element.className = "center"

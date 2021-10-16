@@ -87,6 +87,45 @@
 								{% endwith %}
 							</div>
 							<!-- Only one view open at the time -->
+							<!-- Default "Try these tags" -->
+							<div id="defaultView" style="display: '';">
+								<div class="center">
+									<h4>Suosittuja</h4>
+									<div class="tag">
+										<a onclick="makeRequest(['sushi'], 'OR')">sushi</a>
+									</div>
+									<div class="tag">
+										<a onclick="makeRequest(['pizza'], 'OR')">pizza</a>
+									</div>
+									<div class="tag">
+										<a onclick="makeRequest(['vege'], 'OR')">vege</a>
+									</div>
+									<br>
+									<br>
+									<h4>Baarit</h4>
+									<div class="tag">
+										<a onclick="makeRequest(['cocktail'], 'OR')">cocktail</a>
+									</div>
+									<div class="tag">
+										<a onclick="makeRequest(['olutravintola'], 'OR')">olutravintola</a>
+									</div>
+									<div class="tag">
+										<a onclick="makeRequest(['k21'], 'OR')">k21</a>
+									</div>
+									<br>
+									<br>
+									<h4>Maailmalta</h4>
+									<div class="tag">
+										<a onclick="makeRequest(['italialainen'], 'OR')">italialainen</a>
+									</div>
+									<div class="tag">
+										<a onclick="makeRequest(['libanonilainen'], 'OR')">libanonilainen</a>
+									</div>
+									<div class="tag">
+										<a onclick="makeRequest(['nepalilainen'], 'OR')">nepalilainen</a>
+									</div> 
+								</div>
+							</div>
 							<div id="loginView" style="display: none;">
 								<div class="center">
 									<form action="/login" method="POST">
@@ -97,7 +136,7 @@
 									  <input type="submit" value="Kirjaudu">
 									  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 									</form>
-								  </div>
+								</div>
 							</div>
 							<div id="registerView" style="display: none;">
 								<div class="center">
@@ -111,7 +150,7 @@
 									  <input type="submit" value="Rekisteröidy">
 									  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 									</form>
-								  </div>
+								</div>
 							</div>
 							<div id="addView" style="display: none;">
 								<form class="center" action="/create" method="POST">
