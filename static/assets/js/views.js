@@ -3,12 +3,14 @@ addView = document.getElementById("addView")
 searchView = document.getElementById("searchView")
 registerView = document.getElementById("registerView")
 loginView = document.getElementById("loginView")
+defaultView = document.getElementById("defaultView")
 
 const openAddRestaurant = () => {
     loginView.style.display = "none"
     registerView.style.display = "none"
     addView.style.display = ""
     searchView.style.display = "none"
+    defaultView.style.display = "none"
 }
 
 const openSearch = () => {
@@ -16,6 +18,7 @@ const openSearch = () => {
     registerView.style.display = "none"
     addView.style.display = "none"
     searchView.style.display = ""
+    defaultView.style.display = "none"
     onEnter()
 }
 
@@ -24,6 +27,7 @@ const openRegister = () => {
     registerView.style.display = ""
     addView.style.display = "none"
     searchView.style.display = "none"
+    defaultView.style.display = "none"
 }
 
 const openLogin = () => {
@@ -31,25 +35,19 @@ const openLogin = () => {
     registerView.style.display = "none"
     addView.style.display = "none"
     searchView.style.display = "none"
+    defaultView.style.display = "none"
 }
 
 // Existing tags are shown immediately
 // If page is refreshed this comes handy
 const onEnter = () => {
-    element.innerHTML = ""
     let splitString = []
     try {
         const storedString = localStorage.getItem("tags")
         splitString = storedString.split(",")
-    } catch (TypeError) {
-        console.log("Empty localStorage")
-    }
+    } catch (TypeError) {}
 
-    splitString.forEach(tag => {
-        let newTag = document.createElement("div")
-        newTag.innerText = tag
-        element.appendChild(newTag)
-    })
+    showTags(splitString)
 }
 
 document.getElementById("openAddView").onclick = openAddRestaurant

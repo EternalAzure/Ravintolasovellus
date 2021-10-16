@@ -3,7 +3,7 @@
     Then request is made to the server and received restaurants are shown.
 */
 
-let element = document.getElementById("tags")
+let selectedTagsElement = document.getElementById("tags")
 let scrollBar = document.getElementById("restaurants")
 
 // 1.
@@ -33,11 +33,11 @@ const getNewTag = () => {
 // 2.a
 const showTags = (tags) => {
     console.log("showTags")
-    element.innerHTML = ""
+    selectedTagsElement.innerHTML = ""
     tags.forEach(tag => {
         let newTag = document.createElement("div")
         newTag.innerText = tag
-        element.appendChild(newTag)
+        selectedTagsElement.appendChild(newTag)
     })
 }
 
@@ -107,7 +107,7 @@ const noResultsElement = () => {
 const restaurantElement = (r) => {
     let restaurantElement = document.createElement("div")
     let title = document.createElement("h3")
-    title.innerText = r.name
+    title.innerText = `${r.name} | ${r.rating}`
     let lineBreak = document.createElement("br")
 
     let info = document.createElement("a")
@@ -137,7 +137,7 @@ const restaurantElement = (r) => {
 const clearTags = () => {
     console.log("clearTags")
     localStorage.removeItem("tags")
-    element.innerHTML = ""
+    selectedTagsElement.innerHTML = ""
 }
 
 const searchByName = async () => {

@@ -1,11 +1,11 @@
-from db import select_restaurants_tag, select_restaurants_all, is_restaurant_tag, select_restaurants_name
+import db
 import json, collections
 
 def tag_or(tags):
     #loose search
     dictionary = {}
     for tag in tags:
-        result_list = select_restaurants_tag(tag)
+        result_list = db.select_restaurants_tag(tag)
         for result in result_list:
             dictionary[result.id] = result
             
@@ -18,13 +18,13 @@ def tag_or(tags):
 def tag_and(tags):
     #strict search
     results = {}
-    restaurants = select_restaurants_all()
+    restaurants = db.select_restaurants_all()
     #restaurant has to match all tags
     #breaks loop to save time
     for r in restaurants:
         matches_all = True
         for tag in tags:
-            if not is_restaurant_tag(tag, r.id):
+            if not db.is_restaurant_tag(tag, r.id):
                 matches_all = False
                 break
         if matches_all:
@@ -55,13 +55,14 @@ def tags(tags, mode):
         d["id"] = row[0]
         d["name"] = row[1]
         d["city"] = row[2]
+        d["rating"] = str(db.grades_full_summary(row[0]))
         objects_list.append(d)
     
     j = json.dumps(objects_list)
     return j
 
 def name(name):
-    results = select_restaurants_name(name)
+    results = db.select_restaurants_name(name)
     print(results)
     
     objects_list = []
@@ -70,6 +71,7 @@ def name(name):
         d["id"] = row[0]
         d["name"] = row[1]
         d["city"] = row[2]
+        d["rating"] = str(db.grades_full_summary(row[0]))
         objects_list.append(d)
     
     j = json.dumps(objects_list)

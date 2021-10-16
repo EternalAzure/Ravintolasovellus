@@ -17,9 +17,6 @@ def show(id):
     if image:return image
     return "No image"
 
-
-#WEB PAGES
-#----------------
 @app.route("/")
 def index():
     url = getenv("MAP")
@@ -64,12 +61,6 @@ def demo_reviews(id):
     # show all reviews for non logged in users
     return redirect(f"review/{id}#one")
 
-@app.route("/grade/<int:id>", methods=["POST"])
-def grade(id):
-    if not utils.insert_grades(id):
-        flash("Arvostele kaikki kategoriat")
-    return redirect(f"/review/{id}#one")
-
 @app.route("/info/<int:id>", methods=["GET"])
 def restaurant(id):
     data = db.select_restaurant(id)
@@ -91,9 +82,6 @@ def admin():
     flash("Non allowed IP address")
     return redirect("/#one")
 
-
-#FUNCTIONALITY
-#----------------
 # Update restaurant info
 @app.route("/info/<int:id>/image", methods=["POST"])
 def update_image(id):
@@ -144,6 +132,10 @@ def set_city():
     city = request.form["city"]
     set_session_city(city)
     return redirect("/#three")
+
+@app.route("/grade/<int:id>", methods=["POST"])
+def grade(id):
+    return utils.insert_grades(id)
 #------
 
 # Create restaurant
@@ -181,16 +173,6 @@ def logout():
 @app.route("/register_admin", methods=["POST"])
 def register_admin():
     return auth.register_admin()
-#----------------
-
-# Depricated
-# Dont delete change to api format maybe
-@app.route("/search/name")
-def search_name_depricated():
-    name = request.args["name"]
-    list = db.select_restaurants_name(name)
-    url = getenv("MAP")
-    return render_template("index.html", url=url, restaurants=list)
 
 #API
 #----------------
@@ -206,11 +188,14 @@ def location():
 
 @app.route("/api/search/tags", methods=["POST"])
 def search_tags():
+    print("/ROUTE SEARCH TAGS")
     body = request.get_json()
+    print(body)
     return search.tags(body["tags"], body["mode"])
 
 @app.route("/api/search/name", methods=["POST"])
 def search_name():
+    print("/ROUTE SEARCH NAME")
     body = request.get_json()
     print(body)
     return search.name(body["name"])
