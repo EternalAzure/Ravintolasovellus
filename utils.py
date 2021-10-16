@@ -1,4 +1,4 @@
-from flask import request, session
+from flask import request, session, flash, redirect
 import db, json, collections
 import map, search
 from math import inf
@@ -35,24 +35,29 @@ def sort_by_rating(e):
         return inf
 
 # Fails if not all review categories are rated/graded
-def insert_grades(restaurant):
+def insert_grades(restaurant_id):
+    print("Utils")
     categories = db.categories()
+    list = []
     # List of tuples [(category, grade), ...]
     try:
         list = [(request.form[str(c.id)], c.id) for c in categories]
     except:
-        return False
+        flash("Arvostele kaikki kategoriat")
+        return redirect(f"/review/{restaurant_id}#one")
+
     try:
         user = session["user_id"]
-        logged_in_grading(user, list, restaurant)
+        logged_in_grading(user, list, restaurant_id)
     except KeyError:
+        print("userless")
         for tuple in list:
-            db.insert_grade_userless(tuple[0], tuple[1], restaurant)
-    return True
+            db.insert_grade_userless(tuple[0], tuple[1], restaurant_id)
+    return redirect(f"/review/{restaurant_id}#one")
 
 def logged_in_grading(user, grades, restaurant):
-    # Update previous grading or create new one
-    if db.has_graded(user):
+    print("logged in grade")
+    if db.has_graded(user, restaurant):
         for grade in grades:
             db.update_grade(grade[0], grade[1], user, restaurant)
     else:

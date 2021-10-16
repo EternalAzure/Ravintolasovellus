@@ -247,9 +247,9 @@ def update_grade(grade, category, user, restaurant):
     db.session.execute(sql, {"grade":grade, "u_id":user, "r_id":restaurant, "c_id":category})
     db.session.commit()
 
-def has_graded(user):
-    sql = "SELECT 1 FROM grades WHERE user_id=:u_id"
-    result = db.session.execute(sql, {"u_id":user})
+def has_graded(user, restaurant):
+    sql = "SELECT 1 FROM grades WHERE user_id=:u_id AND restaurant_id=:r_id"
+    result = db.session.execute(sql, {"u_id": user, "r_id": restaurant})
     row = result.fetchone()
     if row: return True
     return False
