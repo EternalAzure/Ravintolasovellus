@@ -70,7 +70,7 @@
                     <div class="col-6 col-12-medium imp-medium">
                         <h3>Aukioloajat</h3>
                         <hr>
-                        <table style="max-width: 40em;">
+                        <table class="narrow">
                             <tr>
                                 <td></td> <td>Avaa</td> <td>Sulkee</td>
                             </tr>
@@ -138,13 +138,13 @@
                         {{ error1 }}
                         
                         <form action="/info/{{ id }}/hours" method="POST" class="info">
-                            <table style="max-width: 40em;">
+                            <table class="narrow">
                                 <tr>
                                     <td>
                                         <input type="submit" value="Päivitä" class="small">
                                     </td>
                                     <td>
-                                        <table style="max-width: 20em;">
+                                        <table class="narrow">
                                             <tr>
                                                 <td>Ma</td> <td><input type="time" name="opening_Ma"></td> <td><input type="time" name="closing_Ma"></td>
                                             </tr>

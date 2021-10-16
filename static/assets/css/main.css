@@ -1501,6 +1501,11 @@ input::-moz-focus-inner {
 						#footer .copyright li:first-child {
 							margin-top: 0;
 						}
+		/* Tables */
+
+			#narrow {
+				max-width: 15em;
+			}
 
 	}
 
@@ -1530,6 +1535,12 @@ input::-moz-focus-inner {
 
 			#footer {
 				padding: 2em 1em 2em 1em ;
+			}
+
+		/* Tables */
+
+			#narrow {
+				max-width: 15em;
 			}
 
 	}
