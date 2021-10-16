@@ -81,7 +81,7 @@ def validate_username_format(username):
 
 def validate_password(password):
     if not password: return False
-    if len(password) <= 5 or len(password) <= 50 : return False
+    if len(password) < 5 or len(password) > 50 : return False
     return True
 
 def firts_letter_capital(word):
