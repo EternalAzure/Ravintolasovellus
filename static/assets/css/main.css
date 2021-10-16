@@ -1503,9 +1503,10 @@ input::-moz-focus-inner {
 						}
 		/* Tables */
 
-			#narrow {
+			.narrow {
 				max-width: 15em;
 			}
+
 
 	}
 
