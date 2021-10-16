@@ -19,4 +19,4 @@ admin:admin <br>
 </p>
 <br>
 
-<img src="https://github.com/EternalAzure/Ravintolasovellus/blob/main/pictures/etusivu.jpg" width="961" height="502" />
+<img src="https://github.com/EternalAzure/Ravintolasovellus/blob/main/pictures/index.jpg" height="502" />
