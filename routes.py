@@ -129,9 +129,12 @@ def delete_review(id):
 @app.route("/delete_tag/<int:r_id>", methods=["POST"])
 def delete_tag(r_id):
     tag = request.form["tag"]
+    if not tag: 
+        return redirect(f"/info/{r_id}#one")
+
     t_id = db.select_tags_id(tag)
     db.delete_tag(t_id, r_id)
-    return redirect(f"/info/{r_id}")
+    return redirect(f"/info/{r_id}#one")
 #------
 
 @app.route("/set_city", methods=["POST"])

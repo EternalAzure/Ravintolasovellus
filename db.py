@@ -356,7 +356,10 @@ def select_tags(id):
 def select_tags_id(tag):
     sql = "SELECT id FROM tags WHERE tag=:tag"
     result = db.session.execute(sql, {"tag": tag})
-    return result.fetchone()[0]
+    try:
+        return result.fetchone()[0]
+    except TypeError:
+        return None
 
 def delete_tag(t_id, r_id):
     sql = "DELETE FROM tag_relations WHERE tag_id=:t_id AND restaurant_id=:r_id"
