@@ -125,6 +125,13 @@ def delete_review(id):
 
     flash("Istunto on vanhentunut")
     return redirect("/#one")
+
+@app.route("/delete_tag/<int:r_id>", methods=["POST"])
+def delete_tag(r_id):
+    tag = request.form["tag"]
+    t_id = db.select_tags_id(tag)
+    db.delete_tag(t_id, r_id)
+    return redirect(f"/info/{r_id}")
 #------
 
 @app.route("/set_city", methods=["POST"])

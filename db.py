@@ -349,9 +349,19 @@ def is_tag_in_tag_relations(tag, id):
     return False
 
 def select_tags(id):
-    sql = "SELECT tag FROM tag_relations, tags WHERE tag_id=tags.id AND restaurant_id=:id"
+    sql = "SELECT tag FROM tag_relations tr, tags WHERE tag_id=tags.id AND restaurant_id=:id"
     result = db.session.execute(sql, {"id": id})
     return result.fetchall()
+
+def select_tags_id(tag):
+    sql = "SELECT id FROM tags WHERE tag=:tag"
+    result = db.session.execute(sql, {"tag": tag})
+    return result.fetchone()[0]
+
+def delete_tag(t_id, r_id):
+    sql = "DELETE FROM tag_relations WHERE tag_id=:t_id AND restaurant_id=:r_id"
+    db.session.execute(sql, {"t_id": t_id, "r_id": r_id})
+    db.session.commit()
 
 #Auxiliary for intenal use
 def get_street_id(street):
