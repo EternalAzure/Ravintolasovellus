@@ -4,6 +4,8 @@ Sovelluksessa näkyy valitun kaupungin ravintolat, joista voi etsiä tietoa ja l
 
 <a href="https://polar-scrubland-57061.herokuapp.com/" title="https://polar-scrubland-57061.herokuapp.com/" target="_blank" rel="noopener noreferrer"> herokuapp </a>
 admin:admin <br>
+
+[sovellus](https://polar-scrubland-57061.herokuapp.com/)
 ### Nykytila:
 #### Autentikaatio ja kirjautuminen
 Kokonaisuudessaan toteutettu
