@@ -1,6 +1,9 @@
 ## Ravintolasovellus
 Sovelluksessa näkyy valitun kaupungin ravintolat, joista voi etsiä tietoa ja lukea arvioita. Jokainen käyttäjä on peruskäyttäjä tai ylläpitäjä.
 [dokumentaatio](https://github.com/EternalAzure/Ravintolasovellus/blob/main/dokumentaatio.md)
+
+[sovellus](https://polar-scrubland-57061.herokuapp.com/) admin:admin
+
 ### Nykytila:
 #### Autentikaatio ja kirjautuminen
 Kokonaisuudessaan toteutettu
@@ -34,12 +37,8 @@ Kokonaisuudessaan toteutettu
 - [x] Voi hakea ravintolat nimen perusteella
 <br>
 <br>
-<p>https://polar-scrubland-57061.herokuapp.com/
-admin:admin <br>
-</p>
 <br>
 
-<img src="https://github.com/EternalAzure/Ravintolasovellus/blob/main/pictures/index.jpg" height="502" />
 
 ### Oivalluksia
 
