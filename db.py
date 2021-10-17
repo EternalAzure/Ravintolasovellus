@@ -301,6 +301,11 @@ def select_info_hours(id):
         return default
     return hours
 
+def select_info_homepage(id):
+    sql = "SELECT homepage FROM info WHERE restaurant_id=:id"
+    result = db.session.execute(sql, {"id": id})
+    return result.fetchone()[0]
+
 def initiate_info(id):
     sql = "INSERT INTO info (restaurant_id) VALUES (:r)"
     db.session.execute(sql, {"r": id})
@@ -313,6 +318,11 @@ def update_info_hours(input, id):
 
 def update_info_description(input, id):
     sql = "UPDATE info SET descript=:input WHERE restaurant_id=:id;"
+    db.session.execute(sql, {"input": input, "id": id})
+    db.session.commit()
+
+def update_info_homepage(input, id):
+    sql = "UPDATE info SET homepage=:input WHERE restaurant_id=:id;"
     db.session.execute(sql, {"input": input, "id": id})
     db.session.commit()
 
@@ -377,5 +387,3 @@ def get_city_id(city):
     result = db.session.execute(sql, {"city": city})
     return result.fetchone()[0]
 
-def log(output):
-    print("LOG: ", output)

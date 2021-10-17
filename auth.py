@@ -89,8 +89,4 @@ def firts_letter_capital(word):
     format = re.compile(regex)  
     r = re.search(format, word)
 
-    if r is None :
-        return False
-       
-    else :
-        return True
+    return r

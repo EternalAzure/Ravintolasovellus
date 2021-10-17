@@ -80,6 +80,7 @@
                                 </tr>
                             {% endfor %}
                         </table>
+                        <hr>
                     </div>
                 </div>
                 
@@ -93,7 +94,7 @@
                         </div>
                         {% if session.role == 'admin' %}
                         <form action="/delete_tag/{{ id }}" method="POST">
-                            <input type="text" name="tag">
+                            <input type="text" placeholder="tunniste" name="tag">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                             <input type="submit" value="poista">
                         </form>
@@ -106,7 +107,15 @@
                     </div>
                     
                     <div class="col-6 col-12-medium imp-medium">
-                        
+                        <h4>Kotisivut</h4>
+                        <a href="{{ homepage }}" target="_blank" rel="noopener noreferrer" title="{{ homepage }}">{{ homepage }}</a>
+                        {% if session.role == 'admin' %}
+                        <form action="/info/{{ id }}/homepage" method="POST">
+                            <input type="text" placeholder="https://www.kotisivut.fi" name="homepage">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <input type="submit" value="Päivitä">
+                        </form>
+                        {% endif %}
                     </div>
                 </div>
             </div>

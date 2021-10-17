@@ -68,7 +68,8 @@ def restaurant(id):
     days = ["Ma", "Ti", "Ke", "To", "Pe", "La", "Su"]
     hours = db.select_info_hours(id)
     tags = db.select_tags(id)
-    return render_template("info.html", data=data, tags=tags, description=description, days=days, hours=hours, id=id)
+    homepage = db.select_info_homepage(id)
+    return render_template("info.html", data=data, tags=tags, description=description, days=days, hours=hours, homepage=homepage, id=id)
 
 @app.route("/admin")
 def admin():
@@ -94,6 +95,10 @@ def update_tag(id):
 @app.route("/info/<int:id>/description", methods=["POST"])
 def update_description(id):
     return info.description(request.form["description"], id)
+
+@app.route("/info/<int:id>/homepage", methods=["POST"])
+def update_homepage(id):
+    return info.homepage(request.form["homepage"], id)
 
 @app.route("/info/<int:id>/hours", methods=["POST"])
 def update_hours(id):

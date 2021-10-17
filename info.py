@@ -1,7 +1,7 @@
 from flask import flash
 from werkzeug.utils import redirect
 import db
-import time
+import time, re
 
 #Check if such restaurant exists
 def validate_id(id):
@@ -108,3 +108,12 @@ def validate_hours(hours, id):
         except ValueError: # default to previous
             pass
     return valid
+
+def homepage(homepage, id):
+    url = re.findall(r'(http|ftp|https):\/\/([\w\-_]+(?:(?:\.[\w\-_]+)+))([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?[.](?:com|io|fi|de|fr|uk|ee|es|pl|ru)', homepage)
+    print(url)
+    if url:
+        db.update_info_homepage(homepage, id)
+        return redirect(f"/info/{id}#one")
+    flash("Kelvoton url")
+    return redirect(f"/info/{id}#three")

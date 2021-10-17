@@ -75,6 +75,7 @@ CREATE TABLE info (
     id SERIAL PRIMARY KEY,
     descript TEXT,
     service_hours TEXT[],
+    homepage TEXT,
     restaurant_id INTEGER REFERENCES restaurants
     ON DELETE CASCADE
 );
