@@ -161,8 +161,7 @@ def create():
     street = request.form["street"]
     city = request.form["city"]
     if city and street and name:
-        info.restaurant(name, street, city)
-        return redirect("/#one")
+        return info.restaurant(name, street, city)
     flash("Täytä nimi ja osoite tiedot")
     return redirect("/#one")
 
