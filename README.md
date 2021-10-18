@@ -43,13 +43,14 @@ Kokonaisuudessaan toteutettu
 Projektin kehitykseen kuului vaihe, jossa kommunikaatio serverin kanssa toteutettiin lähes yksinomaan lomakkeiden kautta. Ongelma lomakkeissa on se, että pyynnön käsittelevän ```@app.route``` sisältävän funktion (myöhemmin 'route') on joko suoritettava render_template() tai muuten palautettava html. Tämä johtaa nykyisen sivun menetykseen uuden sivun latauksena tai nykyisen sivun uudelleen latauksena. Näistä jälkimmäinen on usein epätoivottavaa, sillä se johtaa muuttujien sekä ```style="display: '' / style="display: none"``` tyylillä toteutettujen "näkymien" nollaantumiseen.
 
 #### Ratkaisu
-Tämä johti lomakkeiden hylkäämiseen ja tiedon hakuun javascriptin kautta API kutsuilla sekä localStoragen käyttöönottoon. Sovellukseen on jätetty yhä lomakkeita demonstraationa osaamisesta.
+Tämä johti lomakkeiden hylkäämiseen ja tiedon hakuun javascriptin kautta API kutsuilla sekä localStoragen käyttöönottoon.
 
 #### Ongelma
 Nyt projektissa on kaksi viestintäväylää selaimen ja serverin välillä: API ja lomakkeet. Olisi selkeämpää, jos toteutuksista valittaisiin vain toinen. Lisäksi toteutusten välillä on päällekkäisyyksiä, joka johtaa toisteiseen koodiin.
 
 #### Ratkaisu
-Siirrytään yksinomaan API kutsuihin ja siirretään API omaan ```.py``` tiedostoonsa erilleen sivut näyttävistä routeista.
+Siirrytään yksinomaan API kutsuihin ja siirretään API omaan ```.py``` tiedostoonsa erilleen sivut näyttävistä routeista. <br>
+Sovellukseen on jätetty yhä lomakkeita demonstraationa osaamisesta.
 
 #### Ongelmia
 HTML koodissa toistuu samat elementit, Globaalit muuttujat ovat tehokkaita tiedon välittäjiä, mutta tiedostoilla ei ole kapsulointia ja muuttujan voi lukea ja yli kirjoittaa toisesta ```.js``` tiedostosta, joka on ladattu samalle HTML sivulle. 
