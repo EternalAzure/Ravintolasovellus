@@ -10,8 +10,6 @@ def restaurant(name, street, city):
         flash("Kadun nimen pitää olla enintään \n30 merkkiä ja loppua numeroon")
         return redirect("/#one")
 
-    print(x.group())
-    flash(f"Lisättiin {name}")
     restaurant_id = db.insert_restaurant(name, street, city)
     db.initiate_info(restaurant_id)
     return redirect(f"/info/{restaurant_id}")
@@ -34,8 +32,8 @@ def image(file, id):
 
     name = file.filename
     error = False
-    if not name.endswith(".jpg"):
-        flash('Kelvoton tiedostonimi. Käytä .jpg.')
+    if not name.endswith(".jpg") and not name.endswith(".jpeg"):
+        flash('Kelvoton tiedostonimi. Käytä .jpg tai .jpeg')
         error = True
 
     data = file.read()
