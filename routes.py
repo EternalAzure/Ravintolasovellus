@@ -161,8 +161,7 @@ def create():
     street = request.form["street"]
     city = request.form["city"]
     if city and street and name:
-        restaurant_id = db.insert_restaurant(name, street, city)
-        db.initiate_info(restaurant_id)
+        info.restaurant(name, street, city)
         return redirect("/#one")
     flash("Täytä nimi ja osoite tiedot")
     return redirect("/#one")

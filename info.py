@@ -3,6 +3,18 @@ from werkzeug.utils import redirect
 import db
 import time, re
 
+def restaurant(name, street, city):
+    x = re.search(r"\D{1,30}\s[0-9]{1,}$", street)
+
+    if x == None or x.group() != street:
+        flash("Kadun nimen pitää olla enintään \n30 merkkiä ja loppua numeroon")
+        return
+
+    print(x.group())
+    flash(f"Lisättiin {name}")
+    restaurant_id = db.insert_restaurant(name, street, city)
+    db.initiate_info(restaurant_id)
+
 #Check if such restaurant exists
 def validate_id(id):
     restaurant = db.select_restaurant(id)
@@ -110,6 +122,7 @@ def validate_hours(hours, id):
     return valid
 
 def homepage(homepage, id):
+    # Wont stop admins from giving more than one urls as one, but we trust them not to
     url = re.findall(r'(http|ftp|https):\/\/([\w\-_]+(?:(?:\.[\w\-_]+)+))([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?[.](?:com|io|fi|de|fr|uk|ee|es|pl|ru)', homepage)
     print(url)
     if url:

@@ -2,7 +2,6 @@ from app import app
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import exc
 from os import getenv
-import sys
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask import make_response
 
@@ -121,6 +120,7 @@ def delete_restaurant(id):
 
 #Inserting restaurant is dependent on inserting street, city and address
 def insert_restaurant(name, street, city):
+    print(f"insert_restaurant({name}, {street}, {city})")
     street_id = insert_street(street)
     city_id = insert_city(city)
     address_id = insert_address(street_id, city_id)
@@ -138,22 +138,26 @@ def insert_address(s_id, c_id): #INSERT ADDRESS
     return result.fetchone()[0]
 
 def insert_street(street): #INSERT STREET
+    print(f"insert_street({street})")
     try:
         sql = "INSERT INTO streets (street) VALUES (:street) RETURNING id"
         result = db.session.execute(sql, {"street":street})
         db.session.commit()
         return result.fetchone()[0]
     except exc.IntegrityError:
+        print("integrity error --> get_street_id()")
         db.session.commit()
         return get_street_id(street)
     
 def insert_city(city): #INSERT CITY
+    print(f"insert_city({city})")
     try:
         sql = "INSERT INTO cities (city) VALUES (:city) RETURNING id"
         result = db.session.execute(sql, {"city":city})
         db.session.commit()
         return result.fetchone()[0]
     except exc.IntegrityError:
+        print("integrity error --> get_city_id()")
         db.session.commit()
         return get_city_id(city)
 

@@ -18,7 +18,8 @@ def sorted_restaurants():
             "name": r.name, 
             "rating": db.grades_full_summary(r.id), 
             "created_at": r.created_at, 
-            "id": r.id, "city": r.city, 
+            "id": r.id, 
+            "city": r.city, 
             "street": r.street
             }
         i += 1
