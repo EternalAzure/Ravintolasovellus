@@ -36,9 +36,6 @@ Kokonaisuudessaan toteutettu
 ##### Nimi
 - [x] Voi hakea ravintolat nimen perusteella
 <br>
-<br>
-<br>
-
 
 ### Oivalluksia
 
