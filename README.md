@@ -40,10 +40,10 @@ Kokonaisuudessaan toteutettu
 ### Oivalluksia
 
 #### Ongelma
-Projektin kehitykseen kuului vaihe, jossa kommunikaatio serverin kanssa toteutettiin lähes yksinomaan lomakkeiden kautta. Ongelma lomakkeissa on se, että pyynnön käsittelevän ```@app.route``` sisältävän funktion (myöhemmin 'route') on joko suoritettava rendere_template() tai muuten palautettava html. Tämä johtaa nykyisen sivun menetykseen uuden sivun latauksena tai nykyisen sivun uudelleen latauksena. Näistä jälkimmäinen on usein epätoivottavaa, sillä se johtaa muuttujien sekä ```style="display: '' / style="display: none"``` tyylillä toteutettujen "näkymien" nollaantumiseen.
+Projektin kehitykseen kuului vaihe, jossa kommunikaatio serverin kanssa toteutettiin lähes yksinomaan lomakkeiden kautta. Ongelma lomakkeissa on se, että pyynnön käsittelevän ```@app.route``` sisältävän funktion (myöhemmin 'route') on joko suoritettava render_template() tai muuten palautettava html. Tämä johtaa nykyisen sivun menetykseen uuden sivun latauksena tai nykyisen sivun uudelleen latauksena. Näistä jälkimmäinen on usein epätoivottavaa, sillä se johtaa muuttujien sekä ```style="display: '' / style="display: none"``` tyylillä toteutettujen "näkymien" nollaantumiseen.
 
 #### Ratkaisu
-Tämä johti lomakkeiden hylkäämiseen ja tiedon hakuun javascriptin kautta API kutsuilla sekä localStoragen käyttöönottoon.
+Tämä johti lomakkeiden hylkäämiseen ja tiedon hakuun javascriptin kautta API kutsuilla sekä localStoragen käyttöönottoon. Sovellukseen on jätetty yhä lomakkeita demonstraationa osaamisesta.
 
 #### Ongelma
 Nyt projektissa on kaksi viestintäväylää selaimen ja serverin välillä: API ja lomakkeet. Olisi selkeämpää, jos toteutuksista valittaisiin vain toinen. Lisäksi toteutusten välillä on päällekkäisyyksiä, joka johtaa toisteiseen koodiin.
