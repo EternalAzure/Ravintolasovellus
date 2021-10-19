@@ -104,11 +104,13 @@ def update_homepage(id):
 def update_hours(id):
     days = ["Ma", "Ti", "Ke", "To", "Pe", "La", "Su"]
     hours = []
+    closed_or_not = []
     for d in days:
         opening = request.form["opening_"+d]
         closing = request.form["closing_"+d]
         hours.append([opening, closing])
-    return info.hours(hours, id)
+        closed_or_not.append(request.form.get(d))
+    return info.hours(hours, closed_or_not, id)
 #------
 
 # Delete stuff

@@ -616,6 +616,7 @@ input::-moz-focus-inner {
 		margin-top: 4em;
 	}
 
+	
 	label {
 		color: #555;
 		display: block;
@@ -1507,6 +1508,10 @@ input::-moz-focus-inner {
 				max-width: 15em;
 			}
 
+			form > table table > tr > td {
+				max-width: 1.5em;
+				padding-left: 0;
+			}
 
 	}
 
@@ -1542,6 +1547,11 @@ input::-moz-focus-inner {
 
 			#narrow {
 				max-width: 15em;
+			}
+
+			form > table table > tr > td {
+				max-width: 1.5em;
+				padding-left: 0;
 			}
 
 	}

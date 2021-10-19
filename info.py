@@ -95,11 +95,23 @@ def validate_description(input):
         return False
     return True
 
-def hours(hours, id):
+def hours(hours, closed_or_not, id):
+    print("hours()")
+    print(closed_or_not)
+    print(hours)
     if not validate_id(id):
         return redirect(f"/info/{id}#three")
 
     hours = validate_hours(hours, id)
+    print(hours)
+    index = 0
+    for status in closed_or_not:
+        print("index", index)
+        if status == "on":
+            hours[index][0] = "suljettu"
+            hours[index][1] = "suljettu"
+        index += 1
+
     db.update_info_hours(hours, id)
     return redirect(f"/info/{id}#one")
 
