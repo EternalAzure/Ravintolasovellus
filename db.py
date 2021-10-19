@@ -302,7 +302,9 @@ def select_info_hours(id):
     hours = result.fetchone()[0]
     default = [["",""]]*7
     if hours == None:
+        print("db returned default", default)
         return default
+    print("db returned results", hours)
     return hours
 
 def select_info_homepage(id):
@@ -316,6 +318,7 @@ def initiate_info(id):
     db.session.commit()
 
 def update_info_hours(input, id):
+    print(f"update_info_hours({input})")
     sql = "UPDATE info SET service_hours=:input WHERE restaurant_id=:id"
     db.session.execute(sql, {"input": input, "id": id})
     db.session.commit()
