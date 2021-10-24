@@ -1,6 +1,6 @@
 from app import app
 from flask_cors import CORS
-from flask import render_template, request, redirect, session, flash
+from flask import render_template, request, redirect, session, flash, make_response
 import utils, info, db
 import auth, search
 from set_city import set_city as set_session_city
@@ -44,6 +44,9 @@ def demo_reviews(id):
                                                     id=id, reviews=text_reviews, 
                                                     grade=general_grade, grades=grades)
     #POST
+    if not "user_id" in session:
+        flash("Istunto vanhentunut")
+        return redirect("/#one")
     review = request.form["review"]
     if review:
         # Only logged in are allowed to give verbal review
@@ -63,14 +66,16 @@ def demo_reviews(id):
 
 @app.route("/info/<int:id>", methods=["GET"])
 def restaurant(id):
-    data = db.select_restaurant(id)
-    description = db.select_info_description(id)
-    days = ["Ma", "Ti", "Ke", "To", "Pe", "La", "Su"]
-    hours = db.select_info_hours(id)
-    tags = db.select_tags(id)
-    homepage = db.select_info_homepage(id)
-    return render_template("info.html", data=data, tags=tags, description=description, days=days, hours=hours, homepage=homepage, id=id)
-
+    try:
+        data = db.select_restaurant(id)
+        description = db.select_info_description(id)
+        days = ["Ma", "Ti", "Ke", "To", "Pe", "La", "Su"]
+        hours = db.select_info_hours(id)
+        tags = db.select_tags(id)
+        homepage = db.select_info_homepage(id)
+        return render_template("info.html", data=data, tags=tags, description=description, days=days, hours=hours, homepage=homepage, id=id)
+    except TypeError:
+        return make_response("Restaurant does not exist")
 @app.route("/admin")
 def admin():
     #Admin register page
