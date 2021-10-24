@@ -584,6 +584,10 @@ input::-moz-focus-inner {
 		margin: auto;
 		width: 50%;
 	}
+		.center.left {
+			float: left;
+			width: fit-content;
+		}
 
 
 /* Map */
@@ -1547,12 +1551,7 @@ input::-moz-focus-inner {
 		/* Tables */
 
 			#narrow {
-				max-width: 15em;
-			}
-
-			form > table table > tr > td {
-				max-width: 1.5em;
-				padding-left: 0;
+				max-width: 50%;
 			}
 
 	}

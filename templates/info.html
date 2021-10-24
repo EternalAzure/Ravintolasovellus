@@ -157,59 +157,60 @@
                         <h3>Aukioloajat</h3>
                         
                         <form action="/info/{{ id }}/hours" method="POST" class="info">
-                            <table class="narrow">
-                                <tr>
-                                    <td>
+                            <div>
+                                <div class="narrow" style="float: left; width: 40%;">
+                                    <div class="center">
                                         <input type="submit" value="Päivitä" class="small">
-                                    </td>
-                                    <td>
-                                        <table class="narrow">
-                                            <tr>
-                                                <th>Ma</th> 
-                                                <td><input type="time" name="opening_Ma"></td>
-                                                <td><input type="time" name="closing_Ma"></td>
-                                                <td style="padding-left: 0;"><input type="checkbox" name="Ma"></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Ti</th> 
-                                                <td><input type="time" name="opening_Ti"></td> 
-                                                <td><input type="time" name="closing_Ti"></td>
-                                                <td style="padding-left: 0;"><input type="checkbox" name="Ti"></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Ke</th> 
-                                                <td><input type="time" name="opening_Ke"></td>
-                                                <td><input type="time" name="closing_Ke"></td>
-                                                <td style="padding-left: 0;"><input type="checkbox" name="Ke"></td>
-                                            </tr>
-                                            <tr>
-                                                <th>To</th> 
-                                                <td><input type="time" name="opening_To"></td>
-                                                <td><input type="time" name="closing_To"></td>
-                                                <td style="padding-left: 0;"><input type="checkbox" name="To"></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Pe</th>
-                                                <td><input type="time" name="opening_Pe"></td>
-                                                <td><input type="time" name="closing_Pe"></td>
-                                                <td style="padding-left: 0;"><input type="checkbox" name="Pe"></td>
-                                            </tr>
-                                            <tr>
-                                                <th>La</th> 
-                                                <td><input type="time" name="opening_La"></td>
-                                                <td><input type="time" name="closing_La"></td>
-                                                <td style="padding-left: 0;"><input type="checkbox" name="La"></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Su</th> 
-                                                <td><input type="time" name="opening_Su"></td>
-                                                <td><input type="time" name="closing_Su"></td>
-                                                <td style="padding-left: 0;"><input type="checkbox" name="Su"></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
+                                    </div>
+                                    
+                                </div>
+                                <div class="narrow" style="float: right;">
+                                    <table>
+                                        <tr>
+                                            <th>Ma</th> 
+                                            <td><input type="time" name="opening_Ma"></td>
+                                            <td><input type="time" name="closing_Ma"></td>
+                                            <td style="padding-left: 0;"><input type="checkbox" name="Ma"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Ti</th> 
+                                            <td><input type="time" name="opening_Ti"></td> 
+                                            <td><input type="time" name="closing_Ti"></td>
+                                            <td style="padding-left: 0;"><input type="checkbox" name="Ti"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Ke</th> 
+                                            <td><input type="time" name="opening_Ke"></td>
+                                            <td><input type="time" name="closing_Ke"></td>
+                                            <td style="padding-left: 0;"><input type="checkbox" name="Ke"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>To</th> 
+                                            <td><input type="time" name="opening_To"></td>
+                                            <td><input type="time" name="closing_To"></td>
+                                            <td style="padding-left: 0;"><input type="checkbox" name="To"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Pe</th>
+                                            <td><input type="time" name="opening_Pe"></td>
+                                            <td><input type="time" name="closing_Pe"></td>
+                                            <td style="padding-left: 0;"><input type="checkbox" name="Pe"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>La</th> 
+                                            <td><input type="time" name="opening_La"></td>
+                                            <td><input type="time" name="closing_La"></td>
+                                            <td style="padding-left: 0;"><input type="checkbox" name="La"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Su</th> 
+                                            <td><input type="time" name="opening_Su"></td>
+                                            <td><input type="time" name="closing_Su"></td>
+                                            <td style="padding-left: 0;"><input type="checkbox" name="Su"></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         </form>
                         
