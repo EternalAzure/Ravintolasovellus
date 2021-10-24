@@ -174,11 +174,12 @@
 									Etsi tunnisteiden perusteella <br>
 									<input type="text" id="tag" class="mini-margin">
 									<button id="search" class="small mini-margin"> Etsi </button> <br>
-									Hakutila: <br>
+									<b>Hakutila:</b> <br>
+									Tiukka/Löyhä <br>
 									<input type="radio" name="mode" value="AND" title="Antaa tulokseksi ravintolat, joissa on kaikki tunnisteista" >
 									<input type="radio" name="mode" value="OR" title="Antaa tulokseksi ravintolat, joissa on ainakin yksi tunnisteista" checked>
 									<br>
-									Tiukka/Löyhä <br>
+									
 									<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 									<a id="clearTags">Tyhjennä</a>
 								</div>
