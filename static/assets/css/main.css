@@ -774,7 +774,8 @@ input::-moz-focus-inner {
 		}
 
 		.image.left, .image.right {
-			max-width: 40%;
+			max-width: 100%;
+			width: 30em;
 		}
 
 			.image.left img, .image.right img {
