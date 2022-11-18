@@ -9,7 +9,7 @@ Sovelluksessa näkyy valitun kaupungin ravintolat, joista voi etsiä tietoa ja l
 Kokonaisuudessaan toteutettu
 - [x] Käyttäjä voi kirjautua sisään ja ulos sekä luoda uuden tunnuksen
 - [x] Uloskirjautuneen istuntoa ei voi väärin käyttää
-#### Karta
+#### Kartta
 - [x] Käyttäjä näkee ravintolat kartalla
 - [x] Käyttäjä voi klitata ravintolaa kartalla ja se tarjoaa linkkiä ravintolan info sivulle
 - [x] Käyttäjä voi klikata ravintolan 'Näytä kartalla' ja sivu ohjaa kartalle ja kartta kohdistaa oikeaan sijaintiin
