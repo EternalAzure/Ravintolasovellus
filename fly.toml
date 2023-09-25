@@ -1,0 +1,14 @@
+# fly.toml app configuration file generated for ravintolasovellus on 2023-09-25T20:00:47+03:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "ravintolasovellus"
+primary_region = "arn"
+
+[http_service]
+  internal_port = 80
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0

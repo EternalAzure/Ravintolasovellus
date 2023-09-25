@@ -106,3 +106,12 @@ CREATE TABLE tag_relations (
 INSERT INTO review_categories (category) VALUES ('viihtyisyys');
 INSERT INTO review_categories (category) VALUES ('hinta-laatu');
 INSERT INTO review_categories (category) VALUES ('maukkaus');
+
+INSERT INTO cities (city) VALUES ('Helsinki');
+INSERT INTO cities (city) VALUES ('Espoo');
+INSERT INTO cities (city) VALUES ('Vantaa');
+INSERT INTO cities (city) VALUES ('Tampere');
+INSERT INTO cities (city) VALUES ('Turku');
+
+INSERT INTO users (username, role, city_id, pwhash) 
+VALUES ('admin', 'admin', 1, 'pbkdf2:sha256:260000$MMNEnyTqOOjjKUGU$9e66952f9173770520035efec9d269f71e1e8dca9a3735d961db35a3569df5c3');
