@@ -6,3 +6,4 @@ Tuntikirjanpito.txt
 #directories
 /__pycache__
 /venv
+.venv/
