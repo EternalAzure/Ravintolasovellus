@@ -1,12 +1,13 @@
-from app import app
+from os import getenv
+
+from flask import make_response
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import exc
-from dotenv import load_dotenv
-from os import getenv
 from werkzeug.security import check_password_hash, generate_password_hash
-from flask import make_response
 
-load_dotenv()
+from app import app
+
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_DATABASE_URI"] = getenv("POSTGRES")
 db = SQLAlchemy(app)
