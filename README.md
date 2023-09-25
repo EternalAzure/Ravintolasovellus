@@ -2,7 +2,7 @@
 Sovelluksessa näkyy valitun kaupungin ravintolat, joista voi etsiä tietoa ja lukea arvioita. Jokainen käyttäjä on peruskäyttäjä tai ylläpitäjä.
 [dokumentaatio](https://github.com/EternalAzure/Ravintolasovellus/blob/main/dokumentaatio.md)
 
-[sovellus](https://polar-scrubland-57061.herokuapp.com/) admin:admin
+[sovellus](https://ravintolasovellus.fly.dev/) admin:admin
 
 ### Nykytila:
 #### Autentikaatio ja kirjautuminen
