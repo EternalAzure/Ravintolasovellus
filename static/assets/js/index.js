@@ -1,5 +1,5 @@
-const baseUrl = "https://polar-scrubland-57061.herokuapp.com"
-//const baseUrl = "http://localhost:5000"
+//const baseUrl = "https://polar-scrubland-57061.herokuapp.com"
+const baseUrl = "http://localhost:5000"
 
 let map
 let restaurants
@@ -24,9 +24,14 @@ const initMap = async () => {
   restaurants = await (await getRestaurants()).json()
   const myLatLng = await (await getCityLocation()).json()
 
-  map = new google.maps.Map(document.getElementById("map"), {
+  const { Map } = await google.maps.importLibrary("maps");
+  const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+
+  //@ts-ignore
+  map = new Map(document.getElementById("map"), {
     zoom: 12,
     center: myLatLng,
+    mapId: "RAVINTOLA_MAP"
   })
 
   infowindow = new google.maps.InfoWindow();
