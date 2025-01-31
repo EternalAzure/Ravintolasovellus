@@ -40,3 +40,19 @@ mahdollistaa pyynnöt klientista tuotanto vaiheessa.
 
 ## Muuta
 ```search.py``` funktiot ovat hieman hitaita, sillä niiden pahin tapaus on O(n²). Sen kehittäminen kuitenkin jää.
+
+# Asennus
+1. ```git clone <url>```
+2. ```py -m venv .venv```
+3. ```.venv\Scripts\activate```
+4. ```py -m pip install -r .\requirements.txt```
+5. Luo ```.env``` tiedosto jonne luo avaimet ```POSTGRES```, ```SECRET_KEY```, ```MAPQUEST_KEY``` lisäksi ```index.html``` tarvitsee Google Maps avaimen.
+
+# Aja
+```flask run```<br>
+```index.js``` ekalla rivillä pitää konfia baseUrl oikein.
+
+# Julkaisu
+Luo fly.io-tili ja asenna flyctl.<br>
+Aja komento ```flyctl deploy .``` projektin juuresta. <br>
+```fly.toml``` kertoo millä spekseillä julkaisu tapahtuu.
