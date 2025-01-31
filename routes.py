@@ -76,6 +76,7 @@ def restaurant(id):
         return render_template("info.html", data=data, tags=tags, description=description, days=days, hours=hours, homepage=homepage, id=id)
     except TypeError:
         return make_response("Restaurant does not exist")
+    
 @app.route("/admin")
 def admin():
     #Admin register page

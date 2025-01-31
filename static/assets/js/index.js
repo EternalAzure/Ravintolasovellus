@@ -23,6 +23,7 @@ const initMap = async () => {
   console.log("Google maps API initiated")
   restaurants = await (await getRestaurants()).json()
   const myLatLng = await (await getCityLocation()).json()
+  console.log(myLatLng)
 
   const { Map } = await google.maps.importLibrary("maps");
   const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");

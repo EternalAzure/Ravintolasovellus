@@ -18,7 +18,7 @@ def select_image(id):
     sql = "SELECT data FROM images WHERE r_id=:id"
     result = db.session.execute(sql, {"id":id})
     try:
-        data = result.fetchone()[0]
+        data = result.fetchone()[0] # Raises TypeError
         response = make_response(bytes(data))
         response.headers.set("Content-Type", "image/jpeg")
         return response

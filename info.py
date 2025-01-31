@@ -1,7 +1,10 @@
+import time, re
+
 from flask import flash
 from werkzeug.utils import redirect
+
 import db
-import time, re
+
 
 def restaurant(name, street, city):
     x = re.search(r"\D{1,30}\s[0-9]{1,}$", street)
@@ -32,14 +35,13 @@ def image(file, id):
 
     name = file.filename
     error = False
-    if not name.endswith(".jpg") and not name.endswith(".jpeg"):
-        flash('Kelvoton tiedostonimi. Käytä .jpg tai .jpeg')
+    if not name.endswith(".jpg") and not name.endswith(".jpeg") and not name.endswith(".png"):
+        flash('Kelvoton tiedostonimi. Käytä .jpg, .jpeg tai .png')
         error = True
 
     data = file.read()
-
-    if len(data) > 200*1024:
-        flash('Tiedosto saa olla enintään 204kt. ')
+    if len(data) > 293*1024:
+        flash('Tiedosto saa olla enintään 300kt. ')
         error = True
 
     if error:

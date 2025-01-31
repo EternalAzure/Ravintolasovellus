@@ -1,7 +1,10 @@
+import logging
 from os import getenv
 import requests
 
-key=getenv("MAP")
+logger = logging.getLogger(__name__)
+
+key=getenv("GEOCODING")
 
 def location(city, street) -> dict[str, float]:
     url = f"https://maps.googleapis.com/maps/api/geocode/json?key={key}&address={street},{city}"
@@ -10,10 +13,9 @@ def location(city, street) -> dict[str, float]:
     try:
         data["lat"] = response.json()["results"][0]["geometry"]["location"]["lat"]
         data["lng"] = response.json()["results"][0]["geometry"]["location"]["lng"]
-    except (IndexError, KeyError):
-        pass
-    except ValueError as err:
+    except Exception as err:
         print(err)
+        logger.exception(err)
 
     return data
 
