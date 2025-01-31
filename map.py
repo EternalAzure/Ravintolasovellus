@@ -1,20 +1,19 @@
 from os import getenv
 import requests
 
-key=getenv("MAPQUEST_KEY")
+key=getenv("MAP")
 
 def location(city, street) -> dict[str, float]:
-    url = f"https://www.mapquestapi.com/geocoding/v1/address?key={key}&json={{%22location%22:{{%22street%22:%22{street}%22,%22city%22:%22{city}%22}}}}"
+    url = f"https://maps.googleapis.com/maps/api/geocode/json?key={key}&address={street},{city}"
     response = requests.get(url)
     data = {"lat": 0, "lng": 0} # Null Island
     try:
-        data = response.json()["results"][0]["locations"][0]["latLng"]
-    except IndexError:
+        data["lat"] = response.json()["results"][0]["geometry"]["location"]["lat"]
+        data["lng"] = response.json()["results"][0]["geometry"]["location"]["lng"]
+    except (IndexError, KeyError):
         pass
-    except ValueError:
-        print("Err")
-        pass
+    except ValueError as err:
+        print(err)
 
-    
     return data
 
